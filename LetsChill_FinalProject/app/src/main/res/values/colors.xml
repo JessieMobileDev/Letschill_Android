@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#019AE8</color>
+    <color name="colorPrimaryDark">#0076BF</color>
+    <color name="colorAccent">#FF9900</color>
+
+    <!-- Custom colors -->
+    <color name="text_grey">#B2AFAF</color>
+    <color name="facebook_background_blue">#3B5998</color>
 </resources>

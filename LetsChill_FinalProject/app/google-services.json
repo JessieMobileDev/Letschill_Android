@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "421267857356",
+    "firebase_url": "https://letschill-finalproject.firebaseio.com",
+    "project_id": "letschill-finalproject",
+    "storage_bucket": "letschill-finalproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421267857356:android:8ad6d02b0a26e0f0",
+        "android_client_info": {
+          "package_name": "com.example.prajwalramamurthy.letschill_finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421267857356-6mrlisci063g4an8s3cppt7o7dr4tq08.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prajwalramamurthy.letschill_finalproject",
+            "certificate_hash": "7d4dacfe130f4ba1b29c64b498fc5b2f7d077351"
+          }
+        },
+        {
+          "client_id": "421267857356-vokuccg1dh627p6ufo70g1g2u4caal6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUU6BfBTm5dZFEXg3QX6SVBK0_46vJr_0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421267857356-vokuccg1dh627p6ufo70g1g2u4caal6r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

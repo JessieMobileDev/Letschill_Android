@@ -8,4 +8,38 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Used for the bottom line of Edit Texts when not selected -->
+    <style name="edittext_notselected">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <!-- Edit Text Padding, Font and Background -->
+    <style name="editText_signIn_style">
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:fontFamily">@font/helvetica_neue</item>
+        <item name="android:background">@drawable/edittext_style</item>
+        <item name="android:drawablePadding">15dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Button (orange) Background and Font -->
+    <style name="button_orange_style">
+        <item name="android:background">@drawable/button_orange</item>
+        <item name="android:fontFamily">@font/helvetica_neue</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Clickable TextView -->
+    <style name="clickable_textViews">
+        <item name="android:clickable">true</item>
+        <item name="android:fontFamily">@font/helvetica_neue</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

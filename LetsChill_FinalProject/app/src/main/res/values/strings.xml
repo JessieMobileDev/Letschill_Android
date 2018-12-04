@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">LetsChill_FinalProject</string>
+
+    <!-- Splash Screen Strings -->
+    <string name="logo_contentDescription">LetsChill Logo</string>
+
+    <!-- Sign In Fragment Strings -->
+    <string name="background_contentDescription">Sign In background image</string>
+    <string name="editText_emailHint">Email address</string>
+    <string name="editText_passwordHint">Password</string>
+    <string name="button_signIn">Sign in</string>
+    <string name="checkBox_rememberMe">Remember me</string>
+    <string name="button_forgotPassword">Forgot password?</string>
+    <string name="button_facebook">Sign in with Facebook</string>
+    <string name="button_noAccount">Don\'t have an account yet? Sign up.</string>
+
+    <!-- Sign Up Fragment Strings -->
+    <string name="editText_usernameHint">Username</string>
+    <string name="editText_repeatPassword">Repeat password</string>
+    <string name="button_signUp">Sign up</string>
 </resources>
