@@ -18,4 +18,10 @@
     <string name="editText_usernameHint">Username</string>
     <string name="editText_repeatPassword">Repeat password</string>
     <string name="button_signUp">Sign up</string>
+
+    <!-- Facebook Login -->
+    <string name="facebook_app_id">2220849721466494</string>
+    <string name="fb_login_protocol_scheme">fb2220849721466494</string>
+
+
 </resources>

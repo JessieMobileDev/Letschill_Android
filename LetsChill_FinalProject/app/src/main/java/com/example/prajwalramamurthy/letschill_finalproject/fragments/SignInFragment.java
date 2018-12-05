@@ -1,6 +1,7 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.InterestsActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,10 +41,47 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     private EditText mEditText_email, mEditText_password;
     private Button mButton_signIn;
     private SignInFragmentInterface mSignInFragmentInterface;
+    private CallbackManager callbackManager;
+
+
 
     public interface SignInFragmentInterface {
         void swapToSignUp();
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+
+                        Toast.makeText(getContext(), "Success! You are successfully logged in!", Toast.LENGTH_SHORT).show();
+
+                        Intent navigationIntent = new Intent(getContext(), InterestsActivity.class);
+                        startActivity(navigationIntent);
+
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
+    }
+
 
     public static SignInFragment newInstance() {
 
@@ -128,6 +174,14 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -145,6 +199,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             case R.id.button_signin:
                 userSignIn();
                 break;
+
         }
     }
 }

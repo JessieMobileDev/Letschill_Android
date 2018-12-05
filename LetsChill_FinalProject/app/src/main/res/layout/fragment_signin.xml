@@ -97,7 +97,8 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/textView_noAccount"
         app:layout_constraintEnd_toEndOf="@+id/textView_forgotPw"
-        app:layout_constraintStart_toStartOf="@+id/checkBox_rememberme" />
+        app:layout_constraintStart_toStartOf="@+id/checkBox_rememberme"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/textView_forgotPw"
@@ -127,6 +128,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="286dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_noAccount"
+        app:layout_constraintEnd_toEndOf="@+id/button_signin"
+        app:layout_constraintStart_toStartOf="@+id/button_signin" />
 
     <ProgressBar
         android:id="@+id/progressBar_signin"
