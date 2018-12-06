@@ -15,12 +15,16 @@ import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {
 
@@ -30,6 +34,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     private Button mButton_signUp;
     private ProgressBar mProgressBar;
     private String mUsername, mEmail, mPassword, mRepeatPassword;
+    private ArrayList<EditText> mAllEditTexts = new ArrayList<>();
 
     public static SignUpFragment newInstance() {
 
@@ -69,43 +74,55 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             // Get firebase auth instance
             mAuth = FirebaseAuth.getInstance();
 
+            // Add all edit texts to an array list to clear them easily upon signing up
+            mAllEditTexts.add(mEditText_username);
+            mAllEditTexts.add(mEditText_email);
+            mAllEditTexts.add(mEditText_password);
+            mAllEditTexts.add(mEditText_repeatPassword);
+
         }
 
     }
 
     private void validateUserInputs() {
 
-        if (mEditText_username.getText().toString().isEmpty()) {
-            mEditText_username.setError("Don't leave this field empty");
+        // Collect data from the edit texts
+        mUsername = mEditText_username.getText().toString();
+        mEmail = mEditText_email.getText().toString();
+        mPassword = mEditText_password.getText().toString();
+        mRepeatPassword = mEditText_repeatPassword.getText().toString();
+
+        // Check if they are all empty
+        if (!mUsername.isEmpty() && !mEmail.isEmpty() && !mPassword.isEmpty() && !mRepeatPassword.isEmpty()) {
+
+            // Check if email is valid
+            final boolean mIsEmailValid = FormValidation.isEmailValid(mEmail);
+
+            // Check if password is valid
+            final boolean mIsPasswordValid = FormValidation.isPasswordValid(mPassword, mEditText_password);
+
+            // Check if passwords match
+            final boolean mDoPasswordsMatch = FormValidation.doPasswordsMatch(mPassword, mRepeatPassword, mEditText_repeatPassword);
+
+            // If email and passwords are valid, then save the user to the database
+            if (mIsEmailValid && mIsPasswordValid && mDoPasswordsMatch) {
+
+                signUp();
+            }
+
         } else {
-            mUsername = mEditText_username.getText().toString();
-        }
-        if (mEditText_email.getText().toString().isEmpty()) {
-            mEditText_email.setError("Don't leave this field empty");
-        } else {
-            mEmail = mEditText_email.getText().toString();
-        }
-        if (mEditText_password.getText().toString().isEmpty()) {
-            mEditText_password.setError("Don't leave this field empty");
-        }
-        if (mEditText_repeatPassword.getText().toString().isEmpty()) {
-            mEditText_repeatPassword.setError("Don't leave this field empty");
-        }
 
-        // If both passwords fields are not empty
-        if (!mEditText_password.getText().toString().isEmpty() &&
-                !mEditText_repeatPassword.getText().toString().isEmpty()) {
+            for (EditText mEditText:mAllEditTexts) {
 
-            // If both passwords match
-            if (mEditText_repeatPassword.getText().toString().equals(mEditText_password.getText().toString())) {
-
-                mPassword = mEditText_password.getText().toString();
-
-            } else {
-                // If repeated password does not match, display error message
-                mEditText_repeatPassword.setError("Password does not match");
+                // Check if edit texts are empty
+                if (mEditText.getText().toString().isEmpty()) {
+                    mEditText.setError("Don't leave this field empty");
+                }
             }
         }
+    }
+
+    private void signUp() {
 
         if (mUsername != null && mEmail != null && mPassword != null) {
 
@@ -122,7 +139,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
                         FirebaseDatabase.getInstance().getReference("Users")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
 
@@ -132,6 +149,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                                 if (task.isSuccessful()) {
 
                                     Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
+
+                                    // Clear the edit texts
+                                    FormValidation.clearEditTexts(mAllEditTexts);
                                 }
                             }
                         });
@@ -157,8 +177,20 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
             case R.id.button_signup:
 
-                // Validate user inputs
-                validateUserInputs();
+                if (getContext() != null) {
+
+                    if (ConnectionHandler.isConnected(getContext())) {
+
+                        // Validate user inputs
+                        validateUserInputs();
+
+                    } else {
+
+                        // Display an alert
+                        FormValidation.displayAlert(R.string.alert_title_noInternet, R.string.alert_content_noInternet, R.string.alert_buttonOk_noInternet, getContext());
+                    }
+                }
+
                 break;
         }
     }

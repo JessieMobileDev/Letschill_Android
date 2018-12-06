@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.prajwalramamurthy.letschill_finalproject">
 
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-
+    <!-- Add permission to access internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -30,7 +30,7 @@
         <activity android:name=".activities.SignInUpActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-
+        <!-- Facebook -->
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 

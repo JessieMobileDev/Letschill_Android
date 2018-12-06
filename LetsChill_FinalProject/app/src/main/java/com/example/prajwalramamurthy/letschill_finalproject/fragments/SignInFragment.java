@@ -21,6 +21,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.InterestsActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -30,6 +31,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
 
@@ -42,8 +45,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     private Button mButton_signIn;
     private SignInFragmentInterface mSignInFragmentInterface;
     private CallbackManager callbackManager;
-
-
+    private ArrayList<EditText> mAllEditTexts = new ArrayList<>();
 
     public interface SignInFragmentInterface {
         void swapToSignUp();
@@ -136,6 +138,10 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
             // Get firebase auth instance
             mAuth = FirebaseAuth.getInstance();
+
+            // Add all edit texts to an array list so that we can clear them easily
+            mAllEditTexts.add(mEditText_email);
+            mAllEditTexts.add(mEditText_password);
         }
     }
 
@@ -160,6 +166,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                         if (getContext() != null) {
 
                             Toast.makeText(getContext(), "Successfully signed in!", Toast.LENGTH_SHORT).show();
+
+                            // Clear the text fields
+                            FormValidation.clearEditTexts(mAllEditTexts);
 
                         }
 

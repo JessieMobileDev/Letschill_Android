@@ -18,6 +18,9 @@
     <string name="editText_usernameHint">Username</string>
     <string name="editText_repeatPassword">Repeat password</string>
     <string name="button_signUp">Sign up</string>
+    <string name="alert_title_noInternet">No internet</string>
+    <string name="alert_content_noInternet">Connect your device to the internet</string>
+    <string name="alert_buttonOk_noInternet">OK</string>
 
     <!-- Facebook Login -->
     <string name="facebook_app_id">2220849721466494</string>
