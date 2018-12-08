@@ -1,5 +1,6 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +23,25 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.InterestsActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -43,47 +54,19 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     private TextView mTextView_signUp, mTextView_forgotPassword;
     private EditText mEditText_email, mEditText_password;
     private Button mButton_signIn;
+    private LoginButton mButton_facebook;
     private SignInFragmentInterface mSignInFragmentInterface;
     private CallbackManager callbackManager;
     private ArrayList<EditText> mAllEditTexts = new ArrayList<>();
 
+    // Constants
+    private static final String TAG = "test";
+
     public interface SignInFragmentInterface {
         void swapToSignUp();
+        void swapToResetPasswordFragment();
+        void moveToInterestsFromSignIn();
     }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-        callbackManager = CallbackManager.Factory.create();
-
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code
-
-                        Toast.makeText(getContext(), "Success! You are successfully logged in!", Toast.LENGTH_SHORT).show();
-
-                        Intent navigationIntent = new Intent(getContext(), InterestsActivity.class);
-                        startActivity(navigationIntent);
-
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-    }
-
 
     public static SignInFragment newInstance() {
 
@@ -121,6 +104,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             mTextView_signUp = getView().findViewById(R.id.textView_noAccount);
             mTextView_forgotPassword = getView().findViewById(R.id.textView_forgotPw);
             mButton_signIn = getView().findViewById(R.id.button_signin);
+            mButton_facebook = getView().findViewById(R.id.login_button);
             mEditText_email = getView().findViewById(R.id.editText_email);
             mEditText_password = getView().findViewById(R.id.editText_password);
             mProgressBar = getView().findViewById(R.id.progressBar_signin);
@@ -142,6 +126,19 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             // Add all edit texts to an array list so that we can clear them easily
             mAllEditTexts.add(mEditText_email);
             mAllEditTexts.add(mEditText_password);
+
+            // The method below handles the facebook click
+            if (ConnectionHandler.isConnected(getContext())) {
+
+                signInWithFacebook();
+
+            } else {
+
+                // Disable facebook button and show toast
+                mButton_facebook.setClickable(false);
+                Toast.makeText(getContext(), R.string.toast_noInternet, Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -170,6 +167,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                             // Clear the text fields
                             FormValidation.clearEditTexts(mAllEditTexts);
 
+                            // Move to the "InterestsActivity"
+                            mSignInFragmentInterface.moveToInterestsFromSignIn();
+
                         }
 
                     } else {
@@ -177,6 +177,88 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                         if (getContext() != null) {
                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    }
+                }
+            });
+        }
+    }
+
+    private void signInWithFacebook() {
+
+        callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+
+
+//                        Intent navigationIntent = new Intent(getContext(), InterestsActivity.class);
+//                        startActivity(navigationIntent);
+
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
+        if (getActivity() != null) {
+
+            mAuth.signInWithCredential(credential).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    if (task.isSuccessful()) {
+
+                        Toast.makeText(getContext(), "Success! You are successfully logged in!", Toast.LENGTH_SHORT).show();
+
+
+                        final FirebaseUser user = mAuth.getCurrentUser();
+                        Log.d(TAG, "onComplete: User uid: " + user.getUid());
+
+
+                        User createdUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+
+                        FirebaseDatabase.getInstance().getReference("Users")
+                                .child(user.getUid())
+                                .setValue(createdUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+
+                                // Hide progress bar if successful
+//                                mProgressBar.setVisibility(View.GONE);
+
+
+                                if (task.isSuccessful()) {
+
+                                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
+
+                                    // Clear the edit texts
+                                    FormValidation.clearEditTexts(mAllEditTexts);
+                                }
+                            }
+                        });
+
+                        Toast.makeText(getContext(), "Account saved to db!", Toast.LENGTH_SHORT).show();
+
+                        // Move to Interests screen
+
                     }
                 }
             });
@@ -203,9 +285,13 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.textView_forgotPw:
-                // TODO: Forgot password button
+
+                // Reset button: Tell SignInUpActivity to replace fragments
+                mSignInFragmentInterface.swapToResetPasswordFragment();
+
                 break;
             case R.id.button_signin:
+
                 userSignIn();
                 break;
 

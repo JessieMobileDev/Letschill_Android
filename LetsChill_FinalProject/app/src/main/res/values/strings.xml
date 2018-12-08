@@ -13,6 +13,8 @@
     <string name="button_forgotPassword">Forgot password?</string>
     <string name="button_facebook">Sign in with Facebook</string>
     <string name="button_noAccount">Don\'t have an account yet? Sign up.</string>
+    <string name="toast_noInternet">No internet</string>
+    <string name="toast_fbAuth_failed">Authentication failed</string>
 
     <!-- Sign Up Fragment Strings -->
     <string name="editText_usernameHint">Username</string>
@@ -26,5 +28,14 @@
     <string name="facebook_app_id">2220849721466494</string>
     <string name="fb_login_protocol_scheme">fb2220849721466494</string>
 
+    <!-- Forgot Password Fragment Strings -->
+    <string name="button_send">Send</string>
+    <string name="toast_instructions">Instructions to reset your password were sent to your email</string>
 
+    <!-- Interests Fragment Strings -->
+    <string name="textView_title_interests">Interests</string>
+    <string name="textView_subTitle_interests">Choose at least 3 to continue</string>
+
+    <!-- Interests Menu Strings -->
+    <string name="menu_text_interests">DONE</string>
 </resources>

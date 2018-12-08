@@ -1,6 +1,7 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,9 +34,15 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private EditText mEditText_username, mEditText_email, mEditText_password, mEditText_repeatPassword;
     private Button mButton_signUp;
+    private LoginButton mButton_facebook;
     private ProgressBar mProgressBar;
     private String mUsername, mEmail, mPassword, mRepeatPassword;
     private ArrayList<EditText> mAllEditTexts = new ArrayList<>();
+    private SignUpFragmentInterface mSignUpFragmentInterface;
+
+    public interface SignUpFragmentInterface {
+        void moveToInterestsFromSignUp();
+    }
 
     public static SignUpFragment newInstance() {
 
@@ -49,6 +57,16 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_signup, container, false);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Verify if the interface is an instance of this context
+        if (context instanceof SignUpFragment.SignUpFragmentInterface) {
+            mSignUpFragmentInterface = (SignUpFragment.SignUpFragmentInterface)context;
+        }
     }
 
     @Override
@@ -152,6 +170,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
                                     // Clear the edit texts
                                     FormValidation.clearEditTexts(mAllEditTexts);
+
+                                    // Perform an intent to open the "InterestsActivity"
+                                    mSignUpFragmentInterface.moveToInterestsFromSignUp();
                                 }
                             }
                         });

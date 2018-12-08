@@ -14,8 +14,8 @@ public class InterestsActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_interests);
+        setContentView(R.layout.activity_interests);
 
-        getFragmentManager().beginTransaction().replace(R.id.main_frame, InterestsFragment.newInstance()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.interests_frame, InterestsFragment.newInstance()).commit();
     }
 }
