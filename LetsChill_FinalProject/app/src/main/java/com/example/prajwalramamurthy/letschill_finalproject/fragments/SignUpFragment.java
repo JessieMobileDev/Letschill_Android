@@ -2,10 +2,13 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +42,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     private String mUsername, mEmail, mPassword, mRepeatPassword;
     private ArrayList<EditText> mAllEditTexts = new ArrayList<>();
     private SignUpFragmentInterface mSignUpFragmentInterface;
+    private SharedPreferences mPrefs;
+
+    // Constants
+    public static final String PREFS_USER_UID = "PREFS_USER_UID";
 
     public interface SignUpFragmentInterface {
         void moveToInterestsFromSignUp();
@@ -97,6 +104,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             mAllEditTexts.add(mEditText_email);
             mAllEditTexts.add(mEditText_password);
             mAllEditTexts.add(mEditText_repeatPassword);
+
+            // Instantiate the SharedPreferences
+            mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         }
 
@@ -167,6 +177,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                                 if (task.isSuccessful()) {
 
                                     Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
+
+
+                                    // Save the user uid for later use within the application
+                                    mPrefs.edit().putString(PREFS_USER_UID, FirebaseDatabase.getInstance().getReference("Users")
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getKey()).apply();
 
                                     // Clear the edit texts
                                     FormValidation.clearEditTexts(mAllEditTexts);

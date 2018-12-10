@@ -2,7 +2,9 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -54,15 +56,17 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     private SignInFragmentInterface mSignInFragmentInterface;
     private CallbackManager callbackManager;
     private ArrayList<EditText> mAllEditTexts = new ArrayList<>();
+    private SharedPreferences mPrefs;
 
     // Constants
     private static final String TAG = "test";
+    public static final String PREFS_REMEMBER_ME = "PREFS_REMEMBER_ME";
 
     public interface SignInFragmentInterface {
         void swapToSignUp();
         void swapToResetPasswordFragment();
         void moveToInterestsFromSignIn();
-        void moveToMainScreen();
+        void moveToMainActivityFromSignIn();
     }
 
     public static SignInFragment newInstance() {
@@ -136,6 +140,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(), R.string.toast_noInternet, Toast.LENGTH_SHORT).show();
             }
 
+            // Instantiate the SharedPreferences
+            mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         }
     }
 
@@ -164,9 +171,19 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                             // Clear the text fields
                             FormValidation.clearEditTexts(mAllEditTexts);
 
+                            // If the "remember me" checkbox is checked, save to defaults
+                            if (mCheckBox_rememberMe.isChecked()) {
+
+                                mPrefs.edit().putBoolean(PREFS_REMEMBER_ME, true).apply();
+                            } else {
+
+                                mPrefs.edit().putBoolean(PREFS_REMEMBER_ME, false).apply();
+                            }
+
+                            // TODO: Move to main screen (not interests) - for testing
                             // Move to the "InterestsActivity"
 //                            mSignInFragmentInterface.moveToInterestsFromSignIn();
-                            mSignInFragmentInterface.moveToMainScreen();
+                            mSignInFragmentInterface.moveToMainActivityFromSignIn();
 
                         }
 

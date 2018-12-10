@@ -54,5 +54,18 @@
     <string name="ten">10</string>
     <string name="none">none</string>
     <string name="create_toast_empty">Please do not please fields empty</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Main Activity Strings -->
+    <string name="menu_profile">Profile</string>
+    <string name="menu_my_events">My Events</string>
+    <string name="menu_notification">Notifications</string>
+    <string name="menu_logout">Log out</string>
+    <string name="tab_today">TODAY</string>
+    <string name="tab_upcoming">UPCOMING</string>
+    <string name="tab_past">PAST</string>
+    <string name="title_activity_main3">Main3Activity</string>
 
 </resources>
