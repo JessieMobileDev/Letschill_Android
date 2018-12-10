@@ -38,4 +38,21 @@
 
     <!-- Interests Menu Strings -->
     <string name="menu_text_interests">DONE</string>
+    <string name="save">Save</string>
+
+    <!-- Create Event Fragment Strings -->
+    <string name="event_name">Event Name</string>
+    <string name="event_location">Location</string>
+    <string name="event_description">Event Description</string>
+    <string name="event_date">Date</string>
+    <string name="event_time">Time</string>
+    <string name="at">at</string>
+    <string name="event_participants">Participants</string>
+    <string name="event_category">Category</string>
+    <string name="is_this_a_recurring_event">Is this a recurring event?</string>
+    <string name="is_this_a_public_event">Is this a public event?</string>
+    <string name="ten">10</string>
+    <string name="none">none</string>
+    <string name="create_toast_empty">Please do not please fields empty</string>
+
 </resources>

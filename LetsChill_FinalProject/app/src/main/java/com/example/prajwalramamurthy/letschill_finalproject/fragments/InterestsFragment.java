@@ -27,7 +27,7 @@ public class InterestsFragment extends Fragment implements ListView.OnItemClickL
     private int mClicksCounter = 0;
     private MenuItem mMenu;
     private ListView mListView;
-    private List<String> mInterestsList = new ArrayList<>(Arrays.asList("Video Game", "Sports", "Technology", "Outdoor Activities", "Indoor Activities", "Role Playing Games", "Arts", "Music", "Movies"));;
+    private List<String> mInterestsList = new ArrayList<>(Arrays.asList("Video Game", "Sports", "Technology", "Outdoor Activities", "Indoor Activities", "Arts", "Music", "Movies", "Auto", "Food", "Fitness"));
 
     public static InterestsFragment newInstance() {
 

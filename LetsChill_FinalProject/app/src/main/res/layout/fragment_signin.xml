@@ -60,7 +60,7 @@
         />
 
     <CheckBox
-        android:id="@+id/checkBox_rememberme"
+        android:id="@+id/checkBox_create_recurring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -97,7 +97,7 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/textView_noAccount"
         app:layout_constraintEnd_toEndOf="@+id/textView_forgotPw"
-        app:layout_constraintStart_toStartOf="@+id/checkBox_rememberme"
+        app:layout_constraintStart_toStartOf="@+id/checkBox_create_recurring"
         android:visibility="gone"/>
 
     <TextView
@@ -113,7 +113,7 @@
         app:layout_constraintEnd_toEndOf="@+id/button_signin"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/checkBox_rememberme" />
+        app:layout_constraintTop_toTopOf="@+id/checkBox_create_recurring" />
 
     <TextView
         android:id="@+id/textView_noAccount"
@@ -150,7 +150,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="@+id/textView_forgotPw"
-        app:layout_constraintStart_toStartOf="@+id/checkBox_rememberme"
+        app:layout_constraintStart_toStartOf="@+id/checkBox_create_recurring"
         app:layout_constraintTop_toBottomOf="@+id/button_signin"
         android:indeterminateTint="@color/colorAccent"/>
 

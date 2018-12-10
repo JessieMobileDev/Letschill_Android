@@ -38,8 +38,16 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     public void moveToInterestsFromSignIn() {
 
         // Move to the "InterestsActivity"
-        Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
+        Intent mInterestsIntent = new Intent(SignInUpActivity.this, CreateEventActivity.class);
         startActivity(mInterestsIntent);
+    }
+
+    @Override
+    public void moveToMainScreen() {
+
+        // Move to the "CreateEventActivity"
+        Intent mCreateEventIntent = new Intent(SignInUpActivity.this, CreateEventActivity.class);
+        startActivity(mCreateEventIntent);
     }
 
     @Override
@@ -52,8 +60,9 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     @Override
     public void moveToInterestsFromSignUp() {
 
+        // TODO swapped activity from interest to create
         // Move to the "InterestsActivity"
-        Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
+        Intent mInterestsIntent = new Intent(SignInUpActivity.this, CreateEventActivity.class);
         startActivity(mInterestsIntent);
     }
 }

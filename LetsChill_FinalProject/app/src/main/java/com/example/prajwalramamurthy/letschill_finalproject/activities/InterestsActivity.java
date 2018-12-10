@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.InterestsFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignInFragment;
 
 public class InterestsActivity extends AppCompatActivity
 {

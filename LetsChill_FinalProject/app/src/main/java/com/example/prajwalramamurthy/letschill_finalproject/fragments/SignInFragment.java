@@ -1,6 +1,5 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
-import com.example.prajwalramamurthy.letschill_finalproject.activities.InterestsActivity;
-import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
-import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.CreateEventActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
@@ -40,7 +37,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -66,6 +62,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         void swapToSignUp();
         void swapToResetPasswordFragment();
         void moveToInterestsFromSignIn();
+        void moveToMainScreen();
     }
 
     public static SignInFragment newInstance() {
@@ -100,7 +97,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         if (getView() != null && getContext() != null) {
 
             // Find Views
-            mCheckBox_rememberMe = getView().findViewById(R.id.checkBox_rememberme);
+            mCheckBox_rememberMe = getView().findViewById(R.id.checkBox_create_recurring);
             mTextView_signUp = getView().findViewById(R.id.textView_noAccount);
             mTextView_forgotPassword = getView().findViewById(R.id.textView_forgotPw);
             mButton_signIn = getView().findViewById(R.id.button_signin);
@@ -168,7 +165,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                             FormValidation.clearEditTexts(mAllEditTexts);
 
                             // Move to the "InterestsActivity"
-                            mSignInFragmentInterface.moveToInterestsFromSignIn();
+//                            mSignInFragmentInterface.moveToInterestsFromSignIn();
+                            mSignInFragmentInterface.moveToMainScreen();
 
                         }
 
@@ -194,8 +192,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                         // App code
 
 
-//                        Intent navigationIntent = new Intent(getContext(), InterestsActivity.class);
-//                        startActivity(navigationIntent);
+                        Intent navigationIntent = new Intent(getContext(), CreateEventActivity.class);
+                        startActivity(navigationIntent);
+
 
                         handleFacebookAccessToken(loginResult.getAccessToken());
 
