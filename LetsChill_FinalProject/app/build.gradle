@@ -32,4 +32,5 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:4.38.1'
     implementation 'com.facebook.android:facebook-login:4.38.1'
     implementation files('libs/javax.mail.jar')
+    implementation 'com.jcminarro:RoundKornerLayouts:0.2.0'
 }

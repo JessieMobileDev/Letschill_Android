@@ -19,7 +19,7 @@
         <item name="android:paddingEnd">10dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
-        <item name="android:fontFamily">@font/helvetica_neue</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:background">@drawable/edittext_style</item>
         <item name="android:drawablePadding">15dp</item>
         <item name="android:textSize">16sp</item>
@@ -28,7 +28,7 @@
     <!-- Button (orange) Background and Font -->
     <style name="button_orange_style">
         <item name="android:background">@drawable/button_orange</item>
-        <item name="android:fontFamily">@font/helvetica_neue</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
@@ -38,9 +38,25 @@
     <!-- Clickable TextView -->
     <style name="clickable_textViews">
         <item name="android:clickable">true</item>
-        <item name="android:fontFamily">@font/helvetica_neue</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Custom card text style -->
+    <style name="eventCards_text_style">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <!-- Custom card title -->
+    <style name="eventCards_titleText_style" parent="eventCards_text_style">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Custom card content text -->
+    <style name="eventCards_contentText_style" parent="eventCards_text_style">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
