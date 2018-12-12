@@ -11,7 +11,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomin
 public class MainPageAdapter extends FragmentPagerAdapter {
 
     // Variables
-    private int mNumOfTabs;
+    private final int mNumOfTabs;
 
     public MainPageAdapter(FragmentManager fm, int mNumOfTabs) {
         super(fm);

@@ -20,7 +20,7 @@ public class TabTodayFragment extends Fragment implements ListView.OnItemClickLi
 
     // Variables
     private ListView mListView_today;
-    private ArrayList<Event> mEventList = new ArrayList<>();
+    private final ArrayList<Event> mEventList = new ArrayList<>();
 
     public static TabTodayFragment newInstance() {
         

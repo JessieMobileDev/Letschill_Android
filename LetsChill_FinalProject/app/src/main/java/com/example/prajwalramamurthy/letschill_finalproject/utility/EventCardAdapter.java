@@ -1,13 +1,6 @@
 package com.example.prajwalramamurthy.letschill_finalproject.utility;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +19,10 @@ public class EventCardAdapter extends BaseAdapter {
     private static final long BASE_ID = 0x01011;
 
     // Reference to our owning screen (context)
-    private Context mContext;
+    private final Context mContext;
 
     // Reference to our collection
-    private ArrayList<Event> mEventList;
+    private final ArrayList<Event> mEventList;
 
     // Constructor
     public EventCardAdapter(Context mContext, ArrayList<Event> mEventList){
@@ -43,7 +36,7 @@ public class EventCardAdapter extends BaseAdapter {
     @Override
     public int getCount(){
 
-        if(mEventList != null){
+        if(mEventList != null && mEventList.size() > 0){
 
             return mEventList.size();
         }
@@ -74,11 +67,11 @@ public class EventCardAdapter extends BaseAdapter {
     // Optimize with view holder!
     static class ViewHolder{
 
-        ImageView mEventImage;
-        TextView mEventTitle;
-        TextView mEventTime;
-        TextView mEventLocation;
-        TextView mEventHost;
+        final ImageView mEventImage;
+        final TextView mEventTitle;
+        final TextView mEventTime;
+        final TextView mEventLocation;
+        final TextView mEventHost;
 
 
         public ViewHolder(View mLayout){

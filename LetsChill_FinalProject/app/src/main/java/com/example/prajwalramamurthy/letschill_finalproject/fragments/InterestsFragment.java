@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,25 +19,25 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
-import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.prajwalramamurthy.letschill_finalproject.fragments.SignUpFragment.PREFS_USER_UID;
 
 public class InterestsFragment extends Fragment implements ListView.OnItemClickListener {
 
     // Variables
     private Menu mMenu;
     private ListView mListView;
-    private List<String> mInterestsList = new ArrayList<>(Arrays.asList("Video Game", "Sports", "Technology", "Outdoor Activities", "Indoor Activities", "Arts", "Music", "Movies", "Auto", "Food", "Fitness"));
+    private final List<String> mInterestsList = new ArrayList<>(Arrays.asList("Video Game", "Sports", "Technology", "Outdoor Activities", "Indoor Activities", "Arts", "Music", "Movies", "Auto", "Food", "Fitness"));
     private SharedPreferences mPrefs;
-    private ArrayList<String> mSelectedInterests = new ArrayList<>();
+    private final ArrayList<String> mSelectedInterests = new ArrayList<>();
     private InterestsFragmentInterface mInterestsFragmentInterface;
 
     public interface InterestsFragmentInterface {
@@ -150,22 +149,28 @@ public class InterestsFragment extends Fragment implements ListView.OnItemClickL
 
     private void updateUserInterests() {
 
-        // Get the reference from "Users"
-        FirebaseDatabase.getInstance().getReference("Users")
-                .child(mPrefs.getString(PREFS_USER_UID, ""))
-                .child("interests")
-                .setValue(mSelectedInterests).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+        FirebaseUser user  = FirebaseAuth.getInstance().getCurrentUser();
 
-                if (task.isSuccessful()) {
+        if (user!= null ) {
 
-                    // TODO: Move to Main Screen, and delete the toast
-                    mInterestsFragmentInterface.moveToMainActivityFromInterests();
-                    Toast.makeText(getContext(), "Interests were saved to database", Toast.LENGTH_SHORT).show();
+            // Get the reference from "Users"
+            FirebaseDatabase.getInstance().getReference("Users")
+                    .child(user.getUid())
+                    .child("interests")
+                    .setValue(mSelectedInterests).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
 
+                    if (task.isSuccessful()) {
+
+                        // TODO: Move to Main Screen, and delete the toast
+                        mInterestsFragmentInterface.moveToMainActivityFromInterests();
+                        Toast.makeText(getContext(), "Interests were saved to database", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
+

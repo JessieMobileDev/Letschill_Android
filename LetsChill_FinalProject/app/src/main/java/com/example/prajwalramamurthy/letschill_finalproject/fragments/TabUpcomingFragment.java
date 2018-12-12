@@ -20,7 +20,7 @@ public class TabUpcomingFragment extends Fragment implements ListView.OnItemClic
 
     // Variables
     private ListView mListView_upcoming;
-    private ArrayList<Event> mEventList = new ArrayList<>();
+    private final ArrayList<Event> mEventList = new ArrayList<>();
 
     public static TabUpcomingFragment newInstance() {
         

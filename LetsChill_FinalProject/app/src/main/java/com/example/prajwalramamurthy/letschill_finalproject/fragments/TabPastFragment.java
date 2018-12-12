@@ -20,7 +20,7 @@ public class TabPastFragment extends Fragment implements ListView.OnItemClickLis
 
     // Variables
     private ListView mListView_past;
-    private ArrayList<Event> mEventList = new ArrayList<>();
+    private final ArrayList<Event> mEventList = new ArrayList<>();
     
     public static TabPastFragment newInstance() {
         
