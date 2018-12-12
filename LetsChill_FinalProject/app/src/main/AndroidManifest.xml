@@ -65,6 +65,10 @@
         <!-- Main Activity -->
         <activity android:name=".activities.MainActivity"
             android:theme="@style/AppTheme"/>
+
+        <!-- My Events Activity -->
+        <activity android:name=".activities.MyEventsActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

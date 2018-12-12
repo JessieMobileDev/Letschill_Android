@@ -180,7 +180,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.save_menu, menu);
+        inflater.inflate(R.menu.settings_menu, menu);
     }
 
     @Override

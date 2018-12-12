@@ -15,6 +15,7 @@ public class CreateEventActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        setTitle("Add Event");
 
         getFragmentManager().beginTransaction().replace(R.id.create_event_frame, CreateEventFragment.newInstance()).commit();
 

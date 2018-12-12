@@ -10,43 +10,35 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
-import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MyEventsAdapter;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MyEventsActivity extends AppCompatActivity {
 
     // Variables
-    private FloatingActionButton mFab;
-    private MainPageAdapter mTabAdapter;
-    private TabItem mTabToday;
-    private TabItem mTabUpcoming;
-    private TabItem mTabPast;
+    private MyEventsAdapter mTabAdapter;
+    private TabItem mTabJoined;
+    private TabItem mTabHosting;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        setTitle("Events");
+        setContentView(R.layout.activity_my_events);
+        setTitle("My Events");
 
         // Find Views
-        mFab = findViewById(R.id.fab_activity);
-        mTabToday = findViewById(R.id.tab_today);
-        mTabUpcoming = findViewById(R.id.tab_upcoming);
-        mTabPast = findViewById(R.id.tab_past);
-        mViewPager = findViewById(R.id.viewPager_tabs);
-        mTabLayout = findViewById(R.id.tablayout_events);
-
-        // Assign the click listener to the floating button
-        mFab.setOnClickListener(this);
+        mTabJoined = findViewById(R.id.tab_joined);
+        mTabHosting = findViewById(R.id.tab_hosting);
+        mViewPager = findViewById(R.id.viewPager_my_events_tabs);
+        mTabLayout = findViewById(R.id.tablayout_my_events);
 
         // Assign the adapter to the view pager that will display the screen for each tab item
-        mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
+        mTabAdapter = new MyEventsAdapter(getSupportFragmentManager(), mTabLayout.getTabCount());
         mViewPager.setAdapter(mTabAdapter);
 
         // Manage what to display when a tab is selected
@@ -80,27 +72,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        MenuIntentHandler.getMenuIntents(item, this);
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.fab_activity:
-
-                // Move to "CreateEventActivity"
-                Intent mCreateEventIntent = new Intent(MainActivity.this, CreateEventActivity.class);
-                startActivity(mCreateEventIntent);
-
-                break;
-        }
     }
 }

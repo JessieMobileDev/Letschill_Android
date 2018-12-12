@@ -58,7 +58,19 @@
     <string name="create_toast_empty">Please do not please fields empty</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string-array name="spinner_category">
+        <item>Video Game</item>
+        <item>Sports</item>
+        <item>Technology</item>
+        <item>Outdoor Activities</item>
+        <item>Indoor Activities</item>
+        <item>Arts</item>
+        <item>Music</item>
+        <item>Movies</item>
+        <item>Auto</item>
+        <item>Food</item>
+        <item>Fitness</item>
+    </string-array>
 
     <!-- Main Activity Strings -->
     <string name="menu_profile">Profile</string>
