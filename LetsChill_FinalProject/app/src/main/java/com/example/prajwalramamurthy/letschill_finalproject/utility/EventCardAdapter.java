@@ -118,7 +118,7 @@ public class EventCardAdapter extends BaseAdapter {
 //            mViewHolder.mEventImage.setImageBitmap(mImageRounded);
             mViewHolder.mEventImage.setImageResource(R.drawable.create_back);
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
-            mViewHolder.mEventTime.setText(mEvent.getmEventTimeStart());
+            mViewHolder.mEventTime.setText("From " + mEvent.getmEventTimeFinish() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
 //            mViewHolder.mEventHost.setText("Hosted by " + mEvent.get);
 

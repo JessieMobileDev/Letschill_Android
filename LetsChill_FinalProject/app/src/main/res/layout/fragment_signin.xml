@@ -72,7 +72,7 @@
         android:textColor="@android:color/white"
         android:buttonTint="@color/colorAccent"
         android:textSize="14sp"
-        android:fontFamily="@font/helvetica_neue"/>
+        android:fontFamily="@font/roboto_regular"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -89,7 +89,7 @@
         android:background="@drawable/button_signin_facebook"
         android:drawableStart="@drawable/button_icon_facebook"
         android:drawablePadding="10dp"
-        android:fontFamily="@font/helvetica_neue"
+        android:fontFamily="@font/roboto_regular"
         android:text="@string/button_facebook"
         android:textAlignment="textStart"
         android:textAllCaps="false"

@@ -60,10 +60,16 @@ public class TabTodayFragment extends Fragment implements ListView.OnItemClickLi
 
         // TODO: Data below is for testing. Populate with database data. Check filter options.
         mEventList.clear();
-        mEventList.add(new Event("Movies at Lincoln", "55 Lincoln Avenue", "Dec 20, 2018", "From 3:30pm to 7pm",
+        mEventList.add(new Event("Movies at Lincoln", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "6:30pm",
                 "Let's watch some movies!", "Me, John, and Jessie", "Movies", true, true));
 
     }
+
+    /*
+    String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
+                 String mEventTimeFinish, String mDescription, String mParticipants,
+                 String mCategory, boolean mIsRecurringEvent, boolean mPublicOrPrivate)
+     */
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

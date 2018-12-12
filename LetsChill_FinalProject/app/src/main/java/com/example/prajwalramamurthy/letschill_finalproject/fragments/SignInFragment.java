@@ -116,7 +116,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
             mButton_signIn.setOnClickListener(this);
 
             // Set the check box font family to Helvetica Neue. It does not change in the xml.
-            mCheckBox_rememberMe.setTypeface(ResourcesCompat.getFont(getContext(), R.font.helvetica_neue));
+            mCheckBox_rememberMe.setTypeface(ResourcesCompat.getFont(getContext(), R.font.roboto_regular));
 
             // Get firebase auth instance
             mAuth = FirebaseAuth.getInstance();
