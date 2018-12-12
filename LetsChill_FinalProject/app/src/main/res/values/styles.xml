@@ -59,6 +59,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <!-- Create Event Edit Texts style -->
+    <style name="createEvent_editText">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
