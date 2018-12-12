@@ -16,6 +16,7 @@ public class InterestsActivity extends AppCompatActivity implements InterestsFra
         setContentView(R.layout.activity_interests);
         setTitle("Interests");
 
+
         getFragmentManager().beginTransaction().replace(R.id.interests_frame, InterestsFragment.newInstance()).commit();
     }
 

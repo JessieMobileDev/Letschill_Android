@@ -18,5 +18,6 @@ public class CreateEventActivity extends AppCompatActivity
 
         getFragmentManager().beginTransaction().replace(R.id.create_event_frame, CreateEventFragment.newInstance()).commit();
 
+
     }
 }

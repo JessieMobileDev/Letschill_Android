@@ -29,8 +29,7 @@
         android:ems="10"
         android:hint="@string/event_location"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/button_map"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_create_eventName" />
 
@@ -55,24 +54,41 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
+        android:clickable="true"
         android:editable="false"
         android:ems="10"
+        android:freezesText="true"
         android:hint="@string/event_date"
         android:inputType="date"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_create_location" />
 
     <EditText
         android:id="@+id/editText_create_time"
-        android:layout_width="130dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/event_time"
+        android:inputType="time"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/editText_create_location" />
+
+    <EditText
+        android:id="@+id/editText_create_time2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/event_time"
         android:inputType="time"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/editText_create_location" />
 
     <android.support.constraint.Guideline
@@ -80,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_begin="192dp" />
 
     <TextView
         android:id="@+id/textView"
@@ -88,12 +104,19 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
         android:text="@string/at"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/editText_create_time"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
+        app:layout_constraintTop_toBottomOf="@+id/editText_create_location" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="to"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/editText_create_location" />
 
     <android.support.constraint.Guideline
@@ -101,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_begin="154dp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -163,10 +186,10 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/ten"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/editText_create_desc" />
 
     <Spinner
@@ -176,8 +199,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toBottomOf="@+id/editText_create_participants" />
 
     <CheckBox
@@ -222,11 +244,32 @@
 
     <Button
         android:id="@+id/save_test_button"
+        style="@style/button_orange_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.72" />
+
+    <Button
+        android:id="@+id/button_map"
+        android:layout_width="46dp"
+        android:layout_height="42dp"
         android:layout_marginTop="8dp"
-        android:text="Save"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        tools:layout_editor_absoluteX="111dp" />
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_location_on_orange_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_create_eventName" />
 
 </android.support.constraint.ConstraintLayout>

@@ -8,7 +8,8 @@ public class Event
     private String mEventName;
     private String mEventLocation;
     private String mEventDate;
-    private String mEventTime;
+    private String mEventTimeStart;
+    private String mEventTimeFinish;
     private String mDescription;
     private String mParticipants;
     private String mCategory;
@@ -16,15 +17,16 @@ public class Event
     private boolean mPublicOrPrivate;
 
     // Constructor
-    public Event(String mEventName, String mEventLocation, String mEventDate,
-                 String mEventTime, String mDescription, String mParticipants, String mCategory,
-                 boolean mIsRecurringEvent, boolean mPublicOrPrivate)
-    {
-        //this.mEventID = mEventID;
+
+
+    public Event(String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
+                 String mEventTimeFinish, String mDescription, String mParticipants,
+                 String mCategory, boolean mIsRecurringEvent, boolean mPublicOrPrivate) {
         this.mEventName = mEventName;
         this.mEventLocation = mEventLocation;
         this.mEventDate = mEventDate;
-        this.mEventTime = mEventTime;
+        this.mEventTimeStart = mEventTimeStart;
+        this.mEventTimeFinish = mEventTimeFinish;
         this.mDescription = mDescription;
         this.mParticipants = mParticipants;
         this.mCategory = mCategory;
@@ -33,7 +35,7 @@ public class Event
     }
 
     // Empty Constructor
-    public Event() {
+    public Event(String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1) {
     }
 
     // Getters
@@ -49,8 +51,12 @@ public class Event
         return mEventDate;
     }
 
-    public String getmEventTime() {
-        return mEventTime;
+    public String getmEventTimeStart() {
+        return mEventTimeStart;
+    }
+
+    public String getmEventTimeFinish() {
+        return mEventTimeFinish;
     }
 
     public String getmDescription() {

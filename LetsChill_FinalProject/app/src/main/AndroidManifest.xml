@@ -59,11 +59,8 @@
         </activity>
 
         <!-- Create Event Activity -->
-        <activity android:name=".activities.CreateEventActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.CreateEventActivity"
+            android:theme="@style/AppTheme"/>
 
         <!-- Main Activity -->
         <activity android:name=".activities.MainActivity"
