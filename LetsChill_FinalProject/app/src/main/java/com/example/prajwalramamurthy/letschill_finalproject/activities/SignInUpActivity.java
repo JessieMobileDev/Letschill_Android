@@ -36,7 +36,6 @@ import static com.example.prajwalramamurthy.letschill_finalproject.fragments.Sig
 public class SignInUpActivity extends AppCompatActivity implements SignInFragment.SignInFragmentInterface,
         ForgotPasswordFragment.ForgotPasswordInterface, SignUpFragment.SignUpFragmentInterface, SignInFragment.FacebookLoginInterface {
 
-    private static final String TAG = "SignInUp" ;
     // Variables
     private SharedPreferences mPrefs;
     private CallbackManager callbackManager;
@@ -47,7 +46,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        // Get firebase auth instance
+        // Get Firebase auth instance
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -58,6 +57,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
             Intent mMainIntent = new Intent(SignInUpActivity.this, MainActivity.class);
             startActivity(mMainIntent);
+            finish();
 
         } else {
 

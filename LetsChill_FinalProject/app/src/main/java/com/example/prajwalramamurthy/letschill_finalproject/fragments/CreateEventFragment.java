@@ -276,8 +276,13 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     {
         if(getContext() != null)
         {
+            // Retrieve the current date
+            Calendar mCalendar = Calendar.getInstance();
+            int mCurrentDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+            int mCurrentMonth = mCalendar.get(Calendar.MONTH);
+            int mCurrentYear = mCalendar.get(Calendar.YEAR);
 
-            DatePickerDialog datePicker = new DatePickerDialog(getContext(), this, 2018, 11, 8);
+            DatePickerDialog datePicker = new DatePickerDialog(getContext(), this, mCurrentYear, mCurrentMonth, mCurrentDay);
             datePicker.show();
         }
     }
