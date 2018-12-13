@@ -5,11 +5,14 @@ import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,18 +38,28 @@ import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class CreateEventFragment extends Fragment implements DatePickerDialog.OnDateSetListener
-{
+public class CreateEventFragment extends Fragment implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
 
-    // member variables
-    private EditText mName, mDesc, mLocation, mTimeStart, mTimeEnd, mParticipants, mDate;
+    // Variables
+    private EditText mEditText_Name, mEditText_Description, mLocation, mEditText_TimeStart, mEditText_TimeEnd, mParticipants, mEditText_Date;
     private Spinner mCategories;
-    private CheckBox mIsRecurring, mPublicOrPrivate;
-    private ImageView eventBackground;
-    private static final int PICTURE_REQUEST = 0x0101;
+    private CheckBox mCheckBox_IsRecurring, mCheckBox_PublicOrPrivate;
+    private ImageView mImageView_eventBackground;
     private DatabaseReference mDatabase;
-    private Button saveButton, mapButton;
+    private Button mButton_saveButton, mButton_mapButton;
+    private Intent mGalleryIntent, mCropIntent;
+    private Uri mImageUri;
+    private int mImageWidth, mImageHeight;
 
+    // Constants
+    private static final int PICTURE_REQUEST = 0x0101;
+    private static final String CROP_EXTRA = "crop";
+    private static final String CROP_OUTPUTX = "outputX";
+    private static final String CROP_OUTPUTY = "outputY";
+    private static final String CROP_ASPECTX = "aspectX";
+    private static final String CROP_ASPECTY = "aspectY";
+    private static final String CROP_SCALEUP_IFNEEDED = "scaleUpIfNeeded";
+    private static final String CROP_RETURN_DATA = "return-data";
 
 
     public static CreateEventFragment newInstance() {
@@ -60,8 +74,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
 
         // get database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -84,72 +96,29 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         if (getView() != null && getContext() != null) {
 
             // Find all the views
-            mName = getView().findViewById(R.id.editText_create_eventName);
+            mEditText_Name = getView().findViewById(R.id.editText_create_eventName);
             mLocation = getView().findViewById(R.id.editText_create_location);
-            mDate = getView().findViewById(R.id.editText_create_date);
-            mTimeStart = getView().findViewById(R.id.editText_create_time);
-            mTimeEnd = getView().findViewById(R.id.editText_create_time2);
+            mEditText_Date = getView().findViewById(R.id.editText_create_date);
+            mEditText_TimeStart = getView().findViewById(R.id.editText_create_timeStart);
+            mEditText_TimeEnd = getView().findViewById(R.id.editText_create_timeEnd);
             mParticipants = getView().findViewById(R.id.editText_create_participants);
-            mDesc = getView().findViewById(R.id.editText_create_desc);
+            mEditText_Description = getView().findViewById(R.id.editText_create_desc);
             mCategories = getView().findViewById(R.id.spinner_create_category);
-            mIsRecurring = getView().findViewById(R.id.checkBox_create_recurring);
-            mPublicOrPrivate = getView().findViewById(R.id.checkBox_create_isPublic);
-            eventBackground = getView().findViewById(R.id.imageView_create_background);
-            saveButton = getView().findViewById(R.id.save_test_button);
-            mapButton = getView().findViewById(R.id.button_map);
+            mCheckBox_IsRecurring = getView().findViewById(R.id.checkBox_create_recurring);
+            mCheckBox_PublicOrPrivate = getView().findViewById(R.id.checkBox_create_isPublic);
+            mImageView_eventBackground = getView().findViewById(R.id.imageView_create_background);
+            mButton_saveButton = getView().findViewById(R.id.save_test_button);
+            mButton_mapButton = getView().findViewById(R.id.button_map);
 
-            mDate.setInputType(InputType.TYPE_NULL);
+            mEditText_Date.setInputType(InputType.TYPE_NULL);
 
-
-            // If the user selects the background image then open images
-            eventBackground.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    // call our method that opens gallery
-                    uploadImage();
-                }
-            });
-
-            // When the date edit text is selected it will open up a date picker.
-            mDate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pickerDialog();
-                }
-            });
-
-            mTimeStart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    timePickerDialog();
-                }
-            });
-
-            mTimeEnd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    timePickerDialog();
-                }
-            });
-
-            // if save button is clicked it will save it to the database
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    saveEventDataToDatabase();
-                }
-            });
-
-            mapButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openMap();
-                }
-            });
+            // Assign click listeners to UI elements
+            mImageView_eventBackground.setOnClickListener(this);
+            mEditText_Date.setOnClickListener(this);
+            mEditText_TimeStart.setOnClickListener(this);
+            mEditText_TimeEnd.setOnClickListener(this);
+            mButton_saveButton.setOnClickListener(this);
+            mButton_mapButton.setOnClickListener(this);
 
 
         }
@@ -167,13 +136,63 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     public void uploadImage()
     {
-        // then create a new intent
-        Intent intentCamera = new Intent(Intent.ACTION_PICK);
+        
+        mGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(Intent.createChooser(mGalleryIntent, "Select Image from Gallery"), 2);
 
-        intentCamera.setType("image/jpeg");
-        // start activity
-        startActivityForResult(intentCamera, PICTURE_REQUEST);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+
+            Log.d("test", "onActivityResult: inside request code 1");
+            if (data != null) {
+
+                Log.d("test", "onActivityResult: inside request code 1 - data not null");
+                Bundle mBundle = data.getExtras();
+
+                Bitmap mBitmap = mBundle.getParcelable("data");
+
+                mImageView_eventBackground.setImageBitmap(mBitmap);
+
+                // TODO: save the bitmap to the database
+
+                Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
+            }
+
+        } else if (requestCode == 2) {
+
+            if (data != null) {
+
+                mImageUri = data.getData();
+
+                cropImage();
+            }
+        }
+    }
+
+    private void cropImage() {
+
+        try {
+
+            // Crop the image under the requirements below (do not change the values)
+            mCropIntent = new Intent("com.android.camera.action.CROP");
+            mCropIntent.setDataAndType(mImageUri, "image/*");
+            mCropIntent.putExtra(CROP_EXTRA, true);
+            mCropIntent.putExtra(CROP_OUTPUTX, 400);
+            mCropIntent.putExtra(CROP_OUTPUTY, 300);
+            mCropIntent.putExtra(CROP_ASPECTX, 4);
+            mCropIntent.putExtra(CROP_ASPECTY, 3);
+            mCropIntent.putExtra(CROP_SCALEUP_IFNEEDED, true);
+            mCropIntent.putExtra(CROP_RETURN_DATA, true);
+
+            startActivityForResult(mCropIntent, 1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -186,69 +205,63 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Integer itemId = item.getItemId();
+        if (getContext() != null) {
 
-        switch(itemId) {
-            // when my save button is clicked this is what will run
-            case R.id.save_test_button:
-            {
-                saveEventDataToDatabase();
-                return true;
-            }
-            case R.id.button_save:
-            {
-                saveEventDataToDatabase();
-                return true;
-            }
+            MenuIntentHandler.getMenuIntents(item, getContext());
         }
+
         return false;
 
     }
 
-    private void saveEventDataToDatabase()
-    {
-        if (mName.getText().toString().isEmpty() || mLocation.getText().toString().isEmpty()
-                || mDate.getText().toString().isEmpty() || mTimeStart.getText().toString().isEmpty()
-                || mParticipants.getText().toString().isEmpty() || mDesc.getText().toString().isEmpty()
-                || mTimeEnd.getText().toString().isEmpty())
-        {
+    private void saveEventDataToDatabase() {
+
+        if (mEditText_Name.getText().toString().isEmpty() || mLocation.getText().toString().isEmpty()
+                || mEditText_Date.getText().toString().isEmpty() || mEditText_TimeStart.getText().toString().isEmpty()
+                || mParticipants.getText().toString().isEmpty() || mEditText_Description.getText().toString().isEmpty()
+                || mEditText_TimeEnd.getText().toString().isEmpty()) {
+
             // Show toast if fields are left blank
             Toast.makeText(getContext(), R.string.create_toast_empty, Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-            // catch and store the user input and pass it to our data model
-            String mEvtName = mName.getText().toString();
-            String mEvtDesc = mDesc.getText().toString();
-            String mEvtLocation = mLocation.getText().toString();
-            String mEvtTimeStart = mTimeStart.getText().toString();
-            String mEvtTimeEnd = mTimeEnd.getText().toString();
-            String mEvtDate = mDate.getText().toString();
-            String mEvtPart = mParticipants.getText().toString();
-            String mEvtCategory = mCategories.getSelectedItem().toString();
 
-            Boolean mEvtRecurr;
-            Boolean mEvtPublic;
+        } else {
 
-            if(mIsRecurring.isChecked() || mPublicOrPrivate.isChecked())
-            {
-                mEvtRecurr = true;
-                mEvtPublic = true;
+            // Validate the fields
+            // Cases: 1. Title and description must be longer than 2 characters
+            //        2. Title must not be longer than 50 characters
+            //        3. Description must not be longer than 280 characters
+
+            if (mEditText_Name.getText().length() >= 2 && mEditText_Name.getText().length() <= 50) {
+
+                if (mEditText_Description.getText().length() >= 2 && mEditText_Description.getText().length() <= 280) {
+
+                    // Catch and store the user input and pass it to our data model
+                    String mEvtName = mEditText_Name.getText().toString();
+                    String mEvtDesc = mEditText_Description.getText().toString();
+                    String mEvtLocation = mLocation.getText().toString();
+                    String mEvtTimeStart = mEditText_TimeStart.getText().toString();
+                    String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
+                    String mEvtDate = mEditText_Date.getText().toString();
+                    String mEvtPart = mParticipants.getText().toString();
+                    String mEvtCategory = mCategories.getSelectedItem().toString();
+
+                    Event newEvent = new Event(mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
+                            mEvtPart, mEvtCategory, mCheckBox_IsRecurring.isChecked(),
+                            mCheckBox_PublicOrPrivate.isChecked());
+
+                    mDatabase.child("Events").push().setValue(newEvent);
+                    // show toast for confirmation
+                    Toast.makeText(getContext(), "Congrats! Event successfully created.", Toast.LENGTH_LONG).show();
+
+
+                } else {
+
+                    mEditText_Description.setError(getResources().getString(R.string.editText_error_description));
+                }
+            } else {
+
+                mEditText_Name.setError(getResources().getString(R.string.editText_error_title));
             }
-            else
-            {
-                mEvtRecurr = false;
-                mEvtPublic = false;
-            }
-
-            Event newEvent = new Event(mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mEvtRecurr, mEvtPublic);
-
-            mDatabase.child("Events").push().setValue(newEvent);
-            // show toast for confirmation
-            Toast.makeText(getContext(), "Congrats! Event successfully created.", Toast.LENGTH_LONG).show();
-
-
-
         }
     }
 
@@ -262,7 +275,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mTimeStart.setText( selectedHour + ":" + selectedMinute);
+                mEditText_TimeStart.setText( selectedHour + ":" + selectedMinute);
             }
         }, hour, minute, true);//Yes 24 hour time
         mTimePicker.setTitle("Select Time");
@@ -314,7 +327,45 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
         String dateToDisplay = simpDate.format(calendar.getTime(), infoType, new FieldPosition(0)).toString();
 
-        mDate.setText(dateToDisplay);
+        mEditText_Date.setText(dateToDisplay);
 
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+
+            case R.id.imageView_create_background:
+
+                // If the user selects the background image, gallery is opened
+                uploadImage();
+                break;
+            case R.id.editText_create_date:
+
+                // When the date edit text is tapped, date picker is opened
+                pickerDialog();
+                break;
+            case R.id.editText_create_timeStart:
+
+                // When the time edit text is tapped, time picker is opened
+                timePickerDialog();
+                break;
+            case R.id.editText_create_timeEnd:
+
+                // When the time edit text is tapped, time picker is opened
+                timePickerDialog();
+                break;
+            case R.id.button_save:
+
+                // If save button is tapped, all collected data is stored in the database
+                saveEventDataToDatabase();
+                break;
+            case R.id.button_map:
+
+                // If map button is tapped, in-built map is opened
+                openMap();
+                break;
+        }
     }
 }

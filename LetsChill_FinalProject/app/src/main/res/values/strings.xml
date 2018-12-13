@@ -71,6 +71,8 @@
         <item>Food</item>
         <item>Fitness</item>
     </string-array>
+    <string name="editText_error_title">This field must be longer than 2 characters and less than 50 characters</string>
+    <string name="editText_error_description">This field must be longer than 2 characters and less than 280 characters</string>
 
     <!-- Main Activity Strings -->
     <string name="menu_profile">Profile</string>

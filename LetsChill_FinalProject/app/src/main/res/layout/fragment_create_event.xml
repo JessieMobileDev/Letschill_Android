@@ -75,19 +75,23 @@
                 android:ems="10"
                 android:freezesText="true"
                 android:hint="@string/event_date"
+                android:clickable="true"
+                android:focusable="false"
                 android:inputType="date"
                 app:layout_constraintEnd_toStartOf="@+id/guideline4"
                 app:layout_constraintStart_toStartOf="@+id/editText_create_location"
                 app:layout_constraintTop_toBottomOf="@+id/editText_create_location" />
 
             <EditText
-                android:id="@+id/editText_create_time"
+                android:id="@+id/editText_create_timeStart"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:ems="10"
+                android:clickable="true"
+                android:focusable="false"
                 android:hint="@string/event_time"
                 android:inputType="time"
                 app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -95,13 +99,15 @@
                 app:layout_constraintTop_toTopOf="@+id/editText_create_date" />
 
             <EditText
-                android:id="@+id/editText_create_time2"
+                android:id="@+id/editText_create_timeEnd"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:ems="10"
                 android:hint="@string/event_time"
+                android:clickable="true"
+                android:focusable="false"
                 android:inputType="time"
                 app:layout_constraintEnd_toEndOf="@+id/editText_create_eventName"
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
@@ -251,9 +257,10 @@
             <ImageView
                 android:id="@+id/imageView_create_background"
                 android:layout_width="0dp"
-                android:layout_height="180dp"
+                android:layout_height="250dp"
                 android:contentDescription="@string/none"
                 android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
