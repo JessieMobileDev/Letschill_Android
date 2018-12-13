@@ -76,7 +76,7 @@ public class InterestsFragment extends Fragment implements ListView.OnItemClickL
         super.onCreateOptionsMenu(menu, inflater);
 
         mMenu = menu;
-        inflater.inflate(R.menu.interests_menu, mMenu);
+        inflater.inflate(R.menu.menu_done, mMenu);
         mMenu.getItem(0).setEnabled(false);
 
     }
