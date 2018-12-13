@@ -205,9 +205,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (getContext() != null) {
+        if (getContext() != null && getActivity() != null) {
 
-            MenuIntentHandler.getMenuIntents(item, getContext());
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
         }
 
         return false;
