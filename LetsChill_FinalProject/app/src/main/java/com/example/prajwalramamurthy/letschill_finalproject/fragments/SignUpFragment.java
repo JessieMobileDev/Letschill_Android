@@ -41,7 +41,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences mPrefs;
 
     // Constants
-    private static final String PREFS_USER_UID = "PREFS_USER_UID";
+    public static final String PREFS_USER_UID = "PREFS_USER_UID";
 
     public interface SignUpFragmentInterface {
         void moveToInterestsFromSignUp();

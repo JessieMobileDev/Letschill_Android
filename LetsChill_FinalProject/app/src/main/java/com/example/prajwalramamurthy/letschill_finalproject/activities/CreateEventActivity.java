@@ -7,8 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.CreateEventFragment;
 
-public class CreateEventActivity extends AppCompatActivity
-{
+public class CreateEventActivity extends AppCompatActivity implements CreateEventFragment.CreateEventFragmentInterface {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -20,5 +19,12 @@ public class CreateEventActivity extends AppCompatActivity
         getFragmentManager().beginTransaction().replace(R.id.event_frame, CreateEventFragment.newInstance()).commit();
 
 
+    }
+
+    @Override
+    public void closeCreateEventActivity() {
+
+        // Close current activity
+        finish();
     }
 }

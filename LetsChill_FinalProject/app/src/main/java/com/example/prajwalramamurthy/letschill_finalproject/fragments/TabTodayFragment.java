@@ -22,7 +22,7 @@ public class TabTodayFragment extends Fragment implements ListView.OnItemClickLi
     private ListView mListView_today;
     private final ArrayList<Event> mEventList = new ArrayList<>();
 
-    public static TabTodayFragment newInstance() {
+    public static TabTodayFragment newInstance(ArrayList<Event> mTodayEvents) {
         
         Bundle args = new Bundle();
         
@@ -61,7 +61,7 @@ public class TabTodayFragment extends Fragment implements ListView.OnItemClickLi
         // TODO: Data below is for testing. Populate with database data. Check filter options.
         mEventList.clear();
         mEventList.add(new Event("Movies at Lincoln", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "6:30pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", true, true));
+                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
 
     }
 

@@ -11,6 +11,9 @@
     <!-- Permission to access the gallery -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!-- Permission to access the user's location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -72,6 +75,10 @@
         <!-- My Events Activity -->
         <activity android:name=".activities.MyEventsActivity"
             android:theme="@style/AppTheme"/>
+
+        <!-- Database Event Intent Service -->
+        <service android:name=".utility.DatabaseEventIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

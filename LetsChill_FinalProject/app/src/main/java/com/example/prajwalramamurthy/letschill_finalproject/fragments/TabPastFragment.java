@@ -22,7 +22,7 @@ public class TabPastFragment extends Fragment implements ListView.OnItemClickLis
     private ListView mListView_past;
     private final ArrayList<Event> mEventList = new ArrayList<>();
     
-    public static TabPastFragment newInstance() {
+    public static TabPastFragment newInstance(ArrayList<Event> mPastEvents) {
         
         Bundle args = new Bundle();
         
@@ -61,7 +61,7 @@ public class TabPastFragment extends Fragment implements ListView.OnItemClickLis
         // TODO: Data below is for testing. Populate with database data. Check filter options.
         mEventList.clear();
         mEventList.add(new Event("Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", true, true));
+                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
 
     }
 

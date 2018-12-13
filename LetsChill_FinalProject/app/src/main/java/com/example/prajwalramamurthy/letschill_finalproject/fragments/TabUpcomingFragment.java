@@ -22,7 +22,7 @@ public class TabUpcomingFragment extends Fragment implements ListView.OnItemClic
     private ListView mListView_upcoming;
     private final ArrayList<Event> mEventList = new ArrayList<>();
 
-    public static TabUpcomingFragment newInstance() {
+    public static TabUpcomingFragment newInstance(ArrayList<Event> mUpcomingEvents) {
         
         Bundle args = new Bundle();
         
@@ -61,9 +61,9 @@ public class TabUpcomingFragment extends Fragment implements ListView.OnItemClic
         // TODO: Data below is for testing. Populate with database data. Check filter options.
         mEventList.clear();
         mEventList.add(new Event("RPG - Drakondar Era", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "6:30pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", true, true));
+                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
         mEventList.add(new Event("Pilattes", "55 Lincoln Avenue", "Dec 20, 2018", "2:15pm", "5:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", true, true));
+                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
 
     }
 

@@ -17,7 +17,7 @@ public class DetailsEventActivity extends AppCompatActivity
         setContentView(R.layout.activity_event);
         setTitle("Add Event");
 
-        getFragmentManager().beginTransaction().replace(R.id.create_event_frame, DetailsEventFragment.newInstance()).commit();
+//        getFragmentManager().beginTransaction().replace(R.id.create_event_frame, DetailsEventFragment.newInstance()).commit();
 
 
     }

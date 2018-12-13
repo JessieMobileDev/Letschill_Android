@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,13 +161,15 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                     mProgressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
 
-                        // TODO: User will be redirected to the "MainActiviy". Showing toast for testing.
                         if (getContext() != null) {
 
                             Toast.makeText(getContext(), "Successfully signed in!", Toast.LENGTH_SHORT).show();
 
                             // Clear the text fields
                             FormValidation.clearEditTexts(mAllEditTexts);
+
+                            // Save the user's UID to SharedPreferences
+                            mPrefs.edit().putString(SignUpFragment.PREFS_USER_UID, task.getResult().getUser().getUid()).apply();
 
                             // If the "remember me" checkbox is checked, save to defaults
                             if (mCheckBox_rememberMe.isChecked()) {
@@ -177,9 +180,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 mPrefs.edit().putBoolean(PREFS_REMEMBER_ME, false).apply();
                             }
 
-                            // TODO: Move to main screen (not interests) - for testing
-                            // Move to the "InterestsActivity"
-//                            mSignInFragmentInterface.moveToInterestsFromSignIn();
+                            // Move to the "MainActivity"
                             mSignInFragmentInterface.moveToMainActivityFromSignIn();
 
                         }

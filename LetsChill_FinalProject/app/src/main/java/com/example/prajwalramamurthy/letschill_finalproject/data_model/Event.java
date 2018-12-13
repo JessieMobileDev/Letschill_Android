@@ -2,9 +2,7 @@ package com.example.prajwalramamurthy.letschill_finalproject.data_model;
 
 public class Event
 {
-
     // Member variables
-    //private String mEventID;
     private String mEventName;
     private String mEventLocation;
     private String mEventDate;
@@ -13,15 +11,14 @@ public class Event
     private String mDescription;
     private String mParticipants;
     private String mCategory;
+    private String mHost;
     private boolean mIsRecurringEvent;
     private boolean mPublicOrPrivate;
 
     // Constructor
-
-
     public Event(String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
-                 String mCategory, boolean mIsRecurringEvent, boolean mPublicOrPrivate) {
+                 String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate) {
         this.mEventName = mEventName;
         this.mEventLocation = mEventLocation;
         this.mEventDate = mEventDate;
@@ -30,6 +27,7 @@ public class Event
         this.mDescription = mDescription;
         this.mParticipants = mParticipants;
         this.mCategory = mCategory;
+        this.mHost = mHost;
         this.mIsRecurringEvent = mIsRecurringEvent;
         this.mPublicOrPrivate = mPublicOrPrivate;
     }
@@ -78,4 +76,9 @@ public class Event
     public boolean ismPublicOrPrivate() {
         return mPublicOrPrivate;
     }
+
+    public String getmHost() {
+        return mHost;
+    }
+
 }
