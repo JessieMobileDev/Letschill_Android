@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        MenuIntentHandler.getMenuIntents(item, this);
+        MenuIntentHandler.getMenuIntents(item, this, this);
         return super.onOptionsItemSelected(item);
     }
 
