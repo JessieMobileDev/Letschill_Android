@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.CreateEventFragment;
 
-public class CreateEventActivity extends AppCompatActivity implements CreateEventFragment.CreateEventFragmentInterface {
+public class EventActivity extends AppCompatActivity implements CreateEventFragment.CreateEventFragmentInterface {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)

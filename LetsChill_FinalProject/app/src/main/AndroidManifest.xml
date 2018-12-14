@@ -65,7 +65,7 @@
         </activity>
 
         <!-- Create Event Activity -->
-        <activity android:name=".activities.CreateEventActivity"
+        <activity android:name=".activities.EventActivity"
             android:theme="@style/AppTheme"/>
 
         <!-- Main Activity -->

@@ -16,7 +16,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageView7"
@@ -26,7 +26,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_participants"
-                app:srcCompat="@drawable/ic_whatshot_gray_24dp" />
+                app:srcCompat="@drawable/ic_whatshot_gray_24dp"
+                android:contentDescription="@string/none"/>
 
             <TextView
                 android:id="@+id/textView_detail_category"
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="November 30 / 6:00 PM - 8:00 PM"
+                android:text="@string/example_dateTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
@@ -45,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Category"
+                android:text="@string/category"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_participants" />
@@ -58,7 +59,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_desc"
-                app:srcCompat="@drawable/ic_people_gray_24dp" />
+                app:srcCompat="@drawable/ic_people_gray_24dp"
+                android:contentDescription="@string/none"/>
 
             <TextView
                 android:id="@+id/textView_detail_participants"
@@ -66,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="Jenny Pomegato (confirmed), Lucas tavares, Richard Ox, Thomas Gerard, Christopher Mouton (confirmed) …."
+                android:text="@string/example_participants"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
@@ -77,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                android:text="Participants"
+                android:text="@string/participants"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_desc" />
@@ -88,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
-                android:text="Description"
+                android:text="@string/description"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host" />
@@ -99,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Nullam orci orci, ullamcorper in mollis eget, posuere in  magna. Aliquam luctus pellentesque semper. Cras  aliquam sem venenatis libero maximus, gravida laoreet  tellus auctor. Praesent finibus lorem ut augue sodales  fringilla."
+                android:text="@string/example_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
@@ -112,7 +114,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host"
-                app:srcCompat="@drawable/ic_description_gray_24dp" />
+                app:srcCompat="@drawable/ic_description_gray_24dp"
+                android:contentDescription="@string/none"/>
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -122,7 +125,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_location"
-                app:srcCompat="@drawable/ic_person_gray_24dp" />
+                app:srcCompat="@drawable/ic_person_gray_24dp"
+                android:contentDescription="@string/none"/>
 
             <TextView
                 android:id="@+id/textView14"
@@ -130,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Host"
+                android:text="@string/host"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_location" />
@@ -141,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="Prajwal Ramamurthy"
+                android:text="@string/example_host"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView14" />
@@ -152,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Movies at Lincoln"
+                android:text="@string/example_title"
                 android:textColor="@color/text_almostBlack"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -168,7 +172,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/create_back" />
+                app:srcCompat="@drawable/create_back"
+                android:contentDescription="@string/none"/>
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -186,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
-                    android:text="0/10 people joined" />
+                    android:text="@string/example_pplJoined" />
 
                 <TextView
                     android:id="@+id/textView_detail_rsvp"
@@ -196,7 +201,7 @@
                     android:layout_marginTop="20dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
-                    android:text="0/10 RSVPs" />
+                    android:text="@string/example_rsvp" />
             </FrameLayout>
 
             <Button
@@ -217,7 +222,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_title_interests2"
-                app:srcCompat="@drawable/ic_access_time_gray_24dp" />
+                app:srcCompat="@drawable/ic_access_time_gray_24dp"
+                android:contentDescription="@string/none"/>
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -227,7 +233,8 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_dateTime"
-                app:srcCompat="@drawable/ic_location_on_gray_24dp" />
+                app:srcCompat="@drawable/ic_location_on_gray_24dp"
+                android:contentDescription="@string/none"/>
 
             <TextView
                 android:id="@+id/textView9"
@@ -235,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Date and Time"
+                android:text="@string/date_and_time"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_title_interests2" />
@@ -246,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Location"
+                android:text="@string/location"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_dateTime" />
@@ -257,7 +264,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="November 30 / 6:00 PM - 8:00 PM"
+                android:text="@string/example_dateTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -268,7 +275,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="116 S Semoran Blvd, Winter Park, FL"
+                android:text="@string/example_location"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
@@ -282,7 +289,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="24dp"
-                android:text="Join"
+                android:text="@string/join"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -296,7 +303,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
-                android:text="RSVP"
+                android:text="@string/rsvp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline7"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_category" />
@@ -309,7 +316,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
-                android:text="Leave"
+                android:text="@string/leave"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_category" />

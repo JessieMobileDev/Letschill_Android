@@ -24,8 +24,6 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdap
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.firebase.database.DatabaseReference;
 
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -161,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.fab_activity:
 
-                // Move to "CreateEventActivity"
-                Intent mCreateEventIntent = new Intent(MainActivity.this, CreateEventActivity.class);
+                // Move to "EventActivity"
+                Intent mCreateEventIntent = new Intent(MainActivity.this, EventActivity.class);
                 startActivity(mCreateEventIntent);
 
                 break;
