@@ -3,6 +3,7 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -49,10 +50,10 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private Button mButton_saveButton, mButton_mapButton;
     private Intent mGalleryIntent, mCropIntent;
     private Uri mImageUri;
-    private int mImageWidth, mImageHeight;
+    private CreateEventFragmentInterface mCreateEventFragmentInterface;
+    private SharedPreferences mPrefs;
 
     // Constants
-    private static final int PICTURE_REQUEST = 0x0101;
     private static final String CROP_EXTRA = "crop";
     private static final String CROP_OUTPUTX = "outputX";
     private static final String CROP_OUTPUTY = "outputY";
@@ -62,6 +63,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private static final String CROP_RETURN_DATA = "return-data";
 
 
+    public interface CreateEventFragmentInterface {
+
+        void closeCreateEventActivity();
+    }
+
     public static CreateEventFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -69,6 +75,16 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         CreateEventFragment fragment = new CreateEventFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Verify if the interface is an instance of this context
+        if (context instanceof CreateEventFragmentInterface) {
+            mCreateEventFragmentInterface = (CreateEventFragmentInterface)context;
+        }
     }
 
     @Override
@@ -107,7 +123,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mCheckBox_IsRecurring = getView().findViewById(R.id.checkBox_create_recurring);
             mCheckBox_PublicOrPrivate = getView().findViewById(R.id.checkBox_create_isPublic);
             mImageView_eventBackground = getView().findViewById(R.id.imageView_create_background);
-            mButton_saveButton = getView().findViewById(R.id.save_test_button);
+            mButton_saveButton = getView().findViewById(R.id.save_createEvent_button);
             mButton_mapButton = getView().findViewById(R.id.button_map);
 
             mEditText_Date.setInputType(InputType.TYPE_NULL);
@@ -120,10 +136,10 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mButton_saveButton.setOnClickListener(this);
             mButton_mapButton.setOnClickListener(this);
 
+            // Instantiate the SharedPreferences
+            mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         }
-
-
     }
 
     public void openMap()
@@ -245,14 +261,20 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     String mEvtPart = mParticipants.getText().toString();
                     String mEvtCategory = mCategories.getSelectedItem().toString();
 
+                    // Retrieve the user's uid from SharedPreferences
+                    String mUserUid = mPrefs.getString(SignUpFragment.PREFS_USER_UID, "default");
+
                     Event newEvent = new Event(mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
-                            mEvtPart, mEvtCategory, mCheckBox_IsRecurring.isChecked(),
+                            mEvtPart, mEvtCategory, mUserUid, mCheckBox_IsRecurring.isChecked(),
                             mCheckBox_PublicOrPrivate.isChecked());
 
                     mDatabase.child("Events").push().setValue(newEvent);
-                    // show toast for confirmation
-                    Toast.makeText(getContext(), "Congrats! Event successfully created.", Toast.LENGTH_LONG).show();
 
+                    // show toast for confirmation
+                    Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+
+                    // Exit the current activity
+                    mCreateEventFragmentInterface.closeCreateEventActivity();
 
                 } else {
 
@@ -265,21 +287,42 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         }
     }
 
-    private void timePickerDialog()
+    private void timePickerDialog(int mStartOrEndTime)
     {
         // TODO Auto-generated method stub
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
+
         TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mEditText_TimeStart.setText( selectedHour + ":" + selectedMinute);
-            }
-        }, hour, minute, true);//Yes 24 hour time
-        mTimePicker.setTitle("Select Time");
-        mTimePicker.show();
+
+        if (mStartOrEndTime == 0) { // Start Time
+
+            mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                    mEditText_TimeStart.setText( selectedHour + ":" + selectedMinute);
+                }
+            }, hour, minute, true);//Yes 24 hour time
+
+            mTimePicker.setTitle("Select Time");
+            mTimePicker.show();
+
+        } else if (mStartOrEndTime == 1) { // End Time
+
+            mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                    mEditText_TimeEnd.setText( selectedHour + ":" + selectedMinute);
+                }
+            }, hour, minute, true);//Yes 24 hour time
+
+            mTimePicker.setTitle("Select Time");
+            mTimePicker.show();
+        }
+
+
+
 
 
         }
@@ -349,14 +392,14 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             case R.id.editText_create_timeStart:
 
                 // When the time edit text is tapped, time picker is opened
-                timePickerDialog();
+                timePickerDialog(0);
                 break;
             case R.id.editText_create_timeEnd:
 
                 // When the time edit text is tapped, time picker is opened
-                timePickerDialog();
+                timePickerDialog(1);
                 break;
-            case R.id.button_save:
+            case R.id.save_createEvent_button:
 
                 // If save button is tapped, all collected data is stored in the database
                 saveEventDataToDatabase();

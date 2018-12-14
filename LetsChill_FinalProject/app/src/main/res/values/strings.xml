@@ -55,7 +55,7 @@
     <string name="is_this_a_public_event">Is this a public event?</string>
     <string name="ten">10</string>
     <string name="none">none</string>
-    <string name="create_toast_empty">Please do not please fields empty</string>
+    <string name="create_toast_empty">Please do not leave empty fields</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
     <string-array name="spinner_category">

@@ -266,7 +266,7 @@
                 app:srcCompat="@drawable/create_back" />
 
             <Button
-                android:id="@+id/save_test_button"
+                android:id="@+id/save_createEvent_button"
                 style="@style/button_orange_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
