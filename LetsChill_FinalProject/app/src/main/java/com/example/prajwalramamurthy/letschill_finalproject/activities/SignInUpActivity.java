@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
@@ -18,6 +21,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.ForgotPasswordFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignInFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignUpFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -48,6 +52,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     // Constants
     private static final int REQUEST_LOCATION_PERMISSION = 0x01101;
     private static final int REQUEST_WRITE_PERMISSION = 0x01101111;
+    public static final String EXTRA_REQUESTER = "EXTRA_REQUESTER";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,18 +127,19 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     @Override
     public void moveToInterestsFromSignIn() {
 
+//        requestUsernameUsingUid(0);
         // Move to the "InterestsActivity"
         Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
-
         startActivity(mInterestsIntent);
     }
 
     @Override
     public void moveToMainActivityFromSignIn() {
 
-        // Move to the "MainActivity3"
-        Intent mCreateEventIntent = new Intent(SignInUpActivity.this, MainActivity.class);
-        startActivity(mCreateEventIntent);
+//        requestUsernameUsingUid(1);
+        // Move to the "MainActivity"
+        Intent mMainActivityIntent = new Intent(SignInUpActivity.this, MainActivity.class);
+        startActivity(mMainActivityIntent);
     }
 
     @Override

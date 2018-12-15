@@ -53,16 +53,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        setTitle("Events");
 
-        instantiateActivity();
+        // Find Views
+        mFab = findViewById(R.id.fab_activity);
+        mTabToday = findViewById(R.id.tab_today);
+        mTabUpcoming = findViewById(R.id.tab_upcoming);
+        mTabPast = findViewById(R.id.tab_past);
+        mViewPager = findViewById(R.id.viewPager_tabs);
+        mTabLayout = findViewById(R.id.tablayout_events);
+        mProgressBar = findViewById(R.id.progress_bar_main);
+
+        // Assign the click listener to the floating button
+        mFab.setOnClickListener(this);
+
+        // Request events data from the database
+        requestEventData();
     }
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//
-//        instantiateActivity();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,6 +112,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void requestEventData() {
 
         if (ConnectionHandler.isConnected(this)) {
+
+            // Clear the lists before adding
+            mTodayEvents.clear();
+            mUpcomingEvents.clear();
+            mPastEvents.clear();
 
             // Start an intent service to retrieve all the events' data
             // We're fetching all the events that the user is hosting, or just participating

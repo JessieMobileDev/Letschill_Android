@@ -19,7 +19,6 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -42,6 +41,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
     // Constants
     public static final String PREFS_USER_UID = "PREFS_USER_UID";
+    public static final String PREFS_USER_NAME = "PREFS_USER_NAME";
 
     public interface SignUpFragmentInterface {
         void moveToInterestsFromSignUp();
@@ -174,6 +174,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
                                     Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
 
+//                                    // Save the username for later use within the application
+//                                    mPrefs.edit().putString(PREFS_USER_NAME, mUsername).apply();
 
                                     // Save the user uid for later use within the application
                                     mPrefs.edit().putString(PREFS_USER_UID, FirebaseDatabase.getInstance().getReference("Users")

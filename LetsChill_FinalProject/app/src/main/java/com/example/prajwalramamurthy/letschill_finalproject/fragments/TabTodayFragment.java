@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class TabTodayFragment extends ListFragment {
 
     // Variables
-    private ArrayList<Event> mEventList = new ArrayList<>();
+    private ArrayList<Event> mEventList;
     private TabTodayInterface mTabTodayInterface;
 
     public interface TabTodayInterface {

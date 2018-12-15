@@ -10,16 +10,18 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignUpFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +35,6 @@ public class DatabaseEventIntentService extends IntentService {
     private ArrayList<Event> mTodayEvents;
     private ArrayList<Event> mUpcomingEvents;
     private ArrayList<Event> mPastEvents;
-    private SharedPreferences mPrefs;
 
     // Constants
     public static final String EXTRA_RESULT_RECEIVER = "com.example.prajwalramamurthy.letschill_finalproject.utility.EXTRA_RESULT_RECEIVER";
@@ -41,6 +42,8 @@ public class DatabaseEventIntentService extends IntentService {
     public static final String BUNDLE_EXTRA_TODAY_EVENTS = "BUNDLE_EXTRA_TODAY_EVENTS";
     public static final String BUNDLE_EXTRA_UPCOMING_EVENTS = "BUNDLE_EXTRA_UPCOMING_EVENTS";
     public static final String BUNDLE_EXTRA_PAST_EVENTS = "BUNDLE_EXTRA_PAST_EVENTS";
+    public static final String BUNDLE_EXTRA_OK_USERNAME = "BUNDLE_EXTRA_OK_USERNAME";
+    public static final String PREFS_USER_NAME = "PREFS_USER_NAME";
 
     public DatabaseEventIntentService() {
         super("DatabaseEventIntentService");
@@ -58,19 +61,23 @@ public class DatabaseEventIntentService extends IntentService {
 
         Integer mRequestID = intent.getIntExtra(MainActivity.EXTRA_DB_REQUEST_ID, 1);
 
-        // Get the database reference and instantiate arrayLists
-        mDBReference = FirebaseDatabase.getInstance().getReference("Events");
+        // Instantiate arrayLists
         mTodayEvents = new ArrayList<>();
         mUpcomingEvents = new ArrayList<>();
         mPastEvents = new ArrayList<>();
 
-        // Instantiate the SharedPreferences
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        // Retrieve the user's uid from SharedPreferences
-        final String mUserUID = mPrefs.getString(SignUpFragment.PREFS_USER_UID, "default");
-
         if (mRequestID == 0) {
+
+            // Get the reference of the database under "Events"
+            mDBReference = FirebaseDatabase.getInstance().getReference("Events");
+
+            // Clear the lists before adding
+            mTodayEvents.clear();
+            mUpcomingEvents.clear();
+            mPastEvents.clear();
+
+            Log.d(TAG, "onReceiveResult: Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
+                    " - Past list: " + mPastEvents.size());
 
             mDBReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -152,6 +159,5 @@ public class DatabaseEventIntentService extends IntentService {
                 }
             });
         }
-
     }
 }
