@@ -1,5 +1,6 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,11 +21,16 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdap
 
 import java.util.ArrayList;
 
-public class TabTodayFragment extends ListFragment implements ListView.OnItemClickListener {
+public class TabTodayFragment extends ListFragment {
 
     // Variables
-    private ListView mListView_today;
     private ArrayList<Event> mEventList = new ArrayList<>();
+    private TabTodayInterface mTabTodayInterface;
+
+    public interface TabTodayInterface {
+
+        void openDetailsPageFromTodayTab(Event mEvent);
+    }
 
     public static TabTodayFragment newInstance() {
         
@@ -33,6 +39,16 @@ public class TabTodayFragment extends ListFragment implements ListView.OnItemCli
         TabTodayFragment fragment = new TabTodayFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof TabTodayInterface) {
+
+            mTabTodayInterface = (TabTodayInterface)context;
+        }
     }
 
     @Nullable
@@ -46,58 +62,29 @@ public class TabTodayFragment extends ListFragment implements ListView.OnItemCli
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getView() != null && getContext() != null) {
+        // Populate the array list with the retrieved data from the database
+        populateEventList();
 
+        // Adapter that will populate the list view
+        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
+        setListAdapter(mAdapter);
 
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            // Find views
-//            mEmptyState = getView().findViewById(R.id.emptyState_todayFrag);
-//            mListView_today = getView().findViewById(R.id.listView_today_frag);
-//            mListView_today.setEmptyView(mEmptyState);
-//            mListView_today.setOnItemClickListener(this);
+                // Pass the selected event object to the "DetailsEventActivity"
+                mTabTodayInterface.openDetailsPageFromTodayTab(mEventList.get(position));
+                Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
 
-            // Populate the array list with the retrieved data from the database
-            populateEventList();
-
-            // Adapter that will populate the list view
-            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-//            mListView_today.setAdapter(mAdapter);
-            setListAdapter(mAdapter);
-
-//            if (mEventList.size() > 0) {
-//
-//                mEmptyState.setVisibility(View.INVISIBLE);
-//
-//            } else {
-//
-//                mEmptyState.setVisibility(View.VISIBLE);
-//            }
-
-
-
-
-        }
+            }
+        });
     }
 
     public void populateEventList() {
 
-//        // TODO: Data below is for testing. Populate with database data. Check filter options.
-//        mEventList.clear();
-//        mEventList.add(new Event("Movies at Lincoln", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "6:30pm",
-//                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
-
         // Get the array list from the fragment arguments
         mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
-
-        // If the array list size is 0, then display the empty state
-        Log.d("test", "populateEventList: list size: " + mEventList.size());
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        // TODO: Do an intent to the details page and pass the event object to it using the position in the arrayList
 
     }
 }

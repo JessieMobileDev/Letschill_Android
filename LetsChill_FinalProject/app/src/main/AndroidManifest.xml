@@ -79,6 +79,10 @@
         <!-- Database Event Intent Service -->
         <service android:name=".utility.DatabaseEventIntentService"
             android:exported="false"/>
+
+        <!-- Details Event Activity -->
+        <activity android:name=".activities.DetailsEventActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

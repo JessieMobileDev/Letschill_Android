@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.util.Log;
@@ -31,8 +32,15 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,6 +58,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private Uri mImageUri;
     private CreateEventFragmentInterface mCreateEventFragmentInterface;
     private SharedPreferences mPrefs;
+    private StorageReference mStorage;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -89,8 +98,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // get database reference
+        // Get database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Get the storage reference
+        mStorage = FirebaseStorage.getInstance().getReference();
     }
 
     @Nullable
@@ -171,7 +183,31 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mImageView_eventBackground.setImageBitmap(mBitmap);
 
-                // TODO: save the bitmap to the database
+//                // TODO: save the bitmap to the database
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//
+//                if (mBitmap != null) {
+//
+//                    mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                    byte[] mByteData = baos.toByteArray();
+//
+//                    UploadTask mUploadTask = mStorage.putBytes(mByteData);
+//
+//                    // Upload the image bytes to Firebase storage
+//                    mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                            Log.d("test", "onSuccess: image uploaded successfully");
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//
+//                        }
+//                    });
+//                }
+
 
                 Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
             }

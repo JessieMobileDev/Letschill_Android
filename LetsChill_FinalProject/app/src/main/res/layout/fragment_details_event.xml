@@ -58,7 +58,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_desc"
+                app:layout_constraintTop_toBottomOf="@+id/textView_detail_description"
                 app:srcCompat="@drawable/ic_people_gray_24dp"
                 android:contentDescription="@string/none"/>
 
@@ -82,7 +82,7 @@
                 android:text="@string/participants"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_desc" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_detail_description" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -96,7 +96,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host" />
 
             <TextView
-                android:id="@+id/textView_detail_desc"
+                android:id="@+id/textView_detail_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -151,7 +151,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
             <TextView
-                android:id="@+id/textView_title_interests2"
+                android:id="@+id/textView_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -221,7 +221,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_title_interests2"
+                app:layout_constraintTop_toBottomOf="@+id/textView_title"
                 app:srcCompat="@drawable/ic_access_time_gray_24dp"
                 android:contentDescription="@string/none"/>
 
@@ -245,7 +245,7 @@
                 android:text="@string/date_and_time"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_title_interests2" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
             <TextView
                 android:id="@+id/textView12"

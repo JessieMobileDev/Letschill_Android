@@ -14,21 +14,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabPastFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabTodayFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomingFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TabTodayFragment.TabTodayInterface, TabUpcomingFragment.TabUpcomingInterface, TabPastFragment.TabPastInterface {
 
     // Variables
     private FloatingActionButton mFab;
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
+    public static final String EXTRA_INTENT_DETAILS = "EXTRA_INTENT_DETAILS";
     private static final String TAG = "test";
 
     @Override
@@ -56,12 +57,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         instantiateActivity();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        instantiateActivity();
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//
+//        instantiateActivity();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -191,5 +192,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
         }
+    }
+
+    private void openDetailsPage(Event mEvent) {
+
+        Intent mDetailsPageIntent = new Intent(MainActivity.this, DetailsEventActivity.class);
+        mDetailsPageIntent.putExtra(EXTRA_INTENT_DETAILS, mEvent);
+        startActivity(mDetailsPageIntent);
+    }
+
+    @Override
+    public void openDetailsPageFromTodayTab(Event mEvent) {
+
+        openDetailsPage(mEvent);
+    }
+
+    @Override
+    public void openDetailsPageFromPastTab(Event mEvent) {
+
+        openDetailsPage(mEvent);
+    }
+
+    @Override
+    public void openDetailsPageFromUpcomingTab(Event mEvent) {
+
+        openDetailsPage(mEvent);
     }
 }
