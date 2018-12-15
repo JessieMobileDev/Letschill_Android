@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
@@ -41,8 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Event> mTodayEvents = new ArrayList<>();
     private ArrayList<Event> mUpcomingEvents = new ArrayList<>();
     private ArrayList<Event> mPastEvents = new ArrayList<>();
+    private ProgressBar mProgressBar;
+
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
+    private static final String TAG = "test";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,41 +89,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabPast = findViewById(R.id.tab_past);
         mViewPager = findViewById(R.id.viewPager_tabs);
         mTabLayout = findViewById(R.id.tablayout_events);
+        mProgressBar = findViewById(R.id.progress_bar_main);
 
         // Assign the click listener to the floating button
         mFab.setOnClickListener(this);
 
-//        // Request events data from the database
-//        requestEventData();
+        // Request events data from the database
+        requestEventData();
 
-        // Assign the adapter to the view pager that will display the screen for each tab item
-        mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mTodayEvents,
-                mUpcomingEvents, mPastEvents);
-        mViewPager.setAdapter(mTabAdapter);
-
-        // Manage what to display when a tab is selected
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-                mViewPager.setCurrentItem(tab.getPosition());
-
-
-                Log.d("test", "onTabSelected: tab was selected: " + tab.getText());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
     }
 
@@ -132,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFetchIntent.putExtra(DatabaseEventIntentService.EXTRA_RESULT_RECEIVER, new DatabaseEventDataReceiver());
             mFetchIntent.putExtra(EXTRA_DB_REQUEST_ID, 0);
             startService(mFetchIntent);
+
+            // Set the progress bar to be visible
+            mProgressBar.setVisibility(View.VISIBLE);
 
         } else {
 
@@ -148,6 +129,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
+            if (resultData != null) {
+
+                // Retrieve all the array lists from the bundle
+                mTodayEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_TODAY_EVENTS);
+                mUpcomingEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_UPCOMING_EVENTS);
+                mPastEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_PAST_EVENTS);
+
+                Log.d(TAG, "onReceiveResult: Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
+                " - Past list: " + mPastEvents.size());
+
+                // Assign the adapter to the view pager that will display the screen for each tab item
+                mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mTodayEvents,
+                        mUpcomingEvents, mPastEvents);
+                mViewPager.setAdapter(mTabAdapter);
+
+                // Set the progress bar to be invisible
+                mProgressBar.setVisibility(View.GONE);
+
+                // Manage what to display when a tab is selected
+                mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+
+                        mViewPager.setCurrentItem(tab.getPosition());
+
+
+                        Log.d("test", "onTabSelected: tab was selected: " + tab.getText());
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+
+                    }
+                });
+
+                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+            }
 
         }
     }

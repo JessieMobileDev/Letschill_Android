@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabPastFragment;
@@ -45,6 +47,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
                 TabTodayFragment mTabTodayFragment = new TabTodayFragment();
                 mTabTodayFragment.setArguments(mFragmentBundle);
 
+
                 return mTabTodayFragment;
             case 1: // Upcoming
 
@@ -69,6 +72,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
+
         return mNumOfTabs;
     }
 }

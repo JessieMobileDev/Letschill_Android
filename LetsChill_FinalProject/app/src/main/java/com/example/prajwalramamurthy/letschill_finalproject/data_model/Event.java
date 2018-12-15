@@ -1,6 +1,9 @@
 package com.example.prajwalramamurthy.letschill_finalproject.data_model;
 
-public class Event
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Event implements Parcelable
 {
     // Member variables
     private String mEventName;
@@ -19,6 +22,7 @@ public class Event
     public Event(String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
                  String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate) {
+
         this.mEventName = mEventName;
         this.mEventLocation = mEventLocation;
         this.mEventDate = mEventDate;
@@ -35,6 +39,36 @@ public class Event
     // Empty Constructor
     public Event(String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1) {
     }
+
+    public Event() {
+
+    }
+
+    protected Event(Parcel in) {
+        mEventName = in.readString();
+        mEventLocation = in.readString();
+        mEventDate = in.readString();
+        mEventTimeStart = in.readString();
+        mEventTimeFinish = in.readString();
+        mDescription = in.readString();
+        mParticipants = in.readString();
+        mCategory = in.readString();
+        mHost = in.readString();
+        mIsRecurringEvent = in.readByte() != 0;
+        mPublicOrPrivate = in.readByte() != 0;
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 
     // Getters
     public String getmEventName() {
@@ -81,4 +115,23 @@ public class Event
         return mHost;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mEventName);
+        dest.writeString(mEventLocation);
+        dest.writeString(mEventDate);
+        dest.writeString(mEventTimeStart);
+        dest.writeString(mEventTimeFinish);
+        dest.writeString(mDescription);
+        dest.writeString(mParticipants);
+        dest.writeString(mCategory);
+        dest.writeString(mHost);
+        dest.writeByte((byte) (mIsRecurringEvent ? 1 : 0));
+        dest.writeByte((byte) (mPublicOrPrivate ? 1 : 0));
+    }
 }

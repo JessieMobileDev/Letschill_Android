@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,17 @@ import android.widget.ListView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 
 import java.util.ArrayList;
 
-public class TabPastFragment extends Fragment implements ListView.OnItemClickListener {
+public class TabPastFragment extends ListFragment implements ListView.OnItemClickListener {
 
     // Variables
     private ListView mListView_past;
-    private final ArrayList<Event> mEventList = new ArrayList<>();
+    private ArrayList<Event> mEventList = new ArrayList<>();
     
-    public static TabPastFragment newInstance(ArrayList<Event> mPastEvents) {
+    public static TabPastFragment newInstance() {
         
         Bundle args = new Bundle();
         
@@ -44,25 +46,28 @@ public class TabPastFragment extends Fragment implements ListView.OnItemClickLis
         if (getView() != null && getContext() != null) {
 
             // Find views
-            mListView_past = getView().findViewById(R.id.listView_past);
-            mListView_past.setOnItemClickListener(this);
+//            mListView_past = getView().findViewById(R.id.listView_past);
+//            mListView_past.setOnItemClickListener(this);
 
             // Populate the array list with the retrieved data from the database
             populateEventList();
 
             // Adapter that will populate the list view
             EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-            mListView_past.setAdapter(mAdapter);
+//            mListView_past.setAdapter(mAdapter);
+            setListAdapter(mAdapter);
         }
     }
 
     public void populateEventList() {
 
-        // TODO: Data below is for testing. Populate with database data. Check filter options.
-        mEventList.clear();
-        mEventList.add(new Event("Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
+//        // TODO: Data below is for testing. Populate with database data. Check filter options.
+//        mEventList.clear();
+//        mEventList.add(new Event("Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
+//                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
 
+        // Get the array list from the fragment arguments
+        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_PASTEVENTS);
     }
 
     @Override
