@@ -25,25 +25,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@android:color/black"
-            android:alpha="0.5">
+            android:alpha="0.5"
+            android:background="@android:color/black">
 
             <TextView
+                style="@style/eventCards_contentText_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0/10 people joined"
-                style="@style/eventCards_contentText_style"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0/10 RSVPs"
-                style="@style/eventCards_contentText_style"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:layout_marginTop="20dp" />
+                android:text="0/10 people joined" />
+
+            <TextView
+                style="@style/eventCards_contentText_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="0/10 RSVPs" />
         </FrameLayout>
     </com.jcminarro.roundkornerlayout.RoundKornerFrameLayout>
 
