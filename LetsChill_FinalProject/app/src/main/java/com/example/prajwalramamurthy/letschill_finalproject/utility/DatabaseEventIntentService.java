@@ -168,6 +168,8 @@ public class DatabaseEventIntentService extends IntentService {
                     mArraysBundle.putSerializable(BUNDLE_EXTRA_UPCOMING_EVENTS, mUpcomingEvents);
                     mArraysBundle.putSerializable(BUNDLE_EXTRA_PAST_EVENTS, mPastEvents);
                     mReceiver.send(Activity.RESULT_OK, mArraysBundle);
+
+                    Log.d(TAG, "onDataChange: ");
                 }
 
                 @Override

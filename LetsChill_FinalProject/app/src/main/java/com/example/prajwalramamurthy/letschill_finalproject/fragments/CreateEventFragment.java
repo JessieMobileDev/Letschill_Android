@@ -331,13 +331,15 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                             Uri url = taskSnapshot.getUploadSessionUri();
 
-                            String uid = FirebaseAuth.getInstance().getUid();
 
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-                            DatabaseReference user = databaseReference.child("users").child(Objects.requireNonNull(uid));
-
-                            user.child("id_img").setValue(Objects.requireNonNull(url).toString());
+//                            String uid = FirebaseAuth.getInstance().getUid();
+//
+//                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+//
+//                            DatabaseReference user = databaseReference.child("users").child(Objects.requireNonNull(uid));
+//
+//                            user.child("id_img").setValue(Objects.requireNonNull(url).toString());
 
                         }
                     });
@@ -415,6 +417,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                             // Exit the current activity
                             mCreateEventFragmentInterface.closeCreateEventActivity();
+
+
 
                         }
 

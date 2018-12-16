@@ -27,6 +27,7 @@ public class TabTodayFragment extends ListFragment {
 //    private ArrayList<Event> mEventList;
     private ArrayList<Event> mTodayEvents = new ArrayList<>();
     private TabTodayInterface mTabTodayInterface;
+    MainPageAdapter mainPageAdapter;
 
     public interface TabTodayInterface {
 
@@ -52,17 +53,19 @@ public class TabTodayFragment extends ListFragment {
         }
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        notify();
-//
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+//        mainPageAdapter.notifyDataSetChanged();
+
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
 
         return inflater.inflate(R.layout.fragment_tab_today, container, false);
     }

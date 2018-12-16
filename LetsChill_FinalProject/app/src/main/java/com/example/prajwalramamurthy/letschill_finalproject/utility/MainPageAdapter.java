@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomin
 
 import java.util.ArrayList;
 
-public class MainPageAdapter extends FragmentPagerAdapter {
+public class MainPageAdapter extends FragmentStatePagerAdapter {
 
     // Variables
     private final int mNumOfTabs;
@@ -35,6 +36,11 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public Fragment getItem(int position) {
 
         Bundle mFragmentBundle = new Bundle();
@@ -50,6 +56,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
                 mTabTodayFragment.setArguments(mFragmentBundle);
 
 //                notifyDataSetChanged();
+
 
                 Log.i("MAIN TODAY", "getItem: " + mTodayEvents.size());
 
