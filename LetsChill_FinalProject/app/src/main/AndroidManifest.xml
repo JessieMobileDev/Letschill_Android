@@ -83,6 +83,10 @@
         <!-- Details Event Activity -->
         <activity android:name=".activities.DetailsEventActivity"
             android:theme="@style/AppTheme"/>
+
+        <!-- Edit Event Activity -->
+        <activity android:name=".activities.EditEventActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout mTabLayout;
     private DatabaseReference mDBReference;
     private final Handler mHandler = new Handler();
-    private ArrayList<Event> mTodayEvents = new ArrayList<>();
-    private ArrayList<Event> mUpcomingEvents = new ArrayList<>();
-    private ArrayList<Event> mPastEvents = new ArrayList<>();
+    private ArrayList<Event> mTodayEvents;
+    private ArrayList<Event> mUpcomingEvents;
+    private ArrayList<Event> mPastEvents;
     private ProgressBar mProgressBar;
 
     // Constants
@@ -75,6 +75,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+//
+//        // Reset lists
+//        mTodayEvents = new ArrayList<>();
+//        mUpcomingEvents = new ArrayList<>();
+//        mPastEvents = new ArrayList<>();
+
+        // Request events data from the database
+        requestEventData();
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -88,37 +102,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void instantiateActivity() {
-
-        setContentView(R.layout.activity_main);
-        setTitle("Events");
-
-        // Find Views
-        mFab = findViewById(R.id.fab_activity);
-        mTabToday = findViewById(R.id.tab_today);
-        mTabUpcoming = findViewById(R.id.tab_upcoming);
-        mTabPast = findViewById(R.id.tab_past);
-        mViewPager = findViewById(R.id.viewPager_tabs);
-        mTabLayout = findViewById(R.id.tablayout_events);
-        mProgressBar = findViewById(R.id.progress_bar_main);
-
-        // Assign the click listener to the floating button
-        mFab.setOnClickListener(this);
-
-        // Request events data from the database
-        requestEventData();
-
-
-    }
 
     private void requestEventData() {
 
         if (ConnectionHandler.isConnected(this)) {
 
-            // Clear the lists before adding
-            mTodayEvents.clear();
-            mUpcomingEvents.clear();
-            mPastEvents.clear();
+//            // Clear the lists before adding
+//            mTodayEvents.clear();
+//            mUpcomingEvents.clear();
+//            mPastEvents.clear();
 
             // Start an intent service to retrieve all the events' data
             // We're fetching all the events that the user is hosting, or just participating
@@ -160,7 +152,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // Assign the adapter to the view pager that will display the screen for each tab item
                 mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mTodayEvents,
                         mUpcomingEvents, mPastEvents);
+
                 mViewPager.setAdapter(mTabAdapter);
+
+
+                Log.d(TAG, "onReceiveResult (after adapter is set): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
+                        " - Past list: " + mPastEvents.size());
 
                 // Set the progress bar to be invisible
                 mProgressBar.setVisibility(View.GONE);

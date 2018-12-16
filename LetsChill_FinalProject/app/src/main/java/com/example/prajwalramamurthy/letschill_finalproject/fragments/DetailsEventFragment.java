@@ -1,6 +1,7 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DetailsEventFragment extends Fragment implements View.OnClickListener
 {
@@ -24,9 +27,16 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             textView_pplRsvp;
     private Button button_rsvp, button_leave, button_join, button_edit;
     private ImageView imageView_background;
+    private DetailsEventInterface mDetailsEventInterface;
+    private FirebaseAuth mAuth;
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
+
+    public interface DetailsEventInterface {
+
+        void closeDetailsEventActivity(Event mEvent);
+    }
 
     public static DetailsEventFragment newInstance(Event mEvent) {
 
@@ -36,6 +46,16 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         DetailsEventFragment fragment = new DetailsEventFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof DetailsEventInterface) {
+
+            mDetailsEventInterface = (DetailsEventInterface)context;
+        }
     }
 
     @Nullable
@@ -71,6 +91,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_edit = getView().findViewById(R.id.button_detail_edit);
             imageView_background = getView().findViewById(R.id.imageView_details_eventImage);
 
+            // Check if the logged user is the same as the host of the selected event
+            FirebaseUser user = mAuth.getCurrentUser();
             // Retrieve the custom object selected from the list
             Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
@@ -106,10 +128,16 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+
         switch (view.getId()) {
 
             case R.id.button_detail_edit:
 
+                // Retrieve the custom object selected from the list
+                Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+
+                // Close current activity and open the Edit Event
+                mDetailsEventInterface.closeDetailsEventActivity(mEvent);
 
                 break;
 

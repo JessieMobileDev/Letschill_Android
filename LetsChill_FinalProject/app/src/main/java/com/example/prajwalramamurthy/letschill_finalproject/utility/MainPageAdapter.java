@@ -21,7 +21,6 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     private final int mNumOfTabs;
     private ArrayList<Event> mTodayEvents, mUpcomingEvents, mPastEvents;
 
-
     // Constants
     public static final String ARGS_TODAYEVENTS = "ARGS_TODAYEVENTS";
     public static final String ARGS_UPCOMINGEVENTS = "ARGS_UPCOMINGEVENTS";
@@ -50,7 +49,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
                 TabTodayFragment mTabTodayFragment = new TabTodayFragment();
                 mTabTodayFragment.setArguments(mFragmentBundle);
 
-                notifyDataSetChanged();
+//                notifyDataSetChanged();
 
                 Log.i("MAIN TODAY", "getItem: " + mTodayEvents.size());
 
@@ -64,8 +63,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
                 TabUpcomingFragment mTabUpcomingFragment = new TabUpcomingFragment();
                 mTabUpcomingFragment.setArguments(mFragmentBundle);
 
-
-                notifyDataSetChanged();
+//                notifyDataSetChanged();
 
                 return mTabUpcomingFragment;
             case 2: // Past
@@ -77,7 +75,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
                 TabPastFragment mTabPastFragment = new TabPastFragment();
                 mTabPastFragment.setArguments(mFragmentBundle);
 
-                notifyDataSetChanged();
+//                notifyDataSetChanged();
 
                 return mTabPastFragment;
         }

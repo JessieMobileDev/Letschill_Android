@@ -9,7 +9,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.CreateEventFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.DetailsEventFragment;
 
-public class DetailsEventActivity extends AppCompatActivity {
+public class DetailsEventActivity extends AppCompatActivity implements DetailsEventFragment.DetailsEventInterface {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,5 +26,11 @@ public class DetailsEventActivity extends AppCompatActivity {
             getFragmentManager().beginTransaction().add(R.id.details_activity_frame, DetailsEventFragment.newInstance(mEvent)).commit();
 
         }
+    }
+
+    @Override
+    public void closeDetailsEventActivity(Event mEvent) {
+
+        // Open "EventActivity"
     }
 }

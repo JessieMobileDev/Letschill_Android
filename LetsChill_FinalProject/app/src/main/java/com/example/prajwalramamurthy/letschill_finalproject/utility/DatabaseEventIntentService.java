@@ -32,9 +32,9 @@ public class DatabaseEventIntentService extends IntentService {
 
     // Variables
     private DatabaseReference mDBReference;
-    private ArrayList<Event> mTodayEvents = new ArrayList<>();
-    private ArrayList<Event> mUpcomingEvents = new ArrayList<>();
-    private ArrayList<Event> mPastEvents = new ArrayList<>();
+    private ArrayList<Event> mTodayEvents;
+    private ArrayList<Event> mUpcomingEvents;
+    private ArrayList<Event> mPastEvents;
 
     // Constants
     public static final String EXTRA_RESULT_RECEIVER = "com.example.prajwalramamurthy.letschill_finalproject.utility.EXTRA_RESULT_RECEIVER";
@@ -71,17 +71,21 @@ public class DatabaseEventIntentService extends IntentService {
             // Get the reference of the database under "Events"
             mDBReference = FirebaseDatabase.getInstance().getReference("Events");
 
-            // Clear the lists before adding
-            mTodayEvents.clear();
-            mUpcomingEvents.clear();
-            mPastEvents.clear();
 
-            Log.d(TAG, "onReceiveResult: Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
-                    " - Past list: " + mPastEvents.size());
+
+
 
             mDBReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    // Clear the lists before adding
+                    mTodayEvents = new ArrayList<>();
+                    mUpcomingEvents = new ArrayList<>();
+                    mPastEvents = new ArrayList<>();
+
+                    Log.d(TAG, "onReceiveResult (service): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
+                            " - Past list: " + mPastEvents.size());
 
                     for (DataSnapshot event: dataSnapshot.getChildren()) {
 
@@ -106,7 +110,7 @@ public class DatabaseEventIntentService extends IntentService {
 
                                 mTodayEvents.add(mEvent);
 
-                                Log.d(TAG, "onDataChange: (1) Today - Selected event date: " + mEvent.getmEventDate() +
+                                Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
                                         " - Today date: " + mTodayDateString);
                             }
 
@@ -122,7 +126,7 @@ public class DatabaseEventIntentService extends IntentService {
 
                                     mUpcomingEvents.add(mEvent);
 
-                                    Log.d(TAG, "onDataChange: (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
+                                    Log.d(TAG, "onDataChange (upcoming): (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
                                             " - Today date: " + mTodayDateString);
                                 }
 
@@ -142,7 +146,7 @@ public class DatabaseEventIntentService extends IntentService {
 
                                     mPastEvents.add(mEvent);
 
-                                    Log.d(TAG, "onDataChange: (3) Past - Selected event date: " + mEvent.getmEventDate() +
+                                    Log.d(TAG, "onDataChange (past): (3) Past - Selected event date: " + mEvent.getmEventDate() +
                                             " - Today date: " + mTodayDateString);
                                 }
 
@@ -153,6 +157,9 @@ public class DatabaseEventIntentService extends IntentService {
 
                         }
                     }
+
+                    Log.d(TAG, "onReceiveResult (service - after populating): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
+                            " - Past list: " + mPastEvents.size());
 
                     // TODO the event list needs to be cleared before this step as it is already repeated
                     // Send a message to the receiver with all the 3 array lists

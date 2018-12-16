@@ -107,23 +107,13 @@ public class EventCardAdapter extends BaseAdapter {
 
         if (mEvent != null){
 
-//            // To round the edges of the image view (does not work)
-//            Bitmap mBitmap = ((BitmapDrawable) this.mContext.getResources().getDrawable(R.drawable.create_back)).getBitmap();
-//            Bitmap mImageRounded = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), mBitmap.getConfig());
-//            Canvas mCanvas = new Canvas(mImageRounded);
-//            Paint mPaint = new Paint();
-//            mPaint.setAntiAlias(true);
-//            mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-//            mCanvas.drawRoundRect((new RectF(0, 0, mBitmap.getWidth(), mBitmap.getHeight())), 100, 100, mPaint);
-
-//            mViewHolder.mEventImage.setImageBitmap(mImageRounded);
             mViewHolder.mEventImage.setImageResource(R.drawable.create_back);
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
             mViewHolder.mEventTime.setText("From " + mEvent.getmEventTimeFinish() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
             mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
 
-            notifyDataSetChanged();
+//            notifyDataSetChanged();
 
         }
 

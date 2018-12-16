@@ -24,7 +24,8 @@ import java.util.ArrayList;
 public class TabTodayFragment extends ListFragment {
 
     // Variables
-    private ArrayList<Event> mEventList;
+//    private ArrayList<Event> mEventList;
+    private ArrayList<Event> mTodayEvents = new ArrayList<>();
     private TabTodayInterface mTabTodayInterface;
 
     public interface TabTodayInterface {
@@ -51,6 +52,14 @@ public class TabTodayFragment extends ListFragment {
         }
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        notify();
+//
+//    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,23 +71,45 @@ public class TabTodayFragment extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Populate the array list with the retrieved data from the database
-        populateEventList();
+//        // Populate the array list with the retrieved data from the database
+//        populateEventList();
+//
+//        // Adapter that will populate the list view
+//        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
+//        setListAdapter(mAdapter);
+//
+//        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                // Pass the selected event object to the "DetailsEventActivity"
+//                mTabTodayInterface.openDetailsPageFromTodayTab(mEventList.get(position));
+//                Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
+//
+//            }
+//        });
 
-        // Adapter that will populate the list view
-        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-        setListAdapter(mAdapter);
+        mTodayEvents = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
 
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mTodayEvents != null) {
 
-                // Pass the selected event object to the "DetailsEventActivity"
-                mTabTodayInterface.openDetailsPageFromTodayTab(mEventList.get(position));
-                Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
+            // Adapter that will populate the list view
+            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mTodayEvents);
+            setListAdapter(mAdapter);
 
-            }
-        });
+
+            getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    // Pass the selected event object to the "DetailsEventActivity"
+                    mTabTodayInterface.openDetailsPageFromTodayTab(mTodayEvents.get(position));
+                    Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
+
+                }
+            });
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void populateEventList() {
@@ -86,7 +117,7 @@ public class TabTodayFragment extends ListFragment {
 
 
         // Get the array list from the fragment arguments
-        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
+//        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
 
         //mEventList.clear();
 
