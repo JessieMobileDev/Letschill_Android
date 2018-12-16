@@ -1,9 +1,12 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +16,38 @@ import android.widget.ListView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 
 import java.util.ArrayList;
 
-public class TabPastFragment extends Fragment implements ListView.OnItemClickListener {
+public class TabPastFragment extends ListFragment {
 
     // Variables
-    private ListView mListView_past;
-    private final ArrayList<Event> mEventList = new ArrayList<>();
-    
-    public static TabPastFragment newInstance(ArrayList<Event> mPastEvents) {
+    private ArrayList<Event> mEventList = new ArrayList<>();
+    private TabPastInterface mTabPastInterface;
+
+    public interface TabPastInterface {
+
+        void openDetailsPageFromPastTab(Event mEvent);
+    }
+
+    public static TabPastFragment newInstance() {
         
         Bundle args = new Bundle();
         
         TabPastFragment fragment = new TabPastFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof TabPastInterface) {
+
+            mTabPastInterface = (TabPastInterface)context;
+        }
     }
 
     @Nullable
@@ -41,34 +60,28 @@ public class TabPastFragment extends Fragment implements ListView.OnItemClickLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getView() != null && getContext() != null) {
+        // Populate the array list with the retrieved data from the database
+        populateEventList();
 
-            // Find views
-            mListView_past = getView().findViewById(R.id.listView_past);
-            mListView_past.setOnItemClickListener(this);
+        // Adapter that will populate the list view
+        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
+        setListAdapter(mAdapter);
 
-            // Populate the array list with the retrieved data from the database
-            populateEventList();
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            // Adapter that will populate the list view
-            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-            mListView_past.setAdapter(mAdapter);
-        }
+                // Pass the selected event object to the "DetailsEventActivity"
+                mTabPastInterface.openDetailsPageFromPastTab(mEventList.get(position));
+                Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
+
+            }
+        });
     }
 
     public void populateEventList() {
 
-        // TODO: Data below is for testing. Populate with database data. Check filter options.
-        mEventList.clear();
-        mEventList.add(new Event("Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        // TODO: Do an intent to the details page and pass the event object to it using the position in the arrayList
-
+        // Get the array list from the fragment arguments
+        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_PASTEVENTS);
     }
 }

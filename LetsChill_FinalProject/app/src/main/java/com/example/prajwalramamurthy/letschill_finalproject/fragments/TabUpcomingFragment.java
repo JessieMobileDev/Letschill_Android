@@ -1,9 +1,12 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +16,38 @@ import android.widget.ListView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 
 import java.util.ArrayList;
 
-public class TabUpcomingFragment extends Fragment implements ListView.OnItemClickListener {
+public class TabUpcomingFragment extends ListFragment {
 
     // Variables
-    private ListView mListView_upcoming;
-    private final ArrayList<Event> mEventList = new ArrayList<>();
+    private ArrayList<Event> mEventList = new ArrayList<>();
+    private TabUpcomingInterface mTabUpcomingInterface;
 
-    public static TabUpcomingFragment newInstance(ArrayList<Event> mUpcomingEvents) {
+    public interface TabUpcomingInterface {
+
+        void openDetailsPageFromUpcomingTab(Event mEvent);
+    }
+
+    public static TabUpcomingFragment newInstance() {
         
         Bundle args = new Bundle();
         
         TabUpcomingFragment fragment = new TabUpcomingFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof TabUpcomingInterface) {
+
+            mTabUpcomingInterface = (TabUpcomingInterface)context;
+        }
     }
 
     @Nullable
@@ -41,36 +60,28 @@ public class TabUpcomingFragment extends Fragment implements ListView.OnItemClic
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getView() != null && getContext() != null) {
+        // Populate the array list with the retrieved data from the database
+        populateEventList();
 
-            // Find views
-            mListView_upcoming = getView().findViewById(R.id.listView_upcoming);
-            mListView_upcoming.setOnItemClickListener(this);
+        // Adapter that will populate the list view
+        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
+        setListAdapter(mAdapter);
 
-            // Populate the array list with the retrieved data from the database
-            populateEventList();
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            // Adapter that will populate the list view
-            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-            mListView_upcoming.setAdapter(mAdapter);
-        }
+                // Pass the selected event object to the "DetailsEventActivity"
+                mTabUpcomingInterface.openDetailsPageFromUpcomingTab(mEventList.get(position));
+                Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
+
+            }
+        });
     }
 
     public void populateEventList() {
 
-        // TODO: Data below is for testing. Populate with database data. Check filter options.
-        mEventList.clear();
-        mEventList.add(new Event("RPG - Drakondar Era", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "6:30pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
-        mEventList.add(new Event("Pilattes", "55 Lincoln Avenue", "Dec 20, 2018", "2:15pm", "5:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        // TODO: Do an intent to the details page and pass the event object to it using the position in the arrayList
-
+        // Get the array list from the fragment arguments
+        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_UPCOMINGEVENTS);
     }
 }

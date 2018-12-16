@@ -14,30 +14,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 
 public class DetailsEventFragment extends Fragment implements View.OnClickListener
 {
-
-    private TextView tv_dateTime, tv_location, tv_host, tv_description, tv_participants,
-            tv_category, tv_pplJoined, tv_pplRsvp;
+    // Variables
+    private TextView textView_title, textView_dateTime, textView_location, textView_host,
+            textView_description, textView_participants, textView_category, textView_pplJoined,
+            textView_pplRsvp;
     private Button button_rsvp, button_leave, button_join, button_edit;
-    private ImageView img_view_background;
+    private ImageView imageView_background;
 
-    public static DetailsEventFragment newInstance() {
+    // Constants
+    private static final String ARGS_OBJECT = "ARGS_OBJECT";
+
+    public static DetailsEventFragment newInstance(Event mEvent) {
 
         Bundle args = new Bundle();
+        args.putParcelable(ARGS_OBJECT, mEvent);
 
         DetailsEventFragment fragment = new DetailsEventFragment();
         fragment.setArguments(args);
         return fragment;
     }
-
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        setHasOptionsMenu(true);
-//    }
 
     @Nullable
     @Override
@@ -53,25 +52,45 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setHasOptionsMenu(true);
-
         if (getView() != null && getContext() != null) {
-            tv_dateTime = getView().findViewById(R.id.textView_detail_dateTime);
-            tv_location = getView().findViewById(R.id.textView_detail_location);
-            tv_host = getView().findViewById(R.id.textView_detail_host);
-            tv_description = getView().findViewById(R.id.textView_detail_desc);
-            tv_participants = getView().findViewById(R.id.textView_detail_participants);
-            tv_category = getView().findViewById(R.id.textView_detail_category);
-            tv_pplJoined = getView().findViewById(R.id.textView_detail_pplJoined);
-            tv_pplRsvp = getView().findViewById(R.id.textView_detail_rsvp);
+
+            // Find views
+            textView_title = getView().findViewById(R.id.textView_title);
+            textView_dateTime = getView().findViewById(R.id.textView_detail_dateTime);
+            textView_location = getView().findViewById(R.id.textView_detail_location);
+            textView_host = getView().findViewById(R.id.textView_detail_host);
+            textView_description = getView().findViewById(R.id.textView_detail_description);
+            textView_participants = getView().findViewById(R.id.textView_detail_participants);
+            textView_category = getView().findViewById(R.id.textView_detail_category);
+
+            textView_pplJoined = getView().findViewById(R.id.textView_detail_pplJoined);
+            textView_pplRsvp = getView().findViewById(R.id.textView_detail_rsvp);
             button_rsvp = getView().findViewById(R.id.button_detail_rsvp);
             button_leave = getView().findViewById(R.id.button_detail_leave);
             button_join = getView().findViewById(R.id.button_detail_joinEvent);
             button_edit = getView().findViewById(R.id.button_detail_edit);
-            img_view_background = getView().findViewById(R.id.imageView_details_eventImage);
+            imageView_background = getView().findViewById(R.id.imageView_details_eventImage);
+
+            // Retrieve the custom object selected from the list
+            Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+
+            if (mEvent != null) {
+
+                // Assign data to each UI element and display
+                textView_title.setText(mEvent.getmEventName());
+                textView_dateTime.setText(mEvent.getmEventDate() + " / " + mEvent.getmEventTimeStart() +
+                " - " + mEvent.getmEventTimeFinish());
+                textView_location.setText(mEvent.getmEventLocation());
+                textView_host.setText(mEvent.getmHost());
+                textView_description.setText(mEvent.getmDescription());
+                textView_category.setText(mEvent.getmCategory());
+
+                // TODO: missing the "participants"
+
+            }
         }
 
-        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

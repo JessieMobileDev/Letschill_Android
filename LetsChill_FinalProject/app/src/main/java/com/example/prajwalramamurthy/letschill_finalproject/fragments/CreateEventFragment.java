@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.util.Log;
@@ -28,13 +29,24 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,6 +64,10 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private Uri mImageUri;
     private CreateEventFragmentInterface mCreateEventFragmentInterface;
     private SharedPreferences mPrefs;
+    private StorageReference mStorage;
+    private FirebaseUser mFirebaseUser;
+    private String mUid;
+    private DatabaseReference mDBReference;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -91,8 +107,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // get database reference
+        // Get database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Get the storage reference
+        mStorage = FirebaseStorage.getInstance().getReference();
     }
 
     @Nullable
@@ -173,7 +192,31 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mImageView_eventBackground.setImageBitmap(mBitmap);
 
-                // TODO: save the bitmap to the database
+//                // TODO: save the bitmap to the database
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//
+//                if (mBitmap != null) {
+//
+//                    mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                    byte[] mByteData = baos.toByteArray();
+//
+//                    UploadTask mUploadTask = mStorage.putBytes(mByteData);
+//
+//                    // Upload the image bytes to Firebase storage
+//                    mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                            Log.d("test", "onSuccess: image uploaded successfully");
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//
+//                        }
+//                    });
+//                }
+
 
                 Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
             }
@@ -252,29 +295,53 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 if (mEditText_Description.getText().length() >= 2 && mEditText_Description.getText().length() <= 280) {
 
                     // Catch and store the user input and pass it to our data model
-                    String mEvtName = mEditText_Name.getText().toString();
-                    String mEvtDesc = mEditText_Description.getText().toString();
-                    String mEvtLocation = mLocation.getText().toString();
-                    String mEvtTimeStart = mEditText_TimeStart.getText().toString();
-                    String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
-                    String mEvtDate = mEditText_Date.getText().toString();
-                    String mEvtPart = mParticipants.getText().toString();
-                    String mEvtCategory = mCategories.getSelectedItem().toString();
+                    final String mEvtName = mEditText_Name.getText().toString();
+                    final String mEvtDesc = mEditText_Description.getText().toString();
+                    final String mEvtLocation = mLocation.getText().toString();
+                    final String mEvtTimeStart = mEditText_TimeStart.getText().toString();
+                    final String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
+                    final String mEvtDate = mEditText_Date.getText().toString();
+                    final String mEvtPart = mParticipants.getText().toString();
+                    final String mEvtCategory = mCategories.getSelectedItem().toString();
 
-                    // Retrieve the user's uid from SharedPreferences
-                    String mUserUid = mPrefs.getString(SignUpFragment.PREFS_USER_UID, "default");
+//                    // Retrieve the user's uid from SharedPreferences
+//                    String mUserName = mPrefs.getString(DatabaseEventIntentService.PREFS_USER_NAME, "default");
+//                    Log.d("test", "saveEventDataToDatabase: ");
 
-                    Event newEvent = new Event(mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
-                            mEvtPart, mEvtCategory, mUserUid, mCheckBox_IsRecurring.isChecked(),
-                            mCheckBox_PublicOrPrivate.isChecked());
+                    // Retrieve the username from the current logged in user
+                    mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    mUid = mFirebaseUser.getUid();
 
-                    mDatabase.child("Events").push().setValue(newEvent);
+                    mDBReference = FirebaseDatabase.getInstance().getReference("Users");
 
-                    // show toast for confirmation
-                    Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                    mDBReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    // Exit the current activity
-                    mCreateEventFragmentInterface.closeCreateEventActivity();
+                            // Read each data from uid
+                            String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
+
+                            Event newEvent = new Event(mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
+                                    mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
+                                    mCheckBox_PublicOrPrivate.isChecked());
+
+                            mDatabase.child("Events").push().setValue(newEvent);
+
+                            // show toast for confirmation
+                            Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+
+                            // Exit the current activity
+                            mCreateEventFragmentInterface.closeCreateEventActivity();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
 
                 } else {
 

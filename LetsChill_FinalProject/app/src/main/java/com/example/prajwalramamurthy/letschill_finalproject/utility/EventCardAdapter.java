@@ -36,6 +36,7 @@ public class EventCardAdapter extends BaseAdapter {
     @Override
     public int getCount(){
 
+
         if(mEventList != null && mEventList.size() > 0){
 
             return mEventList.size();
@@ -120,7 +121,7 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
             mViewHolder.mEventTime.setText("From " + mEvent.getmEventTimeFinish() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
-//            mViewHolder.mEventHost.setText("Hosted by " + mEvent.get);
+            mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
 
         }
 
