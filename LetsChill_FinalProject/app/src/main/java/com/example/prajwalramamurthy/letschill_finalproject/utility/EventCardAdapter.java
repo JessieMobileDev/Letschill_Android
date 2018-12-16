@@ -123,6 +123,8 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
             mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
 
+            notifyDataSetChanged();
+
         }
 
         return convertView;

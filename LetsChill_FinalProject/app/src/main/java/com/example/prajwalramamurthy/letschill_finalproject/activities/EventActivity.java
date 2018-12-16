@@ -9,6 +9,8 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.CreateEven
 
 public class EventActivity extends AppCompatActivity implements CreateEventFragment.CreateEventFragmentInterface {
 
+    private CreateEventFragment createEventFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -16,7 +18,9 @@ public class EventActivity extends AppCompatActivity implements CreateEventFragm
         setContentView(R.layout.activity_event);
         setTitle("Add Event");
 
-        getFragmentManager().beginTransaction().replace(R.id.event_frame, CreateEventFragment.newInstance()).commit();
+        createEventFragment = CreateEventFragment.newInstance();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.event_frame, createEventFragment).commit();
 
 
     }

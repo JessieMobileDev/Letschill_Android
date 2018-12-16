@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,6 +20,7 @@ public class MainPageAdapter extends FragmentPagerAdapter {
     // Variables
     private final int mNumOfTabs;
     private ArrayList<Event> mTodayEvents, mUpcomingEvents, mPastEvents;
+
 
     // Constants
     public static final String ARGS_TODAYEVENTS = "ARGS_TODAYEVENTS";
@@ -42,27 +44,40 @@ public class MainPageAdapter extends FragmentPagerAdapter {
 
             case 0: // Today
 
+
                 // Pass the array list with all the events that are due today
                 mFragmentBundle.putSerializable(ARGS_TODAYEVENTS, mTodayEvents);
                 TabTodayFragment mTabTodayFragment = new TabTodayFragment();
                 mTabTodayFragment.setArguments(mFragmentBundle);
 
+                notifyDataSetChanged();
+
+                Log.i("MAIN TODAY", "getItem: " + mTodayEvents.size());
 
                 return mTabTodayFragment;
             case 1: // Upcoming
+
+
 
                 // Pass the array list with all the events that are due on the upcoming days
                 mFragmentBundle.putSerializable(ARGS_UPCOMINGEVENTS, mUpcomingEvents);
                 TabUpcomingFragment mTabUpcomingFragment = new TabUpcomingFragment();
                 mTabUpcomingFragment.setArguments(mFragmentBundle);
 
+
+                notifyDataSetChanged();
+
                 return mTabUpcomingFragment;
             case 2: // Past
+
+
 
                 // Pass the array list with all the events that were due already
                 mFragmentBundle.putSerializable(ARGS_PASTEVENTS, mPastEvents);
                 TabPastFragment mTabPastFragment = new TabPastFragment();
                 mTabPastFragment.setArguments(mFragmentBundle);
+
+                notifyDataSetChanged();
 
                 return mTabPastFragment;
         }

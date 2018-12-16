@@ -1,7 +1,8 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.Fragment;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +32,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
-import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,11 +50,15 @@ import java.io.ByteArrayOutputStream;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 
-public class CreateEventFragment extends Fragment implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
+public class CreateEventFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
+        View.OnClickListener {
 
     // Variables
-    private EditText mEditText_Name, mEditText_Description, mLocation, mEditText_TimeStart, mEditText_TimeEnd, mParticipants, mEditText_Date;
+    private EditText mEditText_Name, mEditText_Description, mLocation, mEditText_TimeStart,
+            mEditText_TimeEnd, mParticipants, mEditText_Date;
     private Spinner mCategories;
     private CheckBox mCheckBox_IsRecurring, mCheckBox_PublicOrPrivate;
     private ImageView mImageView_eventBackground;
@@ -177,6 +181,13 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     }
 
+    public void displayImage( Bitmap bitmap )
+    {
+        if(getView() != null) {
+            ((ImageView) (getView()).findViewById(R.id.imageView_create_background)).setImageBitmap(bitmap);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -254,6 +265,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         }
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -272,6 +284,77 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         return false;
 
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+        view.findViewById(R.id.save_createEvent_button).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+                if(mImageView_eventBackground.getDrawable() != null)
+                {
+                    // will save our ID image to our database
+                    // show toast
+                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+
+                    // get reference
+                    final StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("IDImages");
+
+                    StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
+
+                    // convert bitmap
+                    Bitmap bitmap = ((BitmapDrawable) mImageView_eventBackground.getDrawable()).getBitmap();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+
+                    UploadTask uploadTask = imagesRef.putBytes(data);
+
+
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+
+                            Uri url = taskSnapshot.getUploadSessionUri();
+
+                            String uid = FirebaseAuth.getInstance().getUid();
+
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+                            DatabaseReference user = databaseReference.child("users").child(Objects.requireNonNull(uid));
+
+                            user.child("id_img").setValue(Objects.requireNonNull(url).toString());
+
+                        }
+                    });
+
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+
+    }
+
 
     private void saveEventDataToDatabase() {
 

@@ -28,7 +28,9 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHa
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TabTodayFragment.TabTodayInterface, TabUpcomingFragment.TabUpcomingInterface, TabPastFragment.TabPastInterface {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        TabTodayFragment.TabTodayInterface, TabUpcomingFragment.TabUpcomingInterface,
+        TabPastFragment.TabPastInterface {
 
     // Variables
     private FloatingActionButton mFab;
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, R.string.alert_content_noInternet, Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     public class DatabaseEventDataReceiver extends ResultReceiver {
 

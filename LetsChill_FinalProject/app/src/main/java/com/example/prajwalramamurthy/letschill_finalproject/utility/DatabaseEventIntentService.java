@@ -32,9 +32,9 @@ public class DatabaseEventIntentService extends IntentService {
 
     // Variables
     private DatabaseReference mDBReference;
-    private ArrayList<Event> mTodayEvents;
-    private ArrayList<Event> mUpcomingEvents;
-    private ArrayList<Event> mPastEvents;
+    private ArrayList<Event> mTodayEvents = new ArrayList<>();
+    private ArrayList<Event> mUpcomingEvents = new ArrayList<>();
+    private ArrayList<Event> mPastEvents = new ArrayList<>();
 
     // Constants
     public static final String EXTRA_RESULT_RECEIVER = "com.example.prajwalramamurthy.letschill_finalproject.utility.EXTRA_RESULT_RECEIVER";
@@ -62,9 +62,9 @@ public class DatabaseEventIntentService extends IntentService {
         Integer mRequestID = intent.getIntExtra(MainActivity.EXTRA_DB_REQUEST_ID, 1);
 
         // Instantiate arrayLists
-        mTodayEvents = new ArrayList<>();
-        mUpcomingEvents = new ArrayList<>();
-        mPastEvents = new ArrayList<>();
+//        mTodayEvents = new ArrayList<>();
+//        mUpcomingEvents = new ArrayList<>();
+//        mPastEvents = new ArrayList<>();
 
         if (mRequestID == 0) {
 
@@ -85,7 +85,13 @@ public class DatabaseEventIntentService extends IntentService {
 
                     for (DataSnapshot event: dataSnapshot.getChildren()) {
 
+
                         Event mEvent = event.getValue(Event.class);
+
+                        // Clear the lists before adding
+//                        mTodayEvents.clear();
+//                        mUpcomingEvents.clear();
+//                        mPastEvents.clear();
 
                         if (mEvent != null) {
 
@@ -94,6 +100,9 @@ public class DatabaseEventIntentService extends IntentService {
 
                             // Check all the events happening today
                             if (mEvent.getmEventDate().equals(mTodayDateString)) {
+
+                                //mTodayEvents.clear();
+
 
                                 mTodayEvents.add(mEvent);
 
@@ -145,6 +154,7 @@ public class DatabaseEventIntentService extends IntentService {
                         }
                     }
 
+                    // TODO the event list needs to be cleared before this step as it is already repeated
                     // Send a message to the receiver with all the 3 array lists
                     Bundle mArraysBundle = new Bundle();
                     mArraysBundle.putSerializable(BUNDLE_EXTRA_TODAY_EVENTS, mTodayEvents);

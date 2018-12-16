@@ -83,8 +83,12 @@ public class TabTodayFragment extends ListFragment {
 
     public void populateEventList() {
 
+
+
         // Get the array list from the fragment arguments
         mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
+
+        //mEventList.clear();
 
     }
 }
