@@ -1,5 +1,6 @@
 package com.example.prajwalramamurthy.letschill_finalproject.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,9 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.CreateEven
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.DetailsEventFragment;
 
 public class DetailsEventActivity extends AppCompatActivity implements DetailsEventFragment.DetailsEventInterface {
+
+    // Constants
+    public static final String ARGS_INTENT_OBJECT = "ARGS_INTENT_OBJECT";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,6 +35,12 @@ public class DetailsEventActivity extends AppCompatActivity implements DetailsEv
     @Override
     public void closeDetailsEventActivity(Event mEvent) {
 
-        // Open "EventActivity"
+        // Open "EditEventActivity"
+        Intent mEditIntent = new Intent(DetailsEventActivity.this, EditEventActivity.class);
+        mEditIntent.putExtra(ARGS_INTENT_OBJECT, mEvent);
+        startActivity(mEditIntent);
+
+        // Close this activity
+        finish();
     }
 }

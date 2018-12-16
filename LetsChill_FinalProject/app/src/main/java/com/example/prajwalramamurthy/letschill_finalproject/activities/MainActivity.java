@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mTodayEvents,
                         mUpcomingEvents, mPastEvents);
 
+                mTabAdapter.notifyDataSetChanged();
                 mViewPager.setAdapter(mTabAdapter);
 
 

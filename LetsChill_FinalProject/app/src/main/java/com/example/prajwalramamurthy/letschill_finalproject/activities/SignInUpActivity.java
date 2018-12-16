@@ -201,7 +201,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
                     final FirebaseUser user = mAuth.getCurrentUser();
 
-                    User createdUser = new User(user.getDisplayName(),user.getEmail(), user.getPhotoUrl().toString());
+                    User createdUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
 
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(user.getUid())

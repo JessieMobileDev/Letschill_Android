@@ -91,8 +91,15 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_edit = getView().findViewById(R.id.button_detail_edit);
             imageView_background = getView().findViewById(R.id.imageView_details_eventImage);
 
-            // Check if the logged user is the same as the host of the selected event
-            FirebaseUser user = mAuth.getCurrentUser();
+            // Set on click listeners
+            button_edit.setOnClickListener(this);
+            button_join.setOnClickListener(this);
+            button_leave.setOnClickListener(this);
+            button_rsvp.setOnClickListener(this);
+
+//            // Check if the logged user is the same as the host of the selected event
+//            FirebaseUser user = mAuth.getCurrentUser();
+
             // Retrieve the custom object selected from the list
             Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 

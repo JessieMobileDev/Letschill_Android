@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class Event implements Parcelable
 {
     // Member variables
+    private String mEventId;
     private String mEventName;
     private String mEventLocation;
     private String mEventDate;
@@ -19,10 +20,11 @@ public class Event implements Parcelable
     private boolean mPublicOrPrivate;
 
     // Constructor
-    public Event(String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
+    public Event(String mEventId, String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
                  String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate) {
 
+        this.mEventId = mEventId;
         this.mEventName = mEventName;
         this.mEventLocation = mEventLocation;
         this.mEventDate = mEventDate;
@@ -37,7 +39,7 @@ public class Event implements Parcelable
     }
 
     // Empty Constructor
-    public Event(String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1) {
+    public Event(String eventId, String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1) {
     }
 
     public Event() {
@@ -45,6 +47,7 @@ public class Event implements Parcelable
     }
 
     protected Event(Parcel in) {
+        mEventId = in.readString();
         mEventName = in.readString();
         mEventLocation = in.readString();
         mEventDate = in.readString();
@@ -115,6 +118,10 @@ public class Event implements Parcelable
         return mHost;
     }
 
+    public String getmEventId() {
+        return mEventId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -122,6 +129,7 @@ public class Event implements Parcelable
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mEventId);
         dest.writeString(mEventName);
         dest.writeString(mEventLocation);
         dest.writeString(mEventDate);

@@ -35,6 +35,16 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- Button (red) Background and Font -->
+    <style name="button_red_style">
+        <item name="android:background">@drawable/button_red</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <!-- Clickable TextView -->
     <style name="clickable_textViews">
         <item name="android:clickable">true</item>

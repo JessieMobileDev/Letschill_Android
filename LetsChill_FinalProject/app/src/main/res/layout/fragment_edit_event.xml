@@ -20,17 +20,17 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button_map2"
+                android:id="@+id/button_map_edit"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/ic_location_on_orange_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
             <Spinner
-                android:id="@+id/spinner_create_category2"
+                android:id="@+id/spinner_category_edit"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_marginTop="8dp"
@@ -49,7 +49,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/is_this_a_recurring_event"
                 app:layout_constraintStart_toStartOf="@+id/imageView7"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_create_category2" />
+                app:layout_constraintTop_toBottomOf="@+id/spinner_category_edit" />
 
             <TextView
                 android:id="@+id/textView8"
@@ -63,7 +63,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
             <CheckBox
-                android:id="@+id/checkBox_create_recurring2"
+                android:id="@+id/checkBox_recurring_edit"
                 android:layout_width="43dp"
                 android:layout_height="27dp"
                 android:layout_marginTop="8dp"
@@ -73,10 +73,10 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox_create_isPublic2" />
+                app:layout_constraintTop_toBottomOf="@+id/checkBox_isPublic_edit" />
 
             <CheckBox
-                android:id="@+id/checkBox_create_isPublic2"
+                android:id="@+id/checkBox_isPublic_edit"
                 android:layout_width="43dp"
                 android:layout_height="27dp"
                 android:layout_marginTop="8dp"
@@ -86,7 +86,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_create_category2" />
+                app:layout_constraintTop_toBottomOf="@+id/spinner_category_edit" />
 
             <ImageView
                 android:id="@+id/imageView7"
@@ -95,7 +95,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText4"
+                app:layout_constraintTop_toBottomOf="@+id/editText_participants_edit"
                 app:srcCompat="@drawable/ic_whatshot_gray_24dp" />
 
             <TextView
@@ -105,9 +105,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="Category"
+                style="@style/createEvent_editText"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/editText4" />
+                app:layout_constraintTop_toBottomOf="@+id/editText_participants_edit" />
 
             <ImageView
                 android:id="@+id/imageView6"
@@ -116,7 +117,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText3"
+                app:layout_constraintTop_toBottomOf="@+id/editText_description_edit"
                 app:srcCompat="@drawable/ic_people_gray_24dp" />
 
             <TextView
@@ -126,9 +127,10 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:text="Participants"
+                style="@style/createEvent_editText"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/editText3" />
+                app:layout_constraintTop_toBottomOf="@+id/editText_description_edit" />
 
             <TextView
                 android:id="@+id/textView16"
@@ -137,9 +139,10 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:text="Description"
+                style="@style/createEvent_editText"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/editText2" />
+                app:layout_constraintTop_toBottomOf="@+id/editText_location_edit" />
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -148,11 +151,11 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText2"
+                app:layout_constraintTop_toBottomOf="@+id/editText_location_edit"
                 app:srcCompat="@drawable/ic_description_gray_24dp" />
 
             <ImageView
-                android:id="@+id/imageView_details_eventImage"
+                android:id="@+id/imageView_edit_eventImage"
                 android:layout_width="match_parent"
                 android:layout_height="186dp"
                 android:scaleType="centerCrop"
@@ -169,7 +172,7 @@
                 android:alpha="0.5"
                 android:background="@android:color/black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView_details_eventImage">
+                app:layout_constraintTop_toTopOf="@+id/imageView_edit_eventImage">
 
                 <TextView
                     android:id="@+id/textView_detail_pplJoined"
@@ -198,16 +201,17 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText5"
+                app:layout_constraintTop_toBottomOf="@+id/editText_eventTitle_edit"
                 app:srcCompat="@drawable/ic_access_time_gray_24dp" />
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText"
+                app:layout_constraintTop_toBottomOf="@+id/editText_startTime_edit"
                 app:srcCompat="@drawable/ic_location_on_gray_24dp" />
 
             <TextView
@@ -215,61 +219,73 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:text="Date and Time"
+                style="@style/createEvent_editText"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/editText5" />
+                app:layout_constraintTop_toBottomOf="@+id/editText_eventTitle_edit" />
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:text="Location"
+                style="@style/createEvent_editText"
                 android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/editText" />
+                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintTop_toBottomOf="@+id/editText_startTime_edit" />
 
             <Button
-                android:id="@+id/button_detail_joinEvent"
+                android:id="@+id/save_editEvent_button"
                 style="@style/button_orange_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="24dp"
-                android:background="@android:color/holo_red_dark"
+                android:layout_marginTop="16dp"
+                android:text="@string/save"
+                app:layout_constraintEnd_toEndOf="@+id/checkBox_recurring_edit"
+                app:layout_constraintStart_toStartOf="@+id/textView8"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+            <Button
+                android:id="@+id/button_delete_edit"
+                style="@style/button_red_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:text="Delete"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                app:layout_constraintEnd_toEndOf="@+id/save_editEvent_button"
+                app:layout_constraintStart_toStartOf="@+id/save_editEvent_button"
+                app:layout_constraintTop_toBottomOf="@+id/save_editEvent_button" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="192dp" />
+                app:layout_constraintGuide_percent="0.50" />
 
             <EditText
-                android:id="@+id/editText"
+                android:id="@+id/editText_date_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Date"
-                app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                android:clickable="true"
+                android:focusable="false"
+                style="@style/createEvent_editText"
+                app:layout_constraintEnd_toEndOf="@+id/editText_eventTitle_edit"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/editText_location_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -278,12 +294,14 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Location"
-                app:layout_constraintEnd_toStartOf="@+id/button_map2"
+                style="@style/createEvent_editText"
+                app:layout_constraintEnd_toStartOf="@+id/button_map_edit"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
             <EditText
-                android:id="@+id/editText3"
+                android:id="@+id/editText_description_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -292,50 +310,89 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Desc"
+                style="@style/createEvent_editText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView5"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
             <EditText
-                android:id="@+id/editText4"
+                android:id="@+id/editText_participants_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:ems="10"
-                android:inputType="textPersonName"
                 android:text="10"
+                style="@style/createEvent_editText"
+                android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView6"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
             <EditText
-                android:id="@+id/editText5"
+                android:id="@+id/editText_eventTitle_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Movies at Lincoln"
+                style="@style/createEvent_editText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView_details_eventImage" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView_edit_eventImage" />
 
             <EditText
-                android:id="@+id/editText6"
+                android:id="@+id/editText_startTime_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Time"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:clickable="true"
+                android:focusable="false"
+                style="@style/createEvent_editText"
+                app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                app:layout_constraintStart_toStartOf="@+id/editText_date_edit"
+                app:layout_constraintTop_toBottomOf="@+id/editText_date_edit" />
+
+            <EditText
+                android:id="@+id/editText_endTime_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Time"
+                android:clickable="true"
+                android:focusable="false"
+                style="@style/createEvent_editText"
+                app:layout_constraintEnd_toEndOf="@+id/editText_date_edit"
+                app:layout_constraintStart_toStartOf="@+id/guideline8"
+                app:layout_constraintTop_toTopOf="@+id/editText_startTime_edit" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.60" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/to"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+                app:layout_constraintTop_toTopOf="@+id/editText_startTime_edit" />
 
 
         </android.support.constraint.ConstraintLayout>

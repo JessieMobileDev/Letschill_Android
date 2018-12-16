@@ -108,6 +108,7 @@ public class TabTodayFragment extends ListFragment {
 
                 }
             });
+
             mAdapter.notifyDataSetChanged();
         }
     }

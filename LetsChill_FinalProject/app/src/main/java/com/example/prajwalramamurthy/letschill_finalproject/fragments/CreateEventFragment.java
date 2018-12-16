@@ -404,17 +404,27 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                             // Read each data from uid
                             String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
 
-                            Event newEvent = new Event(mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
-                                    mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                    mCheckBox_PublicOrPrivate.isChecked());
+                            Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
 
-                            mDatabase.child("Events").push().setValue(newEvent);
 
-                            // show toast for confirmation
-                            Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                            String mEventId = mDatabase.child("Events").push().getKey();
 
-                            // Exit the current activity
-                            mCreateEventFragmentInterface.closeCreateEventActivity();
+                            if (mEventId != null) {
+
+                                Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
+                                        mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
+                                        mCheckBox_PublicOrPrivate.isChecked());
+
+
+                                mDatabase.child("Events").child(mEventId).setValue(newEvent);
+
+                                // show toast for confirmation
+                                Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+
+                                // Exit the current activity
+                                mCreateEventFragmentInterface.closeCreateEventActivity();
+                            }
+
 
                         }
 
@@ -470,12 +480,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mTimePicker.setTitle("Select Time");
             mTimePicker.show();
         }
-
-
-
-
-
-        }
+    }
 
     // shows the date picker when user clicks on select date
     private void pickerDialog()

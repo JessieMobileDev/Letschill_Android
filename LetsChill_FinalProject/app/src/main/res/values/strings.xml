@@ -102,5 +102,8 @@
     <string name="leave">Leave</string>
     <string name="to">to</string>
 
+    <!-- Edit Event Strings -->
+    <string name="toast_changesSaved">Changes were saved</string>
+
 
 </resources>
