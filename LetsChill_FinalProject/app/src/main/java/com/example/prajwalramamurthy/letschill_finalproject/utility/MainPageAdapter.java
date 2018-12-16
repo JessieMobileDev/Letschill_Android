@@ -55,7 +55,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
                 TabTodayFragment mTabTodayFragment = new TabTodayFragment();
                 mTabTodayFragment.setArguments(mFragmentBundle);
 
-//                notifyDataSetChanged();
+
 
 
                 Log.i("MAIN TODAY", "getItem: " + mTodayEvents.size());
@@ -70,7 +70,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
                 TabUpcomingFragment mTabUpcomingFragment = new TabUpcomingFragment();
                 mTabUpcomingFragment.setArguments(mFragmentBundle);
 
-//                notifyDataSetChanged();
+
 
                 return mTabUpcomingFragment;
             case 2: // Past
@@ -82,7 +82,6 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
                 TabPastFragment mTabPastFragment = new TabPastFragment();
                 mTabPastFragment.setArguments(mFragmentBundle);
 
-//                notifyDataSetChanged();
 
                 return mTabPastFragment;
         }
@@ -96,3 +95,4 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
         return mNumOfTabs;
     }
 }
+
