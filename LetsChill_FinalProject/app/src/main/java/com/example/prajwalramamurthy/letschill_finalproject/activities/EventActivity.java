@@ -30,5 +30,7 @@ public class EventActivity extends AppCompatActivity implements CreateEventFragm
 
         // Close current activity
         finish();
+
+
     }
 }
