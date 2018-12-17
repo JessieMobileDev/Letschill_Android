@@ -72,6 +72,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private FirebaseUser mFirebaseUser;
     private String mUid;
     private DatabaseReference mDBReference;
+    private String url = "";
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -86,6 +87,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     public interface CreateEventFragmentInterface {
 
         void closeCreateEventActivity();
+        void imageUploader();
     }
 
     public static CreateEventFragment newInstance() {
@@ -175,9 +177,10 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     public void uploadImage()
     {
+
+        mCreateEventFragmentInterface.imageUploader();
         
-        mGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(Intent.createChooser(mGalleryIntent, "Select Image from Gallery"), 2);
+
 
     }
 
@@ -185,6 +188,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     {
         if(getView() != null) {
             ((ImageView) (getView()).findViewById(R.id.imageView_create_background)).setImageBitmap(bitmap);
+
         }
     }
 
@@ -203,30 +207,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mImageView_eventBackground.setImageBitmap(mBitmap);
 
-//                // TODO: save the bitmap to the database
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//
-//                if (mBitmap != null) {
-//
-//                    mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//                    byte[] mByteData = baos.toByteArray();
-//
-//                    UploadTask mUploadTask = mStorage.putBytes(mByteData);
-//
-//                    // Upload the image bytes to Firebase storage
-//                    mUploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//
-//                            Log.d("test", "onSuccess: image uploaded successfully");
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//
-//                        }
-//                    });
-//                }
 
 
                 Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
@@ -299,57 +279,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             public void onClick(View v)
             {
 
-                if(mImageView_eventBackground.getDrawable() != null)
-                {
-                    // will save our ID image to our database
-                    // show toast
-                    Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
 
-                    // get reference
-                    final StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("IDImages");
-
-                    StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
-
-                    // convert bitmap
-                    Bitmap bitmap = ((BitmapDrawable) mImageView_eventBackground.getDrawable()).getBitmap();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    byte[] data = baos.toByteArray();
-
-                    UploadTask uploadTask = imagesRef.putBytes(data);
-
-
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-
-                            Uri url = taskSnapshot.getUploadSessionUri();
-
-
-
-//                            String uid = FirebaseAuth.getInstance().getUid();
-//
-//                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-//
-//                            DatabaseReference user = databaseReference.child("users").child(Objects.requireNonNull(uid));
-//
-//                            user.child("id_img").setValue(Objects.requireNonNull(url).toString());
-
-                        }
-                    });
-
-
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "", Toast.LENGTH_LONG).show();
-                }
 
             }
         });
@@ -359,6 +289,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
 
     private void saveEventDataToDatabase() {
+
 
         if (mEditText_Name.getText().toString().isEmpty() || mLocation.getText().toString().isEmpty()
                 || mEditText_Date.getText().toString().isEmpty() || mEditText_TimeStart.getText().toString().isEmpty()
@@ -415,7 +346,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                 Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                         mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                        mCheckBox_PublicOrPrivate.isChecked());
+                                        mCheckBox_PublicOrPrivate.isChecked(),url);
 
 
                                 mDatabase.child("Events").child(mEventId).setValue(newEvent);
@@ -448,6 +379,65 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mEditText_Name.setError(getResources().getString(R.string.editText_error_title));
             }
+        }
+    }
+
+
+
+
+    private void saveImagetoStorageDatabase()
+    {
+
+        if(mImageView_eventBackground.getDrawable() != null)
+        {
+            // will save our ID image to our database
+            // show toast
+            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+
+            // get reference
+            final StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("IDImages");
+
+            StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
+
+            // convert bitmap
+            Bitmap bitmap = ((BitmapDrawable) mImageView_eventBackground.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = imagesRef.putBytes(data);
+
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+
+                    url = taskSnapshot.getUploadSessionUri().toString();
+                    saveEventDataToDatabase();
+
+
+//                            String uid = FirebaseAuth.getInstance().getUid();
+//
+//                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+//
+//                            DatabaseReference user = databaseReference.child("users").child(Objects.requireNonNull(uid));
+//
+//                            user.child("id_img").setValue(Objects.requireNonNull(url).toString());
+
+                }
+            });
+
+
+        }
+        else
+        {
+            Toast.makeText(getContext(), "", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -561,7 +551,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             case R.id.save_createEvent_button:
 
                 // If save button is tapped, all collected data is stored in the database
-                saveEventDataToDatabase();
+                saveImagetoStorageDatabase();
+
                 break;
             case R.id.button_map:
 

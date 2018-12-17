@@ -104,6 +104,7 @@
 
     <!-- Edit Event Strings -->
     <string name="toast_changesSaved">Changes were saved</string>
+    <string name="toast_firebase_join">You have successfully joined the event.</string>
 
 
 </resources>

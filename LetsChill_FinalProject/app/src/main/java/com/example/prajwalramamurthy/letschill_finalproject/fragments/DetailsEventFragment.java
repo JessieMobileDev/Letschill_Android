@@ -3,6 +3,7 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,11 +14,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class DetailsEventFragment extends Fragment implements View.OnClickListener
 {
@@ -32,6 +40,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
+    private Event mEvent;
 
     public interface DetailsEventInterface {
 
@@ -97,11 +106,12 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_leave.setOnClickListener(this);
             button_rsvp.setOnClickListener(this);
 
-//            // Check if the logged user is the same as the host of the selected event
-//            FirebaseUser user = mAuth.getCurrentUser();
+            button_leave.setVisibility(View.INVISIBLE);
+            button_rsvp.setVisibility(View.INVISIBLE);
+
 
             // Retrieve the custom object selected from the list
-            Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+            mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
             if (mEvent != null) {
 
@@ -119,6 +129,42 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             }
         }
 
+    }
+
+    private void joinButtonClick()
+    {
+        button_join.setVisibility(View.INVISIBLE);
+
+        button_leave.setVisibility(View.VISIBLE);
+        button_rsvp.setVisibility(View.VISIBLE);
+
+       // show toast
+
+
+
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!= null) {
+            final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+
+            Query query = ref.child("Events").equalTo(mEvent.getmEventId());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
+                    } else {
+                        ref.child(user.getUid()).child("Events").push().setValue(mEvent.getmEventId());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
     }
 
     @Override
@@ -150,6 +196,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
             case R.id.button_detail_joinEvent:
 
+                joinButtonClick();
 
                 break;
 

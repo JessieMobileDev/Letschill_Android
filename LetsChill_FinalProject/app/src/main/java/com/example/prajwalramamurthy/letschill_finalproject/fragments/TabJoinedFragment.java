@@ -61,7 +61,7 @@ public class TabJoinedFragment extends Fragment implements ListView.OnItemClickL
         // TODO: Data below is for testing. Populate with database data. Check filter options.
         mEventList.clear();
         mEventList.add(new Event("aaaa","Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
+                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true, "test"));
 
     }
 

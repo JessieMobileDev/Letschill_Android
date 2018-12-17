@@ -394,6 +394,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                     final boolean mIsPublic = mCheckBox_isPublic.isChecked();
                     final boolean mIsRecurring = mCheckBox_isRecurring.isChecked();
 
+
                     // Retrieve the object that was passed into this fragment
                     final Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
@@ -422,7 +423,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                                 // Make a new event object with the new data to be stored
                                 Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
-                                        mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic);
+                                        mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, "test");
 
 
                                 // Save the new object to the database under the same uid

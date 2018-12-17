@@ -16,13 +16,14 @@ public class Event implements Parcelable
     private String mParticipants;
     private String mCategory;
     private String mHost;
+    private String mUrl;
     private boolean mIsRecurringEvent;
     private boolean mPublicOrPrivate;
 
     // Constructor
     public Event(String mEventId, String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
-                 String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate) {
+                 String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate,String mUrl) {
 
         this.mEventId = mEventId;
         this.mEventName = mEventName;
@@ -36,6 +37,7 @@ public class Event implements Parcelable
         this.mHost = mHost;
         this.mIsRecurringEvent = mIsRecurringEvent;
         this.mPublicOrPrivate = mPublicOrPrivate;
+        this.mUrl = mUrl;
     }
 
     // Empty Constructor
@@ -56,6 +58,7 @@ public class Event implements Parcelable
         mDescription = in.readString();
         mParticipants = in.readString();
         mCategory = in.readString();
+        mUrl = in.readString();
         mHost = in.readString();
         mIsRecurringEvent = in.readByte() != 0;
         mPublicOrPrivate = in.readByte() != 0;
@@ -84,6 +87,14 @@ public class Event implements Parcelable
 
     public String getmEventDate() {
         return mEventDate;
+    }
+
+    public String getmUrl() {
+        return mUrl;
+    }
+
+    public void setmUrl(String mUrl) {
+        this.mUrl = mUrl;
     }
 
     public String getmEventTimeStart() {
@@ -138,6 +149,7 @@ public class Event implements Parcelable
         dest.writeString(mDescription);
         dest.writeString(mParticipants);
         dest.writeString(mCategory);
+        dest.writeString(mUrl);
         dest.writeString(mHost);
         dest.writeByte((byte) (mIsRecurringEvent ? 1 : 0));
         dest.writeByte((byte) (mPublicOrPrivate ? 1 : 0));
