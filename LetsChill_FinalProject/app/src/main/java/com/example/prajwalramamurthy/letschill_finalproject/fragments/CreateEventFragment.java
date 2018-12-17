@@ -2,6 +2,7 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.app.DatePickerDialog;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -49,6 +50,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -67,6 +69,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private DatabaseReference mDatabase;
     private Button mButton_saveButton, mButton_mapButton;
     private Intent mGalleryIntent, mCropIntent;
+    private File mFile;
     private Uri mImageUri;
     private CreateEventFragmentInterface mCreateEventFragmentInterface;
     private SharedPreferences mPrefs;
@@ -76,6 +79,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private DatabaseReference mDBReference;
     private String url = "";
     private ProgressBar mProgressBar;
+    private boolean didSelectNewImage = false;
+    private Bitmap mBitmap;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -182,9 +187,10 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     public void uploadImage()
     {
 
-        mCreateEventFragmentInterface.imageUploader();
-        
+//        mCreateEventFragmentInterface.imageUploader();
 
+        mGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(Intent.createChooser(mGalleryIntent, "Select image from Gallery"), 2);
 
     }
 
@@ -207,9 +213,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 Log.d("test", "onActivityResult: inside request code 1 - data not null");
                 Bundle mBundle = data.getExtras();
 
-                Bitmap mBitmap = mBundle.getParcelable("data");
+                mBitmap = mBundle.getParcelable("data");
 
                 mImageView_eventBackground.setImageBitmap(mBitmap);
+
+                didSelectNewImage = true;
 
 
 
@@ -400,8 +408,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     private void saveImagetoStorageDatabase()
     {
-        if(mImageView_eventBackground.getDrawable() != null)
-        {
+//        if(mImageView_eventBackground.getDrawable() != null) {
+        if (didSelectNewImage) {
             // will save our ID image to our database
 
 
@@ -411,9 +419,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
 
             // convert bitmap
-            Bitmap bitmap = ((BitmapDrawable) mImageView_eventBackground.getDrawable()).getBitmap();
+//            Bitmap bitmap = ((BitmapDrawable) mImageView_eventBackground.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
 
             UploadTask uploadTask = imagesRef.putBytes(data);
@@ -429,7 +437,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
-                    url = taskSnapshot.getUploadSessionUri().toString();
+//                    url = taskSnapshot.getUploadSessionUri().toString();
+                    url = taskSnapshot.getMetadata().getPath();
+
                     saveEventDataToDatabase();
 
 
@@ -437,9 +447,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             });
 
 
-        }
-        else
-        {
+        } else {
+
             Toast.makeText(getContext(), R.string.toast_create_imageBack, Toast.LENGTH_LONG).show();
         }
     }

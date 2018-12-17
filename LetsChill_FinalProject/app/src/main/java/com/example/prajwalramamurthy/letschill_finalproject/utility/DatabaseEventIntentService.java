@@ -170,7 +170,6 @@ public class DatabaseEventIntentService extends IntentService {
                     Log.d(TAG, "onReceiveResult (service - after populating): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
                             " - Past list: " + mPastEvents.size());
 
-                    // TODO the event list needs to be cleared before this step as it is already repeated
                     // Send a message to the receiver with all the 3 array lists
                     Bundle mArraysBundle = new Bundle();
                     mArraysBundle.putSerializable(BUNDLE_EXTRA_TODAY_EVENTS, mTodayEvents);
