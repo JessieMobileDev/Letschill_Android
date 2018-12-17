@@ -422,14 +422,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     saveEventDataToDatabase();
 
 
-//                            String uid = FirebaseAuth.getInstance().getUid();
-//
-//                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-//
-//                            DatabaseReference user = databaseReference.child("users").child(Objects.requireNonNull(uid));
-//
-//                            user.child("id_img").setValue(Objects.requireNonNull(url).toString());
-
                 }
             });
 

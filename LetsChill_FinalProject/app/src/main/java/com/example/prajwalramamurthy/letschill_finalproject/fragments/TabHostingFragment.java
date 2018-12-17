@@ -20,7 +20,6 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.MyEventsAdap
 import java.util.ArrayList;
 
 public class TabHostingFragment extends ListFragment {
-
     // Variables
     private ArrayList<Event> mHostingEventList = new ArrayList<>();
     private TabHostingInterface mTabHostingInterface;
@@ -29,11 +28,11 @@ public class TabHostingFragment extends ListFragment {
 
         void openDetailsPageFromHostingTab(Event mEvent);
     }
-    
+
     public static TabHostingFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         TabHostingFragment fragment = new TabHostingFragment();
         fragment.setArguments(args);
         return fragment;
@@ -76,24 +75,10 @@ public class TabHostingFragment extends ListFragment {
                 EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mHostingEventList);
                 setListAdapter(mAdapter);
 
-<<<<<<< HEAD
-        // TODO: Data below is for testing. Populate with database data. Check filter options.
-        mEventList.clear();
-        mEventList.add(new Event("bbb", "Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true, "test"));
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        // TODO: Do an intent to the details page and pass the event object to it using the position in the arrayList
-=======
                 // Allow users to tap on the cards to see details
                 getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
->>>>>>> 6e79e79566eee894e9b11ea9b0e153428808ab41
 
                         // Pass the selected event object to the "DetailsEventActivity"
                         mTabHostingInterface.openDetailsPageFromHostingTab(mHostingEventList.get(position));
