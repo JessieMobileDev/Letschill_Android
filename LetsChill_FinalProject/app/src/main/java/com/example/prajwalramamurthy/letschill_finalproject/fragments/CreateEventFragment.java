@@ -32,6 +32,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -305,67 +306,69 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             // Cases: 1. Title and description must be longer than 2 characters
             //        2. Title must not be longer than 50 characters
             //        3. Description must not be longer than 280 characters
+            //        4. Start time and end time cannot be the same value
 
             if (mEditText_Name.getText().length() >= 2 && mEditText_Name.getText().length() <= 50) {
 
                 if (mEditText_Description.getText().length() >= 2 && mEditText_Description.getText().length() <= 280) {
 
-                    // Catch and store the user input and pass it to our data model
-                    final String mEvtName = mEditText_Name.getText().toString();
-                    final String mEvtDesc = mEditText_Description.getText().toString();
-                    final String mEvtLocation = mLocation.getText().toString();
-                    final String mEvtTimeStart = mEditText_TimeStart.getText().toString();
-                    final String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
-                    final String mEvtDate = mEditText_Date.getText().toString();
-                    final String mEvtPart = mParticipants.getText().toString();
-                    final String mEvtCategory = mCategories.getSelectedItem().toString();
+                    if (FormValidation.isStartTimeBeforeEndTime(mEditText_TimeStart.getText().toString(),
+                            mEditText_TimeEnd.getText().toString())) {
 
-                    // Retrieve the username from the current logged in user
-                    mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    mUid = mFirebaseUser.getUid();
+                        // Catch and store the user input and pass it to our data model
+                        final String mEvtName = mEditText_Name.getText().toString();
+                        final String mEvtDesc = mEditText_Description.getText().toString();
+                        final String mEvtLocation = mLocation.getText().toString();
+                        final String mEvtTimeStart = mEditText_TimeStart.getText().toString();
+                        final String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
+                        final String mEvtDate = mEditText_Date.getText().toString();
+                        final String mEvtPart = mParticipants.getText().toString();
+                        final String mEvtCategory = mCategories.getSelectedItem().toString();
 
-                    mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+                        // Retrieve the username from the current logged in user
+                        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        mUid = mFirebaseUser.getUid();
 
-                    mDBReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        mDBReference = FirebaseDatabase.getInstance().getReference("Users");
 
-                            // Read each data from uid
-                            String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
+                        mDBReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                            Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
+                                // Read each data from uid
+                                String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
 
-
-                            String mEventId = mDatabase.child("Events").push().getKey();
-
-                            if (mEventId != null) {
-
-                                Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
-                                        mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                        mCheckBox_PublicOrPrivate.isChecked(),url, false);
+                                Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
 
 
-                                mDatabase.child("Events").child(mEventId).setValue(newEvent);
+                                String mEventId = mDatabase.child("Events").push().getKey();
 
-                                // show toast for confirmation
-                                Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                                if (mEventId != null) {
 
-                                // Exit the current activity
-                                mCreateEventFragmentInterface.closeCreateEventActivity();
+                                    Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
+                                            mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
+                                            mCheckBox_PublicOrPrivate.isChecked(),url, false);
+
+
+                                    mDatabase.child("Events").child(mEventId).setValue(newEvent);
+
+                                    // show toast for confirmation
+                                    Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+
+                                    // Exit the current activity
+                                    mCreateEventFragmentInterface.closeCreateEventActivity();
+                                }
                             }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                            }
+                        });
+                    } else {
 
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
+                        mEditText_TimeStart.setError(getResources().getString(R.string.editText_error_sameTime));
+                    }
 
                 } else {
 

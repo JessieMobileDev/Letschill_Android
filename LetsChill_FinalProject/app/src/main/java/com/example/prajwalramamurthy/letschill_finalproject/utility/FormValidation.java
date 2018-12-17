@@ -4,48 +4,16 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.widget.EditText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 public class FormValidation {
-
-    public static String isPasswordValid2(String mPassword) {
-
-        // Password:
-        // -- Must be greater than 8 characters;
-        // -- Must contain 1 uppercase letter;
-        // -- Must contain 1 number;
-        // -- Must not have special characters.
-
-        String mMessage = "";
-
-        // Conditions
-        Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
-        Pattern upperCasePatten = Pattern.compile("[A-Z ]");
-        Pattern digitCasePatten = Pattern.compile("[0-9 ]");
-
-        // Validation
-        if (specialCharPatten.matcher(mPassword).find()) {
-            mMessage = "Cannot contain special characters";
-        }
-
-        if (!upperCasePatten.matcher(mPassword).find()) {
-            mMessage = "Must contain at least 1 uppercase letter";
-        }
-
-        if (mPassword.length() < 8) {
-            mMessage = "Must contain more than 8 characters long";
-        }
-
-        if (!digitCasePatten.matcher(mPassword).find()) {
-            mMessage = "Must contain at least one number";
-        }
-
-        return mMessage;
-    }
 
     public static boolean isPasswordValid(String mPassword, EditText mEditText) {
 
@@ -124,5 +92,26 @@ public class FormValidation {
 
             mEditText.setText("");
         }
+    }
+
+    public static boolean isStartTimeBeforeEndTime(String time, String endTime) {
+
+        String pattern = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        try {
+            Date date1 = sdf.parse(time);
+            Date date2 = sdf.parse(endTime);
+
+            if(date1.before(date2)) {
+                return true;
+            } else {
+
+                return false;
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
