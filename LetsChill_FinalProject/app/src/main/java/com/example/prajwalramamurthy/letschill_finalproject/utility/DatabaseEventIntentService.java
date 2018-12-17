@@ -109,8 +109,6 @@ public class DatabaseEventIntentService extends IntentService {
                                 }
                             }
 
-
-
                             // Check all the events happening in the upcoming days
                             try {
 

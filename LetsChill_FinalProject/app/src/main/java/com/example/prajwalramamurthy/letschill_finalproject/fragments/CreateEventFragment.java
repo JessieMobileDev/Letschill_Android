@@ -320,10 +320,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     final String mEvtPart = mParticipants.getText().toString();
                     final String mEvtCategory = mCategories.getSelectedItem().toString();
 
-//                    // Retrieve the user's uid from SharedPreferences
-//                    String mUserName = mPrefs.getString(DatabaseEventIntentService.PREFS_USER_NAME, "default");
-//                    Log.d("test", "saveEventDataToDatabase: ");
-
                     // Retrieve the username from the current logged in user
                     mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     mUid = mFirebaseUser.getUid();

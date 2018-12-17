@@ -172,6 +172,10 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                     mCheckBox_isPublic.setChecked(true);
                 }
             }
+
+            // Check who is current logged on and see if it's the same as the host name
+            // If they match, display the "delete button", otherwise don't
+            getCurrentSignedInUser();
         }
     }
 
@@ -223,6 +227,43 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                 break;
         }
+    }
+
+    private void getCurrentSignedInUser() {
+
+        // Retrieve the username from the current logged in user
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUid = mFirebaseUser.getUid();
+
+        FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (getArguments() != null) {
+
+                    // Get the current logged in user
+                    String mUsername = dataSnapshot.getValue(String.class);
+
+                    // Retrieve the event that was passed to this fragment
+                    Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+
+                    if (mEvent != null) {
+
+                        if (!mEvent.getmHost().equals(mUsername)) {
+
+                            // Make the delete button disappear
+                            mButton_delete.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void deleteEvent() {

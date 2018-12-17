@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +28,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class DetailsEventFragment extends Fragment implements View.OnClickListener
 {
     // Variables
@@ -37,6 +42,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     private ImageView imageView_background;
     private DetailsEventInterface mDetailsEventInterface;
     private FirebaseAuth mAuth;
+    private FirebaseUser mFirebaseUser;
+    private String mUid;
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -127,8 +134,69 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 // TODO: missing the "participants"
 
             }
+
+            // Check if the logged in user is the same as the event host
+            // If they don't match, do not display the edit button
+            getCurrentSignedInUser();
         }
 
+    }
+
+    private void getCurrentSignedInUser() {
+
+        // Retrieve the username from the current logged in user
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUid = mFirebaseUser.getUid();
+
+        FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (getArguments() != null) {
+
+                    // Get the current logged in user
+                    String mUsername = dataSnapshot.getValue(String.class);
+
+                    // Retrieve the event that was passed to this fragment
+                    Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+
+                    if (mEvent != null) {
+
+                        if (!mEvent.getmHost().equals(mUsername)) {
+
+                            // Make the delete button disappear
+                            button_edit.setVisibility(View.GONE);
+                        }
+                    }
+
+                    // Get today's date
+                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("M-dd-yyyy");
+                    String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
+
+                    // If the user tapped on an event that has passed already, they can't see the join button
+                    try {
+
+                        Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
+                        Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
+
+                        if (mSelectedEventDate.before(mTodayDate)) {
+
+                            // If selected event date is past today's date, the user cannot join
+                            button_join.setVisibility(View.GONE);
+                        }
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void joinButtonClick()
