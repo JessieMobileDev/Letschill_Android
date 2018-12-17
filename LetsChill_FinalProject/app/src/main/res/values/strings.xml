@@ -73,6 +73,7 @@
     </string-array>
     <string name="editText_error_title">This field must be longer than 2 characters and less than 50 characters</string>
     <string name="editText_error_description">This field must be longer than 2 characters and less than 280 characters</string>
+    <string name="editText_error_sameTime">Start time and end time cannot be the same time</string>
 
     <!-- Main Activity Strings -->
     <string name="menu_profile">Profile</string>
@@ -106,6 +107,10 @@
     <string name="toast_changesSaved">Changes were saved</string>
     <string name="toast_firebase_join">You have successfully joined the event.</string>
     <string name="toast_deleted">Event deleted</string>
+    <string name="alert_title">Delete</string>
+    <string name="alert_message">Are you sure you want to delete this event?</string>
+    <string name="alert_Yes">Yes</string>
+    <string name="alert_No">No</string>
 
     <!-- My Events Strings -->
     <string name="tab_joined">JOINED</string>

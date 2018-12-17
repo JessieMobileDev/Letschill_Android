@@ -1,8 +1,10 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -275,16 +277,33 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             if (ConnectionHandler.isConnected(getContext())) {
 
                 // Retrieve the selected event from the arguments
-                Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+                final Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
-                if (mEvent != null) {
+                // Display a dialog box asking the user to be sure of their action
+                AlertDialog.Builder mDeleteAlert = new AlertDialog.Builder(getContext());
+                mDeleteAlert.setTitle(R.string.alert_title);
+                mDeleteAlert.setMessage(R.string.alert_message);
+                mDeleteAlert.setNegativeButton(R.string.alert_No, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                mDeleteAlert.setPositiveButton(R.string.alert_Yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                    Intent mChangeVariableIntent = new Intent(getContext(), DatabaseEventIntentService.class);
-                    mChangeVariableIntent.putExtra(DatabaseEventIntentService.EXTRA_RESULT_RECEIVER, new DatabaseEventDataReceiver());
-                    mChangeVariableIntent.putExtra(EXTRA_DB_DELETE_ID, 2);
-                    mChangeVariableIntent.putExtra(ARGS_OBJECT, mEvent);
-                    getContext().startService(mChangeVariableIntent);
-                }
+                        if (mEvent != null) {
+
+                            Intent mChangeVariableIntent = new Intent(getContext(), DatabaseEventIntentService.class);
+                            mChangeVariableIntent.putExtra(DatabaseEventIntentService.EXTRA_RESULT_RECEIVER, new DatabaseEventDataReceiver());
+                            mChangeVariableIntent.putExtra(EXTRA_DB_DELETE_ID, 2);
+                            mChangeVariableIntent.putExtra(ARGS_OBJECT, mEvent);
+                            getContext().startService(mChangeVariableIntent);
+                        }
+                    }
+                });
+                mDeleteAlert.create().show();
             }
         }
 
