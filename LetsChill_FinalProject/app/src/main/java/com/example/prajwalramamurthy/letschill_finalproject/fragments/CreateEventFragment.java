@@ -320,10 +320,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     final String mEvtPart = mParticipants.getText().toString();
                     final String mEvtCategory = mCategories.getSelectedItem().toString();
 
-//                    // Retrieve the user's uid from SharedPreferences
-//                    String mUserName = mPrefs.getString(DatabaseEventIntentService.PREFS_USER_NAME, "default");
-//                    Log.d("test", "saveEventDataToDatabase: ");
-
                     // Retrieve the username from the current logged in user
                     mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     mUid = mFirebaseUser.getUid();
@@ -346,7 +342,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                 Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                         mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                        mCheckBox_PublicOrPrivate.isChecked(),url);
+                                        mCheckBox_PublicOrPrivate.isChecked(),url, false);
 
 
                                 mDatabase.child("Events").child(mEventId).setValue(newEvent);
