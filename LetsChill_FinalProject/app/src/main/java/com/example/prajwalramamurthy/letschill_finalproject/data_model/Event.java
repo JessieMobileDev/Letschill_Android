@@ -19,11 +19,13 @@ public class Event implements Parcelable
     private String mUrl;
     private boolean mIsRecurringEvent;
     private boolean mPublicOrPrivate;
+    private boolean mIsDeleted;
 
     // Constructor
     public Event(String mEventId, String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
-                 String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate,String mUrl) {
+                 String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate, String mUrl,
+                 boolean mIsDeleted) {
 
         this.mEventId = mEventId;
         this.mEventName = mEventName;
@@ -38,6 +40,7 @@ public class Event implements Parcelable
         this.mIsRecurringEvent = mIsRecurringEvent;
         this.mPublicOrPrivate = mPublicOrPrivate;
         this.mUrl = mUrl;
+        this.mIsDeleted = mIsDeleted;
     }
 
     // Empty Constructor
@@ -62,6 +65,7 @@ public class Event implements Parcelable
         mHost = in.readString();
         mIsRecurringEvent = in.readByte() != 0;
         mPublicOrPrivate = in.readByte() != 0;
+        mIsDeleted = in.readByte() != 0;
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -133,6 +137,10 @@ public class Event implements Parcelable
         return mEventId;
     }
 
+    public boolean ismIsDeleted() {
+        return mIsDeleted;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -153,5 +161,6 @@ public class Event implements Parcelable
         dest.writeString(mHost);
         dest.writeByte((byte) (mIsRecurringEvent ? 1 : 0));
         dest.writeByte((byte) (mPublicOrPrivate ? 1 : 0));
+        dest.writeByte((byte) (mIsDeleted ? 1 : 0));
     }
 }

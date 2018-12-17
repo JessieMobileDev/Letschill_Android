@@ -15,6 +15,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.activities.MyEventsA
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.EditEventFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignUpFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,13 +66,9 @@ public class DatabaseEventIntentService extends IntentService {
 
         final ResultReceiver mReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
 
-        Integer mRequestID = intent.getIntExtra(MainActivity.EXTRA_DB_REQUEST_ID, 2);
+        Integer mRequestID = intent.getIntExtra(MainActivity.EXTRA_DB_REQUEST_ID, 3);
         Integer mRequestMyEvents = intent.getIntExtra(MyEventsActivity.EXTRA_DB_REQUEST_ID_MYEVENTS, 3);
-
-        // Instantiate arrayLists
-//        mTodayEvents = new ArrayList<>();
-//        mUpcomingEvents = new ArrayList<>();
-//        mPastEvents = new ArrayList<>();
+        Integer mRequestDeleteID = intent.getIntExtra(EditEventFragment.EXTRA_DB_DELETE_ID, 3);
 
         // Get the reference of the database under "Events"
         mDBReference = FirebaseDatabase.getInstance().getReference("Events");
@@ -92,13 +89,7 @@ public class DatabaseEventIntentService extends IntentService {
 
                     for (DataSnapshot event: dataSnapshot.getChildren()) {
 
-
                         Event mEvent = event.getValue(Event.class);
-
-                        // Clear the lists before adding
-//                        mTodayEvents.clear();
-//                        mUpcomingEvents.clear();
-//                        mPastEvents.clear();
 
                         if (mEvent != null) {
 
@@ -108,13 +99,14 @@ public class DatabaseEventIntentService extends IntentService {
                             // Check all the events happening today
                             if (mEvent.getmEventDate().equals(mTodayDateString)) {
 
-                                //mTodayEvents.clear();
+                                // If the event deletion is set to false, then display
+                                if (!mEvent.ismIsDeleted()) {
 
+                                    mTodayEvents.add(mEvent);
 
-                                mTodayEvents.add(mEvent);
-
-                                Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
-                                        " - Today date: " + mTodayDateString);
+                                    Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
+                                            " - Today date: " + mTodayDateString);
+                                }
                             }
 
 
@@ -127,10 +119,14 @@ public class DatabaseEventIntentService extends IntentService {
 
                                 if (mSelectedEventDate.after(mTodayDate)) {
 
-                                    mUpcomingEvents.add(mEvent);
+                                    // If the event deletion is set to false, then display
+                                    if (!mEvent.ismIsDeleted()) {
 
-                                    Log.d(TAG, "onDataChange (upcoming): (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
-                                            " - Today date: " + mTodayDateString);
+                                        mUpcomingEvents.add(mEvent);
+
+                                        Log.d(TAG, "onDataChange (upcoming): (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
+                                                " - Today date: " + mTodayDateString);
+                                    }
                                 }
 
                             } catch (Exception e) {
@@ -147,10 +143,14 @@ public class DatabaseEventIntentService extends IntentService {
 
                                 if (mSelectedEventDate.before(mTodayDate)) {
 
-                                    mPastEvents.add(mEvent);
+                                    // If the event deletion is set to false, then display
+                                    if (!mEvent.ismIsDeleted()) {
 
-                                    Log.d(TAG, "onDataChange (past): (3) Past - Selected event date: " + mEvent.getmEventDate() +
-                                            " - Today date: " + mTodayDateString);
+                                        mPastEvents.add(mEvent);
+
+                                        Log.d(TAG, "onDataChange (past): (3) Past - Selected event date: " + mEvent.getmEventDate() +
+                                                " - Today date: " + mTodayDateString);
+                                    }
                                 }
 
                             } catch (Exception e) {
@@ -247,6 +247,54 @@ public class DatabaseEventIntentService extends IntentService {
             });
 
 
+        }
+
+        if (mRequestDeleteID == 2) {
+
+            // Retrieve the event passed through the intent
+            final Event mEvent = intent.getParcelableExtra(EditEventFragment.ARGS_OBJECT);
+
+            if (mEvent != null) {
+
+                // Loop through the events and look for the same to change the variable isDeleted to true
+                mDBReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot event: dataSnapshot.getChildren()) {
+
+                            Event mRetrievedEvent = event.getValue(Event.class);
+
+                            if (mRetrievedEvent != null) {
+
+                                if (mRetrievedEvent.getmEventId().equals(mEvent.getmEventId())) {
+
+                                    // If Ids are a match, change the variable isDeleted to true
+                                    Event mChangedEvent = new Event(mRetrievedEvent.getmEventId(), mRetrievedEvent.getmEventName(),
+                                            mRetrievedEvent.getmEventLocation(), mRetrievedEvent.getmEventDate(), mRetrievedEvent.getmEventTimeStart(),
+                                            mRetrievedEvent.getmEventTimeFinish(), mRetrievedEvent.getmDescription(), mRetrievedEvent.getmParticipants(),
+                                            mRetrievedEvent.getmCategory(), mRetrievedEvent.getmHost(), mRetrievedEvent.ismIsRecurringEvent(),
+                                            mRetrievedEvent.ismPublicOrPrivate(), mRetrievedEvent.getmUrl(), true);
+
+                                    // Get the reference in the database using the event ID
+                                    mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mRetrievedEvent.getmEventId());
+
+                                    // Save the changed event back to the database
+                                    mDBReference.setValue(mChangedEvent);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                // Send an ok to the EditEventFragment
+                mReceiver.send(Activity.RESULT_OK, null);
+            }
         }
     }
 }

@@ -346,7 +346,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                 Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                         mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                        mCheckBox_PublicOrPrivate.isChecked(),url);
+                                        mCheckBox_PublicOrPrivate.isChecked(),url, false);
 
 
                                 mDatabase.child("Events").child(mEventId).setValue(newEvent);

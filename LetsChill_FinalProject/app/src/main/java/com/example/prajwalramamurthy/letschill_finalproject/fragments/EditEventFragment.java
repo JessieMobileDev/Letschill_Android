@@ -8,10 +8,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +30,11 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -58,9 +65,10 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private EditEventInterface mEditEventInterface;
     private Intent mGalleryIntent, mCropIntent;
     private Uri mImageUri;
+    private final Handler mHandler = new Handler();
 
     // Constants
-    private static final String ARGS_OBJECT = "ARGS_OBJECT";
+    public static final String ARGS_OBJECT = "ARGS_OBJECT";
     private static final String CROP_EXTRA = "crop";
     private static final String CROP_OUTPUTX = "outputX";
     private static final String CROP_OUTPUTY = "outputY";
@@ -68,6 +76,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private static final String CROP_ASPECTY = "aspectY";
     private static final String CROP_SCALEUP_IFNEEDED = "scaleUpIfNeeded";
     private static final String CROP_RETURN_DATA = "return-data";
+    public static final String EXTRA_DB_DELETE_ID = "EXTRA_DB_DELETE_ID";
 
     public interface EditEventInterface {
 
@@ -201,6 +210,11 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                 break;
             case R.id.button_delete_edit:
+
+                // When the delete button is tapped, the event in the database has the variable
+                // isDeleted set to true and does not show anymore on the app
+                deleteEvent();
+
                 break;
             case R.id.button_map_edit:
 
@@ -208,6 +222,50 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                 openMap();
 
                 break;
+        }
+    }
+
+    private void deleteEvent() {
+
+        // Start an intent service to request the deletion of an event
+        // We'll change the variable isDelete from false to true
+        if (getContext() != null && getArguments() != null) {
+
+            if (ConnectionHandler.isConnected(getContext())) {
+
+                // Retrieve the selected event from the arguments
+                Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+
+                if (mEvent != null) {
+
+                    Intent mChangeVariableIntent = new Intent(getContext(), DatabaseEventIntentService.class);
+                    mChangeVariableIntent.putExtra(DatabaseEventIntentService.EXTRA_RESULT_RECEIVER, new DatabaseEventDataReceiver());
+                    mChangeVariableIntent.putExtra(EXTRA_DB_DELETE_ID, 2);
+                    mChangeVariableIntent.putExtra(ARGS_OBJECT, mEvent);
+                    getContext().startService(mChangeVariableIntent);
+                }
+            }
+        }
+
+    }
+
+    public class DatabaseEventDataReceiver extends ResultReceiver {
+
+        DatabaseEventDataReceiver() {
+            super(mHandler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            if (getContext() != null) {
+
+                // The event was deleted successfully, so display a toast
+                Toast.makeText(getContext(), R.string.toast_deleted, Toast.LENGTH_SHORT).show();
+
+                // Close this activity
+                mEditEventInterface.closeEditEventActivity();
+            }
         }
     }
 
@@ -402,9 +460,6 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                         Log.d("test", "saveEditEventToDatabase: event id: " + mEvent.getmEventId());
 
-                        /*
-                        String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
-                         */
                         // Get the database reference
                         mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mEvent.getmEventId());
 
@@ -421,9 +476,11 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                                 Log.d("test", "saveEditEventToDatabase: retrieved NAME: " + mUsername);
 
+                                // TODO: Redo the image capture again
                                 // Make a new event object with the new data to be stored
                                 Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
-                                        mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, "test");
+                                        mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, mEvent.getmUrl(),
+                                        false);
 
 
                                 // Save the new object to the database under the same uid
