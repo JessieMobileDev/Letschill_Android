@@ -77,14 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-//
-//        // Reset lists
-//        mTodayEvents = new ArrayList<>();
-//        mUpcomingEvents = new ArrayList<>();
-//        mPastEvents = new ArrayList<>();
-       // getSupportFragmentManager().beginTransaction().replace(R.id.card_imageView, )
-//        Intent mCreateEventIntent = new Intent(MainActivity.this, MainActivity.class);
-//        startActivity(mCreateEventIntent);
 
         // Request events data from the database
         requestEventData();
@@ -110,13 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void requestEventData() {
 
         if (ConnectionHandler.isConnected(this)) {
-
-//            // Clear the lists before adding
-//            mTodayEvents.clear();
-//            mUpcomingEvents.clear();
-//            mPastEvents.clear();
-
-
 
             // Start an intent service to retrieve all the events' data
             // We're fetching all the events that the user is hosting, or just participating

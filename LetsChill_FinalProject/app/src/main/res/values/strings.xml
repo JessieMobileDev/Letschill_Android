@@ -106,5 +106,9 @@
     <string name="toast_changesSaved">Changes were saved</string>
     <string name="toast_firebase_join">You have successfully joined the event.</string>
 
+    <!-- My Events Strings -->
+    <string name="tab_joined">JOINED</string>
+    <string name="tab_hosting">HOSTING</string>
+
 
 </resources>

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.MyEventsActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
@@ -35,6 +36,9 @@ public class DatabaseEventIntentService extends IntentService {
     private ArrayList<Event> mTodayEvents;
     private ArrayList<Event> mUpcomingEvents;
     private ArrayList<Event> mPastEvents;
+    private ArrayList<Event> mJoinedEvents;
+    private ArrayList<Event> mHostingEvents;
+    private String mUsername;
 
     // Constants
     public static final String EXTRA_RESULT_RECEIVER = "com.example.prajwalramamurthy.letschill_finalproject.utility.EXTRA_RESULT_RECEIVER";
@@ -42,6 +46,8 @@ public class DatabaseEventIntentService extends IntentService {
     public static final String BUNDLE_EXTRA_TODAY_EVENTS = "BUNDLE_EXTRA_TODAY_EVENTS";
     public static final String BUNDLE_EXTRA_UPCOMING_EVENTS = "BUNDLE_EXTRA_UPCOMING_EVENTS";
     public static final String BUNDLE_EXTRA_PAST_EVENTS = "BUNDLE_EXTRA_PAST_EVENTS";
+    public static final String BUNDLE_EXTRA_JOINED_EVENTS = "BUNDLE_EXTRA_JOINED_EVENTS";
+    public static final String BUNDLE_EXTRA_HOSTING_EVENTS = "BUNDLE_EXTRA_HOSTING_EVENTS";
     public static final String BUNDLE_EXTRA_OK_USERNAME = "BUNDLE_EXTRA_OK_USERNAME";
     public static final String PREFS_USER_NAME = "PREFS_USER_NAME";
 
@@ -59,21 +65,18 @@ public class DatabaseEventIntentService extends IntentService {
 
         final ResultReceiver mReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
 
-        Integer mRequestID = intent.getIntExtra(MainActivity.EXTRA_DB_REQUEST_ID, 1);
+        Integer mRequestID = intent.getIntExtra(MainActivity.EXTRA_DB_REQUEST_ID, 2);
+        Integer mRequestMyEvents = intent.getIntExtra(MyEventsActivity.EXTRA_DB_REQUEST_ID_MYEVENTS, 3);
 
         // Instantiate arrayLists
 //        mTodayEvents = new ArrayList<>();
 //        mUpcomingEvents = new ArrayList<>();
 //        mPastEvents = new ArrayList<>();
 
+        // Get the reference of the database under "Events"
+        mDBReference = FirebaseDatabase.getInstance().getReference("Events");
+
         if (mRequestID == 0) {
-
-            // Get the reference of the database under "Events"
-            mDBReference = FirebaseDatabase.getInstance().getReference("Events");
-
-
-
-
 
             mDBReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -177,6 +180,73 @@ public class DatabaseEventIntentService extends IntentService {
 
                 }
             });
+
+        }
+
+        if (mRequestMyEvents == 1) {
+
+            // Collect the current logged in user name
+            FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            final String mUid = mFirebaseUser.getUid();
+
+            DatabaseReference mDBUsersReference = FirebaseDatabase.getInstance().getReference("Users");
+
+            mDBUsersReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    // Collect the user name
+                    mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
+                    Log.d(TAG, "onReceiveResult: My events username: " + mUsername);
+
+
+                    mDBReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            // Clear the lists before adding to them
+                            mJoinedEvents = new ArrayList<>();
+                            mHostingEvents = new ArrayList<>();
+
+                            for (DataSnapshot event: dataSnapshot.getChildren()) {
+
+                                Event mEvent = event.getValue(Event.class);
+
+                                if (mEvent != null) {
+
+                                    // TODO: GOLD PHASE: Pull data based on people who joined an event
+
+                                    Log.d(TAG, "onReceiveResult: Host name: " + mEvent.getmHost());
+                                    if (mEvent.getmHost().equals(mUsername)) {
+
+                                        mHostingEvents.add(mEvent);
+                                    }
+                                }
+                            }
+
+                            Log.d(TAG, "onReceiveResult: Joined list: " + mJoinedEvents.size() + " - Hosting list: " + mHostingEvents.size());
+
+                            // Send a message to the receiver with all the 2 array lists
+                            Bundle mArraysBundle = new Bundle();
+                            mArraysBundle.putSerializable(BUNDLE_EXTRA_JOINED_EVENTS, mJoinedEvents);
+                            mArraysBundle.putSerializable(BUNDLE_EXTRA_HOSTING_EVENTS, mHostingEvents);
+                            mReceiver.send(Activity.RESULT_OK, mArraysBundle);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
         }
     }
 }

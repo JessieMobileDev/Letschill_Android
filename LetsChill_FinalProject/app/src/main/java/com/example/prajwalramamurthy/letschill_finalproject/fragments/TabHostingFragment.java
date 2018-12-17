@@ -1,9 +1,11 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +15,20 @@ import android.widget.ListView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MyEventsAdapter;
 
 import java.util.ArrayList;
 
-public class TabHostingFragment extends Fragment implements ListView.OnItemClickListener {
+public class TabHostingFragment extends ListFragment {
 
     // Variables
-    private ListView mListView_hosting;
-    private final ArrayList<Event> mEventList = new ArrayList<>();
+    private ArrayList<Event> mHostingEventList = new ArrayList<>();
+    private TabHostingInterface mTabHostingInterface;
+
+    public interface TabHostingInterface {
+
+        void openDetailsPageFromHostingTab(Event mEvent);
+    }
     
     public static TabHostingFragment newInstance() {
         
@@ -29,6 +37,22 @@ public class TabHostingFragment extends Fragment implements ListView.OnItemClick
         TabHostingFragment fragment = new TabHostingFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof TabHostingInterface) {
+
+            mTabHostingInterface = (TabHostingInterface)context;
+        }
     }
 
     @Nullable
@@ -41,23 +65,18 @@ public class TabHostingFragment extends Fragment implements ListView.OnItemClick
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getView() != null && getContext() != null) {
+        if (getView() != null && getContext() != null && getArguments() != null) {
 
-            // Find views
-            mListView_hosting = getView().findViewById(R.id.listView_hosting);
-            mListView_hosting.setOnItemClickListener(this);
+            // Retrieve the list view that was passed to this fragment through arguments
+            mHostingEventList = (ArrayList<Event>) getArguments().getSerializable(MyEventsAdapter.ARGS_HOSTINGEVENTS);
 
-            // Populate the array list with the retrieved data from the database
-            populateEventList();
+            if (mHostingEventList != null) {
 
-            // Adapter that will populate the list view
-            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-            mListView_hosting.setAdapter(mAdapter);
-        }
-    }
+                // Adapter that will populate the list view
+                EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mHostingEventList);
+                setListAdapter(mAdapter);
 
-    public void populateEventList() {
-
+<<<<<<< HEAD
         // TODO: Data below is for testing. Populate with database data. Check filter options.
         mEventList.clear();
         mEventList.add(new Event("bbb", "Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
@@ -69,6 +88,18 @@ public class TabHostingFragment extends Fragment implements ListView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         // TODO: Do an intent to the details page and pass the event object to it using the position in the arrayList
+=======
+                // Allow users to tap on the cards to see details
+                getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+>>>>>>> 6e79e79566eee894e9b11ea9b0e153428808ab41
 
+                        // Pass the selected event object to the "DetailsEventActivity"
+                        mTabHostingInterface.openDetailsPageFromHostingTab(mHostingEventList.get(position));
+                    }
+                });
+            }
+        }
     }
 }

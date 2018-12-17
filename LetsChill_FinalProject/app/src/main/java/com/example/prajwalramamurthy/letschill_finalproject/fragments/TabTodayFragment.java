@@ -24,10 +24,8 @@ import java.util.ArrayList;
 public class TabTodayFragment extends ListFragment {
 
     // Variables
-//    private ArrayList<Event> mEventList;
     private ArrayList<Event> mTodayEvents = new ArrayList<>();
     private TabTodayInterface mTabTodayInterface;
-    MainPageAdapter mainPageAdapter;
 
     public interface TabTodayInterface {
 
@@ -57,7 +55,6 @@ public class TabTodayFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-//        mainPageAdapter.notifyDataSetChanged();
 
 
     }
@@ -73,24 +70,6 @@ public class TabTodayFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        // Populate the array list with the retrieved data from the database
-//        populateEventList();
-//
-//        // Adapter that will populate the list view
-//        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-//        setListAdapter(mAdapter);
-//
-//        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                // Pass the selected event object to the "DetailsEventActivity"
-//                mTabTodayInterface.openDetailsPageFromTodayTab(mEventList.get(position));
-//                Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
-//
-//            }
-//        });
 
         mTodayEvents = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
 
@@ -114,16 +93,5 @@ public class TabTodayFragment extends ListFragment {
 
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    public void populateEventList() {
-
-
-
-        // Get the array list from the fragment arguments
-//        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
-
-        //mEventList.clear();
-
     }
 }
