@@ -10,6 +10,9 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MyEventsActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
@@ -24,7 +27,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +58,7 @@ public class DatabaseEventIntentService extends IntentService {
     public static final String BUNDLE_EXTRA_HOSTING_EVENTS = "BUNDLE_EXTRA_HOSTING_EVENTS";
     public static final String BUNDLE_EXTRA_OK_USERNAME = "BUNDLE_EXTRA_OK_USERNAME";
     public static final String PREFS_USER_NAME = "PREFS_USER_NAME";
+
 
     public DatabaseEventIntentService() {
         super("DatabaseEventIntentService");
@@ -246,6 +254,11 @@ public class DatabaseEventIntentService extends IntentService {
 
 
         }
+
+        // Reference to an image file in Cloud Storage
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+
+
 
         if (mRequestDeleteID == 2) {
 
