@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -111,7 +112,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_edit.setOnClickListener(this);
             button_join.setOnClickListener(this);
             button_leave.setOnClickListener(this);
-            button_rsvp.setOnClickListener(this);
+//            button_rsvp.setOnClickListener(this);
 
             button_leave.setVisibility(View.INVISIBLE);
             button_rsvp.setVisibility(View.INVISIBLE);
@@ -166,6 +167,20 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                             // Make the delete button disappear
                             button_edit.setVisibility(View.GONE);
+
+                            // Change the "join button" text to "join"
+                            button_join.setText(R.string.join);
+                            Log.d("test", "joinButtonClick: other's event");
+                        }
+
+                        // If the current logged in user is equal to the event's host name,
+                        // change the "join" button to "rsvp" text
+                        else if (mEvent.getmHost().equals(mUsername)) {
+
+                            button_join.setText(R.string.rsvp);
+
+                            button_rsvp.setVisibility(View.GONE);
+                            Log.d("test", "joinButtonClick: my own event");
                         }
                     }
 
@@ -189,6 +204,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                         e.printStackTrace();
                     }
+
+
                 }
             }
 
@@ -201,40 +218,54 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     private void joinButtonClick()
     {
-        button_join.setVisibility(View.INVISIBLE);
+        if (button_join.getText().toString().equals(getResources().getString(R.string.join))) {
 
-        button_leave.setVisibility(View.VISIBLE);
-        button_rsvp.setVisibility(View.VISIBLE);
+            // If the button text is equal to "Join", continue below
+            // This part will only work if the logged in user is not the same as the event host
+            button_join.setVisibility(View.INVISIBLE);
 
-        // show toast
-        Toast.makeText(getContext(), R.string.toast_event_joined, Toast.LENGTH_SHORT).show();
+            button_leave.setVisibility(View.VISIBLE);
+            button_rsvp.setVisibility(View.VISIBLE);
+
+            // Show toast
+            Toast.makeText(getContext(), R.string.toast_event_joined, Toast.LENGTH_SHORT).show();
 
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!= null) {
-            final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user!= null) {
+                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
 
-            Query query = ref.child("Events").equalTo(mEvent.getmEventId());
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
-                    } else {
-                        ref.child(user.getUid()).child("Events").push().setValue(mEvent.getmEventId());
+                Query query = ref.child("Events").equalTo(mEvent.getmEventId());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
+                        } else {
+                            ref.child(user.getUid()).child("Events").push().setValue(mEvent.getmEventId());
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+                    }
+                });
+            }
+        } else if (button_join.getText().toString().equals(getResources().getString(R.string.rsvp))) {
 
+            // If the button text is equal to "rsvp", continue below
+            // This part will only happen if the logged in user is the same as the event host
+            button_join.setVisibility(View.VISIBLE);
 
+            button_leave.setVisibility(View.INVISIBLE);
+            button_rsvp.setVisibility(View.INVISIBLE);
+
+            // Perform the rsvp functionality
+            Log.d("test", "onClick (rsvp): Host is equal to logged in user");
+            rsvpButtonClick();
         }
     }
-
 
     private void leaveButtonClick()
     {
@@ -244,6 +275,10 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     private void rsvpButtonClick()
     {
+        // Note: this method is being called inside the "joinButtonClick()". I'm recycling the buttons
+        // instead of having a bunch of buttons on the layout. It's all connected and working. Just do
+        // the rsvp functionality in this method and it will work.
+
 
     }
 
@@ -283,6 +318,9 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
             case R.id.button_detail_rsvp:
 
+                // This method will be called ONLY when host is not equal to logged in user
+                Log.d("test", "onClick (rsvp): Host is not equal to logged in user");
+                rsvpButtonClick();
 
                 break;
 

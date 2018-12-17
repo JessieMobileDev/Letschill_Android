@@ -27,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -74,6 +75,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private String mUid;
     private DatabaseReference mDBReference;
     private String url = "";
+    private ProgressBar mProgressBar;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -151,6 +153,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mImageView_eventBackground = getView().findViewById(R.id.imageView_create_background);
             mButton_saveButton = getView().findViewById(R.id.save_createEvent_button);
             mButton_mapButton = getView().findViewById(R.id.button_map);
+            mProgressBar = getView().findViewById(R.id.progressBar_createEvent_save);
 
             mEditText_Date.setInputType(InputType.TYPE_NULL);
 
@@ -291,7 +294,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     private void saveEventDataToDatabase() {
 
-
         if (mEditText_Name.getText().toString().isEmpty() || mLocation.getText().toString().isEmpty()
                 || mEditText_Date.getText().toString().isEmpty() || mEditText_TimeStart.getText().toString().isEmpty()
                 || mParticipants.getText().toString().isEmpty() || mEditText_Description.getText().toString().isEmpty()
@@ -354,6 +356,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                     // show toast for confirmation
                                     Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+
+                                    // Make the progress bar disappear
+                                    mProgressBar.setVisibility(View.GONE);
 
                                     // Exit the current activity
                                     mCreateEventFragmentInterface.closeCreateEventActivity();
@@ -539,6 +544,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 timePickerDialog(1);
                 break;
             case R.id.save_createEvent_button:
+
+                // Make the progress bar show up
+                mProgressBar.setVisibility(View.VISIBLE);
 
                 // If save button is tapped, all collected data is stored in the database
                 saveImagetoStorageDatabase();
