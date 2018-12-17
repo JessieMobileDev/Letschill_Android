@@ -105,5 +105,9 @@
     <!-- Edit Event Strings -->
     <string name="toast_changesSaved">Changes were saved</string>
 
+    <!-- My Events Strings -->
+    <string name="tab_joined">JOINED</string>
+    <string name="tab_hosting">HOSTING</string>
+
 
 </resources>

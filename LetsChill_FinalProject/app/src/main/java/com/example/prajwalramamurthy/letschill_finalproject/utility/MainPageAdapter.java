@@ -55,9 +55,6 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
                 TabTodayFragment mTabTodayFragment = new TabTodayFragment();
                 mTabTodayFragment.setArguments(mFragmentBundle);
 
-
-
-
                 Log.i("MAIN TODAY", "getItem: " + mTodayEvents.size());
 
                 return mTabTodayFragment;

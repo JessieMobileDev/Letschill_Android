@@ -1,9 +1,11 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +15,21 @@ import android.widget.ListView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MyEventsAdapter;
 
 import java.util.ArrayList;
 
-public class TabJoinedFragment extends Fragment implements ListView.OnItemClickListener {
+public class TabJoinedFragment extends ListFragment {
 
     // Variables
-    private ListView mListView_joined;
-    private final ArrayList<Event> mEventList = new ArrayList<>();
-    
+    private ArrayList<Event> mJoinedEventList = new ArrayList<>();
+    private TabJoinedInterface mTabJoinedInterface;
+
+    public interface TabJoinedInterface {
+
+        void openDetailsPageFromJoinedTab(Event mEvent);
+    }
+
     public static TabJoinedFragment newInstance() {
         
         Bundle args = new Bundle();
@@ -29,6 +37,22 @@ public class TabJoinedFragment extends Fragment implements ListView.OnItemClickL
         TabJoinedFragment fragment = new TabJoinedFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof TabJoinedInterface) {
+
+            mTabJoinedInterface = (TabJoinedInterface)context;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     @Nullable
@@ -41,34 +65,27 @@ public class TabJoinedFragment extends Fragment implements ListView.OnItemClickL
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getView() != null && getContext() != null) {
+        if (getView() != null && getContext() != null && getArguments() != null) {
 
-            // Find views
-            mListView_joined = getView().findViewById(R.id.listView_joined);
-            mListView_joined.setOnItemClickListener(this);
+            // Retrieve the list view that was passed to this fragment through arguments
+            mJoinedEventList = (ArrayList<Event>) getArguments().getSerializable(MyEventsAdapter.ARGS_JOINEDEVENTS);
 
-            // Populate the array list with the retrieved data from the database
-            populateEventList();
+            if (mJoinedEventList != null) {
 
-            // Adapter that will populate the list view
-            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
-            mListView_joined.setAdapter(mAdapter);
+                // Adapter that will populate the list view
+                EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mJoinedEventList);
+                setListAdapter(mAdapter);
+
+                // Allow users to tap on the cards to see details
+                getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        // Pass the selected event object to the "DetailsEventActivity"
+                        mTabJoinedInterface.openDetailsPageFromJoinedTab(mJoinedEventList.get(position));
+                    }
+                });
+            }
         }
-    }
-
-    public void populateEventList() {
-
-        // TODO: Data below is for testing. Populate with database data. Check filter options.
-        mEventList.clear();
-        mEventList.add(new Event("aaaa","Tennis", "55 Lincoln Avenue", "Dec 20, 2018", "3:30pm", "7:00pm",
-                "Let's watch some movies!", "Me, John, and Jessie", "Movies", "Me", true, true));
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        // TODO: Do an intent to the details page and pass the event object to it using the position in the arrayList
-
     }
 }
