@@ -112,7 +112,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_edit.setOnClickListener(this);
             button_join.setOnClickListener(this);
             button_leave.setOnClickListener(this);
-//            button_rsvp.setOnClickListener(this);
+            button_rsvp.setOnClickListener(this);
 
             button_leave.setVisibility(View.INVISIBLE);
             button_rsvp.setVisibility(View.INVISIBLE);
@@ -159,7 +159,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                     String mUsername = dataSnapshot.getValue(String.class);
 
                     // Retrieve the event that was passed to this fragment
-                    Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+                    final Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
                     if (mEvent != null) {
 
@@ -171,6 +171,38 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             // Change the "join button" text to "join"
                             button_join.setText(R.string.join);
                             Log.d("test", "joinButtonClick: other's event");
+
+                            // TODO: check if the user has already joined this event
+
+                            FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot joinedEvent: dataSnapshot.getChildren()) {
+
+                                        String mJoinedEventID = joinedEvent.getValue(String.class);
+
+                                        if (mJoinedEventID != null) {
+
+                                            // Check if the logged in user is currently participating on the
+                                            // selected event
+                                            if (mEvent.getmEventId().equals(mJoinedEventID)) {
+
+                                                // Display only the "rsvp" and "leave" buttons
+                                                button_join.setVisibility(View.GONE);
+                                                button_rsvp.setVisibility(View.VISIBLE);
+                                                button_leave.setVisibility(View.VISIBLE);
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
 
                         // If the current logged in user is equal to the event's host name,
@@ -326,6 +358,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
             case R.id.button_detail_leave:
 
+                leaveButtonClick();
 
                 break;
         }
