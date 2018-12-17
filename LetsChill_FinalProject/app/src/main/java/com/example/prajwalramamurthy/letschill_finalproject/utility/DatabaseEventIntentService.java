@@ -195,7 +195,11 @@ public class DatabaseEventIntentService extends IntentService {
             FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             final String mUid = mFirebaseUser.getUid();
 
-            DatabaseReference mDBUsersReference = FirebaseDatabase.getInstance().getReference("Users");
+            final DatabaseReference mDBUsersReference = FirebaseDatabase.getInstance().getReference("Users");
+
+//            // Clear the lists before adding to them
+//            mJoinedEvents = new ArrayList<>();
+//            mHostingEvents = new ArrayList<>();
 
             mDBUsersReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -204,7 +208,6 @@ public class DatabaseEventIntentService extends IntentService {
                     // Collect the user name
                     mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
                     Log.d(TAG, "onReceiveResult: My events username: " + mUsername);
-
 
                     mDBReference.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -216,27 +219,73 @@ public class DatabaseEventIntentService extends IntentService {
 
                             for (DataSnapshot event: dataSnapshot.getChildren()) {
 
-                                Event mEvent = event.getValue(Event.class);
+                                final Event mEvent = event.getValue(Event.class);
 
                                 if (mEvent != null) {
 
                                     // TODO: GOLD PHASE: Pull data based on people who joined an event
 
-                                    Log.d(TAG, "onReceiveResult: Host name: " + mEvent.getmHost());
+
                                     if (mEvent.getmHost().equals(mUsername)) {
+                                        Log.d(TAG, "onReceiveResult: User name: " + mUsername);
 
                                         mHostingEvents.add(mEvent);
+
+                                    }
+
+                                    if (!mEvent.getmHost().equals(mUsername)) {
+
+                                        Log.d(TAG, "onReceiveResult: User uid: " + mUid);
+
+                                        // Look for events that the current logged in user is participating
+                                        mDBUsersReference.child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                for (DataSnapshot joinedEvents: dataSnapshot.getChildren()) {
+
+                                                    final String mJoinedEventID = joinedEvents.getValue(String.class);
+
+                                                    if (mJoinedEventID != null) {
+
+                                                        // Compare the current event on the loop with the joined event id
+                                                        if (mEvent.getmEventId().equals(mJoinedEventID)) {
+
+                                                            Log.d(TAG, "onDataChange: Comparing: Event id with the user joined events: " + mEvent.getmEventId() + " --- " + mJoinedEventID);
+
+
+                                                            Log.d(TAG, "onDataChange (joined list before adding): size: " + mJoinedEvents.size());
+//                                                            if (!mJoinedEvents.contains(mEvent)) {
+
+                                                                mJoinedEvents.add(mEvent);
+                                                                Log.d(TAG, "onDataChange (joined list after adding): size: " + mJoinedEvents.size());
+//                                                            }
+
+
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
                                     }
                                 }
                             }
-
-                            Log.d(TAG, "onReceiveResult: Joined list: " + mJoinedEvents.size() + " - Hosting list: " + mHostingEvents.size());
 
                             // Send a message to the receiver with all the 2 array lists
                             Bundle mArraysBundle = new Bundle();
                             mArraysBundle.putSerializable(BUNDLE_EXTRA_JOINED_EVENTS, mJoinedEvents);
                             mArraysBundle.putSerializable(BUNDLE_EXTRA_HOSTING_EVENTS, mHostingEvents);
                             mReceiver.send(Activity.RESULT_OK, mArraysBundle);
+
+                            Log.d(TAG, "onReceiveResult: Joined list: " + mJoinedEvents.size() + " - Hosting list: " + mHostingEvents.size());
+
+
                         }
 
                         @Override
@@ -251,8 +300,6 @@ public class DatabaseEventIntentService extends IntentService {
 
                 }
             });
-
-
         }
 
         // Reference to an image file in Cloud Storage

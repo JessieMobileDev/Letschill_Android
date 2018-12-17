@@ -314,8 +314,14 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 if (mEditText_Description.getText().length() >= 2 && mEditText_Description.getText().length() <= 280) {
 
+                    // Make the progress bar show up
+                    mProgressBar.setVisibility(View.VISIBLE);
+
                     if (FormValidation.isStartTimeBeforeEndTime(mEditText_TimeStart.getText().toString(),
                             mEditText_TimeEnd.getText().toString())) {
+
+                        // Make the progress bar show up
+                        mProgressBar.setVisibility(View.VISIBLE);
 
                         // Catch and store the user input and pass it to our data model
                         final String mEvtName = mEditText_Name.getText().toString();
@@ -372,6 +378,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                         });
                     } else {
 
+                        // Make the progress bar disappear
+                        mProgressBar.setVisibility(View.GONE);
+
                         mEditText_TimeStart.setError(getResources().getString(R.string.editText_error_sameTime));
                     }
 
@@ -391,7 +400,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     private void saveImagetoStorageDatabase()
     {
-
         if(mImageView_eventBackground.getDrawable() != null)
         {
             // will save our ID image to our database
@@ -544,9 +552,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 timePickerDialog(1);
                 break;
             case R.id.save_createEvent_button:
-
-                // Make the progress bar show up
-                mProgressBar.setVisibility(View.VISIBLE);
 
                 // If save button is tapped, all collected data is stored in the database
                 saveImagetoStorageDatabase();
