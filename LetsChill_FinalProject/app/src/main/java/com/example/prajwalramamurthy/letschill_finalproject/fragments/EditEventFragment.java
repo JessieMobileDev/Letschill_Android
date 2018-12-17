@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,8 @@ import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,11 +47,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EditEventFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
@@ -68,6 +76,8 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private Intent mGalleryIntent, mCropIntent;
     private Uri mImageUri;
     private final Handler mHandler = new Handler();
+    private Bitmap mBitmap;
+    private String url;
 
     // Constants
     public static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -132,6 +142,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mButton_map = getView().findViewById(R.id.button_map_edit);
             mButton_save = getView().findViewById(R.id.save_editEvent_button);
             mButton_delete = getView().findViewById(R.id.button_delete_edit);
+            mImageView_eventImage = getView().findViewById(R.id.imageView_edit_eventImage);
 
             // Assign click listeners
             mButton_save.setOnClickListener(this);
@@ -139,12 +150,36 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mButton_map.setOnClickListener(this);
             mEditText_eventStartTime.setOnClickListener(this);
             mEditText_eventDate.setOnClickListener(this);
+            mImageView_eventImage.setOnClickListener(this);
 
             // Retrieve the object that was passed into this fragment
             Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
             // Assign values to the fields
             if (mEvent != null) {
+
+                if (mEvent.getmUrl() != null && !mEvent.getmUrl().isEmpty()) {
+
+                    // Variables
+                    FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
+                    StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+
+                    mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            mImageView_eventImage.setImageBitmap(bmp);
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+                }
 
                 mEditText_eventTitle.setText(mEvent.getmEventName());
                 mEditText_eventDate.setText(mEvent.getmEventDate());
@@ -348,7 +383,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                 Log.d("test", "onActivityResult: inside request code 1 - data not null");
                 Bundle mBundle = data.getExtras();
 
-                Bitmap mBitmap = mBundle.getParcelable("data");
+                mBitmap = mBundle.getParcelable("data");
 
                 mImageView_eventImage.setImageBitmap(mBitmap);
 
@@ -520,42 +555,69 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                         Log.d("test", "saveEditEventToDatabase: event id: " + mEvent.getmEventId());
 
-                        // Get the database reference
-                        mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mEvent.getmEventId());
+                        // Get reference
+                        final StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("IDImages");
+                        StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
 
-                        // Retrieve the username from the current logged in user
-                        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                        mUid = mFirebaseUser.getUid();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] data = baos.toByteArray();
+
+                        UploadTask uploadTask = imagesRef.putBytes(data);
 
 
-                        FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                String mUsername = dataSnapshot.getValue(String.class);
-
-                                Log.d("test", "saveEditEventToDatabase: retrieved NAME: " + mUsername);
-
-                                // TODO: Redo the image capture again
-                                // Make a new event object with the new data to be stored
-                                Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
-                                        mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, mEvent.getmUrl(),
-                                        false);
-
-
-                                // Save the new object to the database under the same uid
-                                mDBReference.setValue(mEdittedEvent);
-
-                                // Show a toast when changes were saved
-                                Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
-
-                                // Close this activity
-                                mEditEventInterface.closeEditEventActivity();
-
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
                             }
-
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+
+//                    url = taskSnapshot.getUploadSessionUri().toString();
+                                url = taskSnapshot.getMetadata().getPath();
+
+                                // Get the database reference
+                                mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mEvent.getmEventId());
+
+                                // Retrieve the username from the current logged in user
+                                mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                mUid = mFirebaseUser.getUid();
+
+
+                                FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        String mUsername = dataSnapshot.getValue(String.class);
+
+                                        Log.d("test", "saveEditEventToDatabase: retrieved NAME: " + mUsername);
+
+                                        // TODO: Redo the image capture again
+                                        // Make a new event object with the new data to be stored
+                                        Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
+                                                mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
+                                                false);
+
+
+                                        // Save the new object to the database under the same uid
+                                        mDBReference.setValue(mEdittedEvent);
+
+                                        // Show a toast when changes were saved
+                                        Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+
+                                        // Close this activity
+                                        mEditEventInterface.closeEditEventActivity();
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
 
                             }
                         });

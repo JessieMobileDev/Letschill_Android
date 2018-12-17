@@ -2,6 +2,8 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -122,6 +128,29 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
             if (mEvent != null) {
+
+                if (mEvent.getmUrl() != null && !mEvent.getmUrl().isEmpty()) {
+
+                    // Variables
+                    FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
+                    StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+
+                    mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            imageView_background.setImageBitmap(bmp);
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+                }
 
                 // Assign data to each UI element and display
                 textView_title.setText(mEvent.getmEventName());

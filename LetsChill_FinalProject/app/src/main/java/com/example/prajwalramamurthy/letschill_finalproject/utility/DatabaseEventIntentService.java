@@ -225,7 +225,7 @@ public class DatabaseEventIntentService extends IntentService {
                                     // TODO: GOLD PHASE: Pull data based on people who joined an event
 
 
-                                    if (mEvent.getmHost().equals(mUsername)) {
+                                    if (mEvent.getmHost().equals(mUsername) && !mEvent.ismIsDeleted()) {
                                         Log.d(TAG, "onReceiveResult: User name: " + mUsername);
 
                                         mHostingEvents.add(mEvent);

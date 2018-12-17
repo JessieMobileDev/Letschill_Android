@@ -368,8 +368,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                     mDatabase.child("Events").child(mEventId).setValue(newEvent);
 
-                                    // show toast for confirmation
-                                    Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                                    if (getContext() != null) {
+
+                                        // show toast for confirmation
+                                        Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                                    }
 
                                     // Make the progress bar disappear
                                     mProgressBar.setVisibility(View.GONE);

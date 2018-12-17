@@ -31,6 +31,7 @@
 
             <TextView
                 android:id="@+id/textView_detail_category"
+                style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -42,6 +43,7 @@
 
             <TextView
                 android:id="@+id/textView21"
+                style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -65,6 +67,7 @@
             <TextView
                 android:id="@+id/textView_detail_participants"
                 android:layout_width="0dp"
+                style="@style/createEvent_editText"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
@@ -75,6 +78,7 @@
 
             <TextView
                 android:id="@+id/textView19"
+                style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -92,6 +96,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/description"
                 android:textSize="14sp"
+                style="@style/createEvent_editText"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host" />
 
@@ -101,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                style="@style/createEvent_editText"
                 android:text="@string/example_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
@@ -130,6 +136,7 @@
 
             <TextView
                 android:id="@+id/textView14"
+                style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -141,6 +148,7 @@
 
             <TextView
                 android:id="@+id/textView_detail_host"
+                style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -156,6 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_regular"
                 android:text="@string/example_title"
                 android:textColor="@color/text_almostBlack"
                 android:textSize="20sp"
@@ -238,6 +247,7 @@
 
             <TextView
                 android:id="@+id/textView9"
+                style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -249,6 +259,7 @@
 
             <TextView
                 android:id="@+id/textView12"
+                style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -260,6 +271,7 @@
 
             <TextView
                 android:id="@+id/textView_detail_dateTime"
+                style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -271,6 +283,7 @@
 
             <TextView
                 android:id="@+id/textView_detail_location"
+                style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
