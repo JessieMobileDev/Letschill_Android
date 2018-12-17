@@ -391,8 +391,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         if(mImageView_eventBackground.getDrawable() != null)
         {
             // will save our ID image to our database
-            // show toast
-            Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+
 
             // get reference
             final StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("IDImages");
@@ -429,7 +428,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         }
         else
         {
-            Toast.makeText(getContext(), "", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.toast_create_imageBack, Toast.LENGTH_LONG).show();
         }
     }
 

@@ -138,8 +138,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         button_leave.setVisibility(View.VISIBLE);
         button_rsvp.setVisibility(View.VISIBLE);
 
-       // show toast
-
+        // show toast
+        Toast.makeText(getContext(), R.string.toast_event_joined, Toast.LENGTH_SHORT).show();
 
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -166,6 +166,19 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
         }
     }
+
+
+    private void leaveButtonClick()
+    {
+
+
+    }
+
+    private void rsvpButtonClick()
+    {
+
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
