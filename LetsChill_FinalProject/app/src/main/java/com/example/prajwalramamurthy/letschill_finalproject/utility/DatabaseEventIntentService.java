@@ -101,7 +101,7 @@ public class DatabaseEventIntentService extends IntentService {
 
                         if (mEvent != null) {
 
-                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("M-dd-yyyy");
+                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
                             String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
 
                             // Check all the events happening today
@@ -164,6 +164,9 @@ public class DatabaseEventIntentService extends IntentService {
                                 e.printStackTrace();
                             }
 
+                        } else {
+
+                            Log.d(TAG, "onDataChange: event is null (today)");
                         }
                     }
 
