@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,6 +79,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private final Handler mHandler = new Handler();
     private Bitmap mBitmap;
     private String url;
+    private boolean didSelectAnImage = false;
 
     // Constants
     public static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -387,6 +389,8 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                 mImageView_eventImage.setImageBitmap(mBitmap);
 
+                didSelectAnImage = true;
+
 
                 Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
             }
@@ -560,7 +564,14 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                         StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                        if (didSelectAnImage) {
+                            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        } else {
+                            mBitmap = ((BitmapDrawable)mImageView_eventImage.getDrawable()).getBitmap();
+                            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        }
+
                         byte[] data = baos.toByteArray();
 
                         UploadTask uploadTask = imagesRef.putBytes(data);

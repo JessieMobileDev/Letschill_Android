@@ -38,9 +38,10 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private final Handler mHandler = new Handler();
-    private ArrayList<Event> mJoinedEvents;
-    private ArrayList<Event> mHostingEvents;
+    private ArrayList<Event> mJoinedEvents = new ArrayList<>();
+    private ArrayList<Event> mHostingEvents = new ArrayList<>();
     private ProgressBar mProgressBar;
+    private boolean isFirstRun;
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID_MYEVENTS = "EXTRA_DB_REQUEST_ID_MYEVENTS";
@@ -62,13 +63,17 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
 
         // Request events data from the database
         requestEventData();
+        isFirstRun = true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        requestEventData();
+        if (!isFirstRun) {
+
+            requestEventData();
+        }
     }
 
     @Override
@@ -96,6 +101,14 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
             mFetchIntent.putExtra(EXTRA_DB_REQUEST_ID_MYEVENTS, 1);
             startService(mFetchIntent);
 
+            if (isFirstRun) {
+
+                isFirstRun = false;
+            } else {
+
+                isFirstRun = true;
+            }
+
         } else {
 
             Toast.makeText(this, R.string.alert_content_noInternet, Toast.LENGTH_SHORT).show();
@@ -117,7 +130,7 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
                 mJoinedEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_JOINED_EVENTS);
                 mHostingEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_HOSTING_EVENTS);
 
-//                Log.d(TAG, "onReceiveResult (received): Joined list: " + mJoinedEvents.size() + " - Hosting list: " + mHostingEvents.size());
+                Log.d(TAG, "onReceiveResult (received): Joined list: " + mJoinedEvents.size() + " - Hosting list: " + mHostingEvents.size());
 
                 // Assign the adapter to the view pager that will display the screen for each tab item
                 mTabAdapter = new MyEventsAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mJoinedEvents,
