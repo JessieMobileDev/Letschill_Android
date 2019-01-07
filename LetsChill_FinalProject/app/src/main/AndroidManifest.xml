@@ -13,6 +13,7 @@
 
     <!-- Permission to access the user's location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -87,6 +88,18 @@
         <!-- Edit Event Activity -->
         <activity android:name=".activities.EditEventActivity"
             android:theme="@style/AppTheme"/>
+
+        <!-- Map Activity -->
+        <activity
+            android:name=".activities.MapActivity"
+            android:theme="@style/AppTheme" />
+
+        <!-- Meta-Data -->
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCWHGzYF4Zc4i1OE8s_X-T2DqmpupOoPoQ"/>
+
     </application>
 
 </manifest>
