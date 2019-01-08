@@ -54,6 +54,14 @@ public class EventActivity extends AppCompatActivity implements CreateEventFragm
     }
 
     @Override
+    public void openMapActivity() {
+
+        // Open the MapActivity
+        Intent mMapIntent = new Intent(this, MapActivity.class);
+        startActivity(mMapIntent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);

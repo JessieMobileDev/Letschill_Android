@@ -96,6 +96,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
         void closeCreateEventActivity();
         void imageUploader();
+        void openMapActivity();
     }
 
     public static CreateEventFragment newInstance() {
@@ -178,10 +179,14 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     public void openMap()
     {
-        Uri gmmIntentUri = Uri.parse("geo:0,0?q=");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+//        Uri gmmIntentUri = Uri.parse("geo:0,0?q=");
+//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+//        mapIntent.setPackage("com.google.android.apps.maps");
+//        startActivity(mapIntent);
+
+        // Open the MapActivity
+        mCreateEventFragmentInterface.openMapActivity();
+
     }
 
     public void uploadImage()
@@ -458,7 +463,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     private void timePickerDialog(int mStartOrEndTime)
     {
-        // TODO Auto-generated method stub
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -511,8 +515,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
     {
-
-
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 
         Calendar calendar = Calendar.getInstance();

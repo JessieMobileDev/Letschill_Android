@@ -92,7 +92,7 @@
         <!-- Map Activity -->
         <activity
             android:name=".activities.MapActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- Meta-Data -->
         <meta-data android:name="com.google.android.gms.version"
