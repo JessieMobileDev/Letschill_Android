@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
@@ -25,6 +26,7 @@ public class TabPastFragment extends ListFragment {
     // Variables
     private ArrayList<Event> mEventList = new ArrayList<>();
     private TabPastInterface mTabPastInterface;
+    Button editButton;
 
     public interface TabPastInterface {
 

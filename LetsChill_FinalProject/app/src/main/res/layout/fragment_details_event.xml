@@ -20,23 +20,24 @@
 
             <ImageView
                 android:id="@+id/imageView7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="11dp"
+                android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_participants"
-                app:srcCompat="@drawable/ic_whatshot_gray_24dp"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/ic_whatshot_gray_24dp" />
 
             <TextView
                 android:id="@+id/textView_detail_category"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/example_dateTime"
+                android:textColor="@color/text_almostBlack"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
@@ -55,23 +56,24 @@
 
             <ImageView
                 android:id="@+id/imageView6"
-                android:layout_width="wrap_content"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_description"
-                app:srcCompat="@drawable/ic_people_gray_24dp"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/ic_people_gray_24dp" />
 
             <TextView
                 android:id="@+id/textView_detail_participants"
-                android:layout_width="0dp"
                 style="@style/createEvent_editText"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/example_participants"
+                android:textColor="@color/text_almostBlack"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
@@ -81,7 +83,7 @@
                 style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/participants"
                 android:textSize="14sp"
@@ -90,49 +92,50 @@
 
             <TextView
                 android:id="@+id/textView16"
+                style="@style/createEvent_editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/description"
                 android:textSize="14sp"
-                style="@style/createEvent_editText"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host" />
 
             <TextView
                 android:id="@+id/textView_detail_description"
+                style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                style="@style/createEvent_editText"
+                android:layout_marginEnd="16dp"
                 android:text="@string/example_description"
+                android:textColor="@color/text_almostBlack"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="wrap_content"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host"
-                app:srcCompat="@drawable/ic_description_gray_24dp"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/ic_description_gray_24dp" />
 
             <ImageView
                 android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
+                android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_location"
-                app:srcCompat="@drawable/ic_person_gray_24dp"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/ic_person_gray_24dp" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -151,9 +154,10 @@
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/example_host"
+                android:textColor="@color/text_almostBlack"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView14" />
@@ -164,11 +168,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/roboto_regular"
                 android:text="@string/example_title"
                 android:textColor="@color/text_almostBlack"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/button_detail_edit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView_details_eventImage" />
 
@@ -225,25 +231,25 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
+                android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_title"
-                app:srcCompat="@drawable/ic_access_time_gray_24dp"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/ic_access_time_gray_24dp" />
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
+                android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_dateTime"
-                app:srcCompat="@drawable/ic_location_on_gray_24dp"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/ic_location_on_gray_24dp" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -274,9 +280,10 @@
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/example_dateTime"
+                android:textColor="@color/text_almostBlack"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -286,23 +293,29 @@
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/example_location"
+                android:textColor="@color/text_almostBlack"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
             <Button
                 android:id="@+id/button_detail_joinEvent"
-                style="@style/button_orange_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="24dp"
+                android:background="@android:color/holo_green_dark"
+                android:fontFamily="@font/roboto_regular"
                 android:text="@string/join"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -310,11 +323,11 @@
 
             <Button
                 android:id="@+id/button_detail_leave"
-                style="@style/button_orange_style"
+                style="@style/button_red_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="24dp"
                 android:text="@string/leave"
@@ -329,7 +342,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="24dp"
                 android:text="@string/rsvp"
