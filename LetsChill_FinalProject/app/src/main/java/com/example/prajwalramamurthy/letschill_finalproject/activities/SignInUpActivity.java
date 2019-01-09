@@ -66,6 +66,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        // TODO: add request read permision and network permission
         if (requestCode == REQUEST_LOCATION_PERMISSION || requestCode == REQUEST_WRITE_PERMISSION) {
 
             instantiateActivityWithPermissions();
