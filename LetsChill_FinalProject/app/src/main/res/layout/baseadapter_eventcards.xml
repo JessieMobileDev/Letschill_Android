@@ -1,135 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:gravity="center"
     android:layout_height="match_parent">
 
-    <com.jcminarro.roundkornerlayout.RoundKornerFrameLayout
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        app:corner_radius="5dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/card_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:alpha="0.5"
-            android:background="@android:color/black">
-
-            <TextView
-                style="@style/eventCards_contentText_style"
-                android:alpha="1.0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="0/10 people joined" />
-
-            <TextView
-                style="@style/eventCards_contentText_style"
-                android:alpha="1.0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="0/10 RSVPs" />
-        </FrameLayout>
-    </com.jcminarro.roundkornerlayout.RoundKornerFrameLayout>
-
-
-    <com.jcminarro.roundkornerlayout.RoundKornerRelativeLayout
-        android:id="@+id/transparent_toplayer"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@android:color/black"
-        android:alpha="0.5"
-        android:layout_gravity="top"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:corner_radius="5dp">
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="131dp"
+            android:layout_marginTop="92dp"
+            android:alpha="0.1"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="@+id/imageView11"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/imageView11"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/title_event"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Title of event"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/example_title"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:alpha="1.0"
-            style="@style/eventCards_titleText_style" />
-
-        <ImageView
-            android:id="@+id/icon_time_event"
-            android:alpha="1.0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_access_time_white_24dp"
-            android:layout_marginTop="39dp"
-            android:layout_marginStart="20dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView11" />
 
         <TextView
             android:id="@+id/time_event"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Time of event"
-            style="@style/eventCards_contentText_style"
-            android:layout_marginTop="42dp"
-            android:layout_marginStart="60dp"/>
-
-        <ImageView
-            android:id="@+id/icon_location_event"
-            android:alpha="1.0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_location_on_white_24dp"
-            android:layout_marginTop="72dp"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginTop="8dp"
+            android:text="@string/example_dateTime"
+            app:layout_constraintEnd_toEndOf="@+id/title_event"
+            app:layout_constraintStart_toStartOf="@+id/title_event"
+            app:layout_constraintTop_toBottomOf="@+id/title_event" />
 
         <TextView
             android:id="@+id/location_event"
-            android:alpha="1.0"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/eventCards_contentText_style"
-            android:text="Location of the event"
-            android:layout_marginTop="77dp"
-            android:layout_marginStart="60dp"/>
+            android:layout_marginTop="8dp"
+            android:text="@string/example_location"
+            android:textStyle="italic"
+            android:textColor="@android:color/holo_blue_light"
+            app:layout_constraintEnd_toEndOf="@+id/title_event"
+            app:layout_constraintStart_toStartOf="@+id/title_event"
+            app:layout_constraintTop_toBottomOf="@+id/time_event" />
 
         <ImageView
-            android:id="@+id/icon_host_event"
-            android:alpha="1.0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_person_white_24dp"
-            android:layout_marginTop="105dp"
-            android:layout_marginStart="20dp"/>
+            android:id="@+id/imageView11"
+            android:layout_width="0dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:alpha="0.2"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView11"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:color/background_light" />
 
         <TextView
-            android:id="@+id/host_name"
-            android:alpha="1.0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hosted by Jessica Oliveira"
-            style="@style/eventCards_contentText_style"
-            android:layout_marginTop="110dp"
-            android:layout_marginStart="60dp"/>
+            android:id="@+id/textView_joined"
+            android:layout_width="27dp"
+            android:layout_height="18dp"
+            android:text="0/10"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView13"
+            app:layout_constraintEnd_toEndOf="@+id/imageView13"
+            app:layout_constraintStart_toStartOf="@+id/imageView13"
+            app:layout_constraintTop_toTopOf="@+id/imageView13" />
 
-    </com.jcminarro.roundkornerlayout.RoundKornerRelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </FrameLayout>

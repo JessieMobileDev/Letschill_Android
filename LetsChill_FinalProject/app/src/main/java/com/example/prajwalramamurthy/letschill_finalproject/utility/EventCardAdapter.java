@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 public class EventCardAdapter extends BaseAdapter {

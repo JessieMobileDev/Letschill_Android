@@ -121,4 +121,13 @@
     <!-- MapActivity Strings -->
     <string name="searchbox">Search here</string>
 
+    <!-- Notifications Strings -->
+    <string name="notifications">Notifications</string>
+    <string name="event_changed">Event Changed</string>
+    <string name="guest_joined">Guest Joined</string>
+    <string name="close_to_event_time">Close to Event Time</string>
+    <string name="string_current">Notify me when something about the event I am currently participating has changed</string>
+    <string name="string_notify_hosting">Notify me when someone join an event that I am hosting</string>
+    <string name="string_event_start">Notify me once when my events are about to start</string>
+
 </resources>
