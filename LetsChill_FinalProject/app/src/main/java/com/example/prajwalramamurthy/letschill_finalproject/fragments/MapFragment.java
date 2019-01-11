@@ -1,5 +1,6 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -38,20 +39,41 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     private int mSelectedMarker;
     private ArrayList<MapMarker> mSavedMarkers = new ArrayList<>();
     private Geocoder mGeocoder;
+    private MapFragmentInterface mMapFragmentInterface;
 
     // Constants
     private static final String ARG_LONGITUDE = "ARG_LONGITUDE";
     private static final String ARG_LATITUDE = "ARG_LATITUDE";
+    private static final String ARG_ADDRESS = "ARG_ADDRESS";
+    private static final String ARG_ISTHISASEARCH = "ARG_ISTHISASEARCH";
+    public static final String ARG_ALL_DATA_BUNDLE = "ARG_ALL_DATA_BUNDLE";
 
-    public static MapFragment newInstance(double mCurrentLong, double mCurrentLat) {
+    public interface MapFragmentInterface {
+
+        void passAddressBackToMapActivity(String address, Bundle allDataBundle);
+    }
+
+    public static MapFragment newInstance(double mCurrentLong, double mCurrentLat, String mAddress, boolean mIsThisASearch, Bundle allDataBundle) {
 
         Bundle args = new Bundle();
         args.putDouble(ARG_LONGITUDE, mCurrentLong);
         args.putDouble(ARG_LATITUDE, mCurrentLat);
+        args.putBoolean(ARG_ISTHISASEARCH, mIsThisASearch);
+        args.putBundle(ARG_ALL_DATA_BUNDLE, allDataBundle);
 
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof MapFragmentInterface) {
+
+            mMapFragmentInterface = (MapFragmentInterface)context;
+        }
     }
 
     @Override
@@ -102,6 +124,16 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onInfoWindowClick(Marker marker) {
 
+        Log.d("marker", "onInfoWindowClick: marker address: " + marker.getSnippet());
+
+        // Grab the data bundle
+        if (getArguments() != null) {
+
+            Bundle allDataBundle = getArguments().getBundle(ARG_ALL_DATA_BUNDLE);
+
+            // Pass the address back to the MapActivity
+            mMapFragmentInterface.passAddressBackToMapActivity(marker.getSnippet(), allDataBundle);
+        }
     }
 
     @Override
@@ -135,21 +167,28 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         if (mSelectedAddress != null && getContext() != null) {
 
             Toast.makeText(getContext(), mSelectedAddress.getAddressLine(0), Toast.LENGTH_LONG).show();
-//            StringBuilder sb = new StringBuilder();
-//            for (int i = 0; i < mSelectedAddress.getMaxAddressLineIndex(); i++){
-//                sb.append(mSelectedAddress.getAddressLine(i) + "\n");
-//            }
 
+            mSavedMarkers.clear();
+
+            createMarker(mSelectedAddress.getAddressLine(0), latLng.latitude, latLng.longitude);
+
+            // Put the created marker on the map
+            mGoogleMap.clear();
+
+            for (MapMarker marker: mSavedMarkers) {
+                MarkerOptions options = new MarkerOptions();
+                options.title("Address:");
+                options.snippet(marker.getmAddress());
+
+                // Create a LatLng variable
+                LatLng pinPointedLocation = new LatLng(marker.getmLatitude(), marker.getmLongitude());
+
+                // Retrieves the position where the marker will be placed
+                options.position(pinPointedLocation);
+
+                marker.setmMarkerId(mGoogleMap.addMarker(options).getId());
+            }
         }
-
-//        //remove previously placed Marker
-//        if (marker != null) {
-//            marker.remove();
-//        }
-//
-//        //place marker where user just clicked
-//        marker = mMap.addMarker(new MarkerOptions().position(point).title("Marker")
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
     }
 
     @Override
@@ -179,21 +218,52 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         // When the fragment opens, the map will be zoomed in to the device's current location
         showInitialLocationZoomedIn();
 
-        // Recreate the markers
-        for (MapMarker marker: mSavedMarkers) {
+        if (getArguments() != null) {
 
-            MarkerOptions options = new MarkerOptions();
-            options.title("Address:");
-            options.snippet(marker.getmAddress());
+            boolean mIsThisASearch = getArguments().getBoolean(ARG_ISTHISASEARCH);
 
-            // Create a LatLng variable
-            LatLng mPinPointedLocation = new LatLng(marker.getmLatitude(), marker.getmLongitude());
+            if (mIsThisASearch) {
 
-            // Retrieve the position where the marker will be placed
-            options.position(mPinPointedLocation);
+                // Create a marker with the address that was passed to this fragment and add to the map
+                List<Address> mAddresses = new ArrayList<>();
+                double mLat = getArguments().getDouble(ARG_LATITUDE);
+                double mLon = getArguments().getDouble(ARG_LONGITUDE);
 
-            // Save the id of the marker and set on the map
-            marker.setmMarkerId(googleMap.addMarker(options).getId());
+                if (mLat != 0.0 && mLon != 0.0) {
+
+                    try {
+
+                        mAddresses = mGeocoder.getFromLocation(mLat, mLon, 1);
+
+                    } catch (IOException e) {
+
+                        e.printStackTrace();
+                    }
+
+                    // Retrieve the address from the list
+                    Address mSelectedAddress = mAddresses.get(0);
+
+                    // Create the marker and add to the list
+                    createMarker(mSelectedAddress.getAddressLine(0), mLat, mLon);
+
+                    // Recreate the markers
+                    for (MapMarker marker : mSavedMarkers) {
+
+                        MarkerOptions options = new MarkerOptions();
+                        options.title("Address:");
+                        options.snippet(marker.getmAddress());
+
+                        // Create a LatLng variable
+                        LatLng mPinPointedLocation = new LatLng(marker.getmLatitude(), marker.getmLongitude());
+
+                        // Retrieve the position where the marker will be placed
+                        options.position(mPinPointedLocation);
+
+                        // Save the id of the marker and set on the map
+                        marker.setmMarkerId(googleMap.addMarker(options).getId());
+                    }
+                }
+            }
         }
     }
 

@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -78,8 +79,25 @@ public class DatabaseEventIntentService extends IntentService {
         Integer mRequestMyEvents = intent.getIntExtra(MyEventsActivity.EXTRA_DB_REQUEST_ID_MYEVENTS, 3);
         Integer mRequestDeleteID = intent.getIntExtra(EditEventFragment.EXTRA_DB_DELETE_ID, 3);
 
+        // Get current month
+        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
+        Date date = new Date();
+        String monthIndex = "Month";
+        try {
+
+            // Convert the string date to a date variable and extract the month out of it
+            date = mSimpleDateFormat.parse(mTodayDateString);
+            monthIndex = String.valueOf(date.getMonth());
+
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         // Get the reference of the database under "Events"
-        mDBReference = FirebaseDatabase.getInstance().getReference("Events");
+        mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(monthIndex);
 
         if (mRequestID == 0) {
 
@@ -95,78 +113,80 @@ public class DatabaseEventIntentService extends IntentService {
                     Log.d(TAG, "onReceiveResult (service): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
                             " - Past list: " + mPastEvents.size());
 
-                    for (DataSnapshot event: dataSnapshot.getChildren()) {
+                    for (DataSnapshot day: dataSnapshot.getChildren()) {
 
-                        Event mEvent = event.getValue(Event.class);
+                        for (DataSnapshot event: day.getChildren()) {
+                            Event mEvent = event.getValue(Event.class);
 
-                        if (mEvent != null) {
+                            if (mEvent != null) {
 
-                            SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                            String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
+                                SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                                String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
 
-                            // Check all the events happening today
-                            if (mEvent.getmEventDate().equals(mTodayDateString)) {
-
-                                // If the event deletion is set to false, then display
-                                if (!mEvent.ismIsDeleted()) {
-
-                                    mTodayEvents.add(mEvent);
-
-                                    Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
-                                            " - Today date: " + mTodayDateString);
-                                }
-                            }
-
-                            // Check all the events happening in the upcoming days
-                            try {
-
-                                Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
-                                Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
-
-                                if (mSelectedEventDate.after(mTodayDate)) {
+                                // Check all the events happening today
+                                if (mEvent.getmEventDate().equals(mTodayDateString)) {
 
                                     // If the event deletion is set to false, then display
                                     if (!mEvent.ismIsDeleted()) {
 
-                                        mUpcomingEvents.add(mEvent);
+                                        mTodayEvents.add(mEvent);
 
-                                        Log.d(TAG, "onDataChange (upcoming): (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
+                                        Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
                                                 " - Today date: " + mTodayDateString);
                                     }
                                 }
 
-                            } catch (Exception e) {
+                                // Check all the events happening in the upcoming days
+                                try {
 
-                                e.printStackTrace();
-                            }
+                                    Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
+                                    Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
 
+                                    if (mSelectedEventDate.after(mTodayDate)) {
 
-                            // Check all the events that have happened already
-                            try {
+                                        // If the event deletion is set to false, then display
+                                        if (!mEvent.ismIsDeleted()) {
 
-                                Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
-                                Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
+                                            mUpcomingEvents.add(mEvent);
 
-                                if (mSelectedEventDate.before(mTodayDate)) {
-
-                                    // If the event deletion is set to false, then display
-                                    if (!mEvent.ismIsDeleted()) {
-
-                                        mPastEvents.add(mEvent);
-
-                                        Log.d(TAG, "onDataChange (past): (3) Past - Selected event date: " + mEvent.getmEventDate() +
-                                                " - Today date: " + mTodayDateString);
+                                            Log.d(TAG, "onDataChange (upcoming): (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
+                                                    " - Today date: " + mTodayDateString);
+                                        }
                                     }
+
+                                } catch (Exception e) {
+
+                                    e.printStackTrace();
                                 }
 
-                            } catch (Exception e) {
 
-                                e.printStackTrace();
+                                // Check all the events that have happened already
+                                try {
+
+                                    Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
+                                    Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
+
+                                    if (mSelectedEventDate.before(mTodayDate)) {
+
+                                        // If the event deletion is set to false, then display
+                                        if (!mEvent.ismIsDeleted()) {
+
+                                            mPastEvents.add(mEvent);
+
+                                            Log.d(TAG, "onDataChange (past): (3) Past - Selected event date: " + mEvent.getmEventDate() +
+                                                    " - Today date: " + mTodayDateString);
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+
+                                Log.d(TAG, "onDataChange: event is null (today)");
                             }
-
-                        } else {
-
-                            Log.d(TAG, "onDataChange: event is null (today)");
                         }
                     }
 
@@ -199,10 +219,6 @@ public class DatabaseEventIntentService extends IntentService {
 
             final DatabaseReference mDBUsersReference = FirebaseDatabase.getInstance().getReference("Users");
 
-//            // Clear the lists before adding to them
-//            mJoinedEvents = new ArrayList<>();
-//            mHostingEvents = new ArrayList<>();
-
             mDBUsersReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -219,44 +235,46 @@ public class DatabaseEventIntentService extends IntentService {
                             mJoinedEvents = new ArrayList<>();
                             mHostingEvents = new ArrayList<>();
 
-                            for (DataSnapshot event: dataSnapshot.getChildren()) {
+                            for (DataSnapshot day: dataSnapshot.getChildren()) {
 
-                                final Event mEvent = event.getValue(Event.class);
+                                for (DataSnapshot event: day.getChildren()) {
 
-                                if (mEvent != null) {
+                                    final Event mEvent = event.getValue(Event.class);
 
-                                    // TODO: GOLD PHASE: Pull data based on people who joined an event
+                                    if (mEvent != null) {
 
-
-                                    if (mEvent.getmHost().equals(mUsername) && !mEvent.ismIsDeleted()) {
-                                        Log.d(TAG, "onReceiveResult: User name: " + mUsername);
-
-                                        mHostingEvents.add(mEvent);
-
-                                    }
-
-                                    if (!mEvent.getmHost().equals(mUsername)) {
-
-                                        Log.d(TAG, "onReceiveResult: User uid: " + mUid);
-
-                                        // Look for events that the current logged in user is participating
-                                        mDBUsersReference.child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                                for (DataSnapshot joinedEvents: dataSnapshot.getChildren()) {
-
-                                                    final String mJoinedEventID = joinedEvents.getValue(String.class);
-
-                                                    if (mJoinedEventID != null) {
-
-                                                        // Compare the current event on the loop with the joined event id
-                                                        if (mEvent.getmEventId().equals(mJoinedEventID)) {
-
-                                                            Log.d(TAG, "onDataChange: Comparing: Event id with the user joined events: " + mEvent.getmEventId() + " --- " + mJoinedEventID);
+                                        // TODO: GOLD PHASE: Pull data based on people who joined an event
 
 
-                                                            Log.d(TAG, "onDataChange (joined list before adding): size: " + mJoinedEvents.size());
+                                        if (mEvent.getmHost().equals(mUsername) && !mEvent.ismIsDeleted()) {
+                                            Log.d(TAG, "onReceiveResult: User name: " + mUsername);
+
+                                            mHostingEvents.add(mEvent);
+
+                                        }
+
+                                        if (!mEvent.getmHost().equals(mUsername)) {
+
+                                            Log.d(TAG, "onReceiveResult: User uid: " + mUid);
+
+                                            // Look for events that the current logged in user is participating
+                                            mDBUsersReference.child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                    for (DataSnapshot joinedEvents : dataSnapshot.getChildren()) {
+
+                                                        final String mJoinedEventID = joinedEvents.getValue(String.class);
+
+                                                        if (mJoinedEventID != null) {
+
+                                                            // Compare the current event on the loop with the joined event id
+                                                            if (mEvent.getmEventId().equals(mJoinedEventID)) {
+
+                                                                Log.d(TAG, "onDataChange: Comparing: Event id with the user joined events: " + mEvent.getmEventId() + " --- " + mJoinedEventID);
+
+
+                                                                Log.d(TAG, "onDataChange (joined list before adding): size: " + mJoinedEvents.size());
 //                                                            if (!mJoinedEvents.contains(mEvent)) {
 
                                                                 mJoinedEvents.add(mEvent);
@@ -264,17 +282,17 @@ public class DatabaseEventIntentService extends IntentService {
 //                                                            }
 
 
-
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                            }
-                                        });
+                                                }
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -330,17 +348,17 @@ public class DatabaseEventIntentService extends IntentService {
                                 if (mRetrievedEvent.getmEventId().equals(mEvent.getmEventId())) {
 
                                     // If Ids are a match, change the variable isDeleted to true
-                                    Event mChangedEvent = new Event(mRetrievedEvent.getmEventId(), mRetrievedEvent.getmEventName(),
-                                            mRetrievedEvent.getmEventLocation(), mRetrievedEvent.getmEventDate(), mRetrievedEvent.getmEventTimeStart(),
-                                            mRetrievedEvent.getmEventTimeFinish(), mRetrievedEvent.getmDescription(), mRetrievedEvent.getmParticipants(),
-                                            mRetrievedEvent.getmCategory(), mRetrievedEvent.getmHost(), mRetrievedEvent.ismIsRecurringEvent(),
-                                            mRetrievedEvent.ismPublicOrPrivate(), mRetrievedEvent.getmUrl(), true);
+//                                    Event mChangedEvent = new Event(mRetrievedEvent.getmEventId(), mRetrievedEvent.getmEventName(),
+//                                            mRetrievedEvent.getmEventLocation(), mRetrievedEvent.getmEventDate(), mRetrievedEvent.getmEventTimeStart(),
+//                                            mRetrievedEvent.getmEventTimeFinish(), mRetrievedEvent.getmDescription(), mRetrievedEvent.getmParticipants(),
+//                                            mRetrievedEvent.getmCategory(), mRetrievedEvent.getmHost(), mRetrievedEvent.ismIsRecurringEvent(),
+//                                            mRetrievedEvent.ismPublicOrPrivate(), mRetrievedEvent.getmUrl(), true);
 
                                     // Get the reference in the database using the event ID
                                     mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mRetrievedEvent.getmEventId());
 
                                     // Save the changed event back to the database
-                                    mDBReference.setValue(mChangedEvent);
+//                                    mDBReference.setValue(mChangedEvent);
                                 }
                             }
                         }

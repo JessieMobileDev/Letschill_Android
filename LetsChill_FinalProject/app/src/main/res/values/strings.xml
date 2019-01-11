@@ -120,6 +120,9 @@
 
     <!-- MapActivity Strings -->
     <string name="searchbox">Search here</string>
+    <string name="alert_title_address">Address</string>
+    <string name="alert_message_address">Not enough information. Could not find the address.</string>
+    <string name="alert_button_address">OK</string>
 
     <!-- Notifications Strings -->
     <string name="notifications">Notifications</string>

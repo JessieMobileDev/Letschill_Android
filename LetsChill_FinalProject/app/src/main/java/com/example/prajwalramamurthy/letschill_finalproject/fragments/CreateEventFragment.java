@@ -2,6 +2,8 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.app.DatePickerDialog;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.app.TimePickerDialog;
@@ -33,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.MapActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
@@ -51,10 +54,17 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.FieldPosition;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class CreateEventFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
@@ -81,6 +91,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private ProgressBar mProgressBar;
     private boolean didSelectNewImage = false;
     private Bitmap mBitmap;
+    private boolean mFirstInstance;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -90,18 +101,33 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private static final String CROP_ASPECTY = "aspectY";
     private static final String CROP_SCALEUP_IFNEEDED = "scaleUpIfNeeded";
     private static final String CROP_RETURN_DATA = "return-data";
-
+    private static final String ARG_ADDRESS = "ARG_ADDRESS";
+    private static final String ARG_FIRSTINSTANCE = "ARG_FIRSTINSTANCE";
+    private static final String BUNDLE_IMAGE = "BUNDLE_IMAGE";
+    private static final String BUNDLE_NAME = "BUNDLE_NAME";
+    private static final String BUNDLE_LOCATION = "BUNDLE_LOCATION";
+    private static final String BUNDLE_DATE = "BUNDLE_DATE";
+    private static final String BUNDLE_TIMESTART = "BUNDLE_TIMESTART";
+    private static final String BUNDLE_TIMEEND = "BUNDLE_TIMEEND";
+    private static final String BUNDLE_DESCRIPTION = "BUNDLE_DESCRIPTION";
+    public static final String BUNDLE_PARTICIPANTS = "BUNDLE_PARTICIPANTS";
+    private static final String BUNDLE_CATEGORY = "BUNDLE_CATEGORY";
+    private static final String BUNDLE_RECURRING = "BUNDLE_RECURRING";
+    private static final String BUNDLE_PUBLIC = "BUNDLE_PUBLIC";
+    private static final String BUNDLE_DIDSELECTNEWIMAGE = "BUNDLE_DIDSELECTNEWIMAGE";
 
     public interface CreateEventFragmentInterface {
 
         void closeCreateEventActivity();
         void imageUploader();
-        void openMapActivity();
+        void openMapActivity(Bundle bundle);
     }
 
-    public static CreateEventFragment newInstance() {
+    public static CreateEventFragment newInstance(String mAddress, Bundle allDataBundle) {
 
         Bundle args = new Bundle();
+        args.putString(MapActivity.INTENT_RESULT_ADDRESS, mAddress);
+        args.putBundle(MapFragment.ARG_ALL_DATA_BUNDLE, allDataBundle);
 
         CreateEventFragment fragment = new CreateEventFragment();
         fragment.setArguments(args);
@@ -137,13 +163,155 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         return inflater.inflate(R.layout.fragment_create_event, container, false);
     }
 
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//        // Save all the edit texts info, if not blank, in case the fragment needs to be recreated
+//        Bitmap mBitmap = null;
+//        String mEventName = "nothing";
+//        String mEventDescription = "nothing";
+//        String mEventTimeStart = "nothing";
+//        String mEventTimeEnd = "nothing";
+//        String mEventDate = "nothing";
+//        String mEventParticipants = "nothing";
+//        boolean mIsEventPublic = false;
+//        boolean mIsEventRecurring = false;
+//        int mEventCategory = 0;
+//
+////        if (mImageView_eventBackground.getDrawingCache() != null) {
+//            mBitmap = mImageView_eventBackground.getDrawingCache();
+////        }
+////        if (!mEditText_Name.getText().toString().isEmpty()) {
+//            mEventName = mEditText_Name.getText().toString();
+////        }
+////        if (!mEditText_Description.getText().toString().isEmpty()) {
+//            mEventDescription = mEditText_Description.getText().toString();
+////        }
+////        if (!mEditText_TimeStart.getText().toString().isEmpty()) {
+//            mEventTimeStart = mEditText_TimeStart.getText().toString();
+////        }
+////        if (!mEditText_TimeEnd.getText().toString().isEmpty()) {
+//            mEventTimeEnd = mEditText_TimeEnd.getText().toString();
+////        }
+////        if (!mEditText_Date.getText().toString().isEmpty()) {
+//            mEventDate = mEditText_Date.getText().toString();
+////        }
+////        if (!mParticipants.getText().toString().isEmpty()) {
+//            mEventParticipants = mParticipants.getText().toString();
+////        }
+////        if (mCheckBox_PublicOrPrivate.isChecked()) {
+//            mIsEventPublic = true;
+////        }
+////        if (mCheckBox_IsRecurring.isChecked()) {
+//            mIsEventRecurring = true;
+////        }
+//
+//        mEventCategory = mCategories.getSelectedItemPosition();
+//
+//        // Put all the collected data in the bundle
+//        outState.putParcelable("image", mBitmap);
+//        outState.putString("name", mEventName);
+//        outState.putString("description", mEventDescription);
+//        outState.putString("date", mEventDate);
+//        outState.putString("timeStart", mEventTimeStart);
+//        outState.putString("timeEnd", mEventTimeEnd);
+//        outState.putString("participants", mEventParticipants);
+//        outState.putBoolean("public", mIsEventPublic);
+//        outState.putBoolean("recurring", mIsEventRecurring);
+//        outState.putInt("category", mEventCategory);
+//
+//        Log.d("firstInstance", "onViewStateRestored: onSaveInstance: " + mFirstInstance);
+//
+//    }
+//
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//
+//        // Check if this is the first instance or not
+//        if (getArguments() != null) {
+//
+//            mFirstInstance = getArguments().getBoolean(ARG_FIRSTINSTANCE);
+//            Log.d("firstInstance", "onViewStateRestored: first instance (loaded from args)? " + mFirstInstance);
+//
+//        }
+//
+//        if (!mFirstInstance) {
+//
+//            // Set the boolean instance to true
+//            mFirstInstance = true;
+//
+//            // When the view is restored, apply the old information back to the edit texts
+////            if (savedInstanceState.getParcelable("image") != null) {
+////                Bitmap bitmap = savedInstanceState.getParcelable("image");
+////                mImageView_eventBackground.setImageBitmap(bitmap);
+////            }
+//            if (!savedInstanceState.getString("name").equals("nothing")) {
+//                mEditText_Name.setText(savedInstanceState.getString("name"));
+//            }
+//            if (!savedInstanceState.getString("description").equals("nothing")) {
+//                mEditText_Description.setText(savedInstanceState.getString("description"));
+//            }
+//            if (!savedInstanceState.getString("date").equals("nothing")) {
+//                mEditText_Date.setText(savedInstanceState.getString("date"));
+//            }
+//            if (!savedInstanceState.getString("timeStart").equals("nothing")) {
+//                mEditText_TimeStart.setText(savedInstanceState.getString("timeStart"));
+//            }
+//            if (!savedInstanceState.getString("timeEnd").equals("nothing")) {
+//                mEditText_TimeEnd.setText(savedInstanceState.getString("timeEnd"));
+//            }
+//            if (!savedInstanceState.getString("participants").equals("nothing")) {
+//                mParticipants.setText(savedInstanceState.getString("participants"));
+//            }
+//            if (!savedInstanceState.getBoolean("public")) {
+//                mCheckBox_PublicOrPrivate.setChecked(true);
+//            }
+//            if (!savedInstanceState.getBoolean("recurring")) {
+//                mCheckBox_IsRecurring.setChecked(true);
+//            }
+//
+//            mCategories.setSelection(savedInstanceState.getInt("category"));
+//
+//            // Grab the address passed to this fragment and apply to the location edit text
+//            if (getArguments() != null) {
+//
+//                String address = getArguments().getString(ARG_ADDRESS);
+//
+//                if (address != null) {
+//
+//                    mLocation.setText(address);
+//                }
+//            }
+//        } else {
+//
+//            mFirstInstance = false;
+//        }
+//
+//        Log.d("firstInstance", "onViewStateRestored: first instance? " + mFirstInstance);
+//
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//        if (mFirstInstance) {
+//            mFirstInstance = false;
+//        }
+//
+//        Log.d("firstInstance", "onPause" +
+//                ": first instance (on pause)? " + mFirstInstance);
+//    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         setHasOptionsMenu(true);
 
-        if (getView() != null && getContext() != null) {
+        if (getView() != null && getContext() != null && getArguments() != null) {
 
             // Find all the views
             mEditText_Name = getView().findViewById(R.id.editText_create_eventName);
@@ -174,26 +342,65 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             // Instantiate the SharedPreferences
             mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
+            // Check if the bundle passed to this fragment is not null
+            Bundle allDataBundle = getArguments().getBundle(MapFragment.ARG_ALL_DATA_BUNDLE);
+            String address = getArguments().getString(MapActivity.INTENT_RESULT_ADDRESS);
+
+
+
+            if (allDataBundle != null) {
+                Log.d("address", "onActivityCreated: reloading frag address: " + address +
+                        " - Participants: " + allDataBundle.getString(BUNDLE_PARTICIPANTS));
+
+                // Pass the data back to the fields
+                mBitmap = allDataBundle.getParcelable(BUNDLE_IMAGE);
+                mImageView_eventBackground.setImageBitmap(mBitmap);
+                mEditText_Name.setText(allDataBundle.getString(BUNDLE_NAME));
+                mEditText_Date.setText(allDataBundle.getString(BUNDLE_DATE));
+                mEditText_TimeStart.setText(allDataBundle.getString(BUNDLE_TIMESTART));
+                mEditText_TimeEnd.setText(allDataBundle.getString(BUNDLE_TIMEEND));
+                mEditText_Description.setText(allDataBundle.getString(BUNDLE_DESCRIPTION));
+                mParticipants.setText(allDataBundle.getString(BUNDLE_PARTICIPANTS));
+                mCategories.setSelection(allDataBundle.getInt(BUNDLE_CATEGORY));
+                mLocation.setText(allDataBundle.getString(BUNDLE_LOCATION));
+                mCheckBox_PublicOrPrivate.setChecked(allDataBundle.getBoolean(BUNDLE_PUBLIC));
+                mCheckBox_IsRecurring.setChecked(allDataBundle.getBoolean(BUNDLE_RECURRING));
+
+                // Apply the new address to the edit text
+                mLocation.setText(address);
+
+                // Apply the condition for "didSelectNewImage" variable
+                didSelectNewImage = allDataBundle.getBoolean(BUNDLE_DIDSELECTNEWIMAGE);
+            }
+
         }
     }
 
     public void openMap()
     {
-//        Uri gmmIntentUri = Uri.parse("geo:0,0?q=");
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//        mapIntent.setPackage("com.google.android.apps.maps");
-//        startActivity(mapIntent);
+        // Collect all the data from the form and pass through the interface
+        Bundle allDataBundle = new Bundle();
+        Bitmap bitmap = ((BitmapDrawable)mImageView_eventBackground.getDrawable()).getBitmap();
+        allDataBundle.putParcelable(BUNDLE_IMAGE, bitmap);
+        allDataBundle.putString(BUNDLE_NAME, mEditText_Name.getText().toString());
+        allDataBundle.putString(BUNDLE_DATE, mEditText_Date.getText().toString());
+        allDataBundle.putString(BUNDLE_TIMESTART, mEditText_TimeStart.getText().toString());
+        allDataBundle.putString(BUNDLE_TIMEEND, mEditText_TimeEnd.getText().toString());
+        allDataBundle.putString(BUNDLE_DESCRIPTION, mEditText_Description.getText().toString());
+        allDataBundle.putString(BUNDLE_PARTICIPANTS, mParticipants.getText().toString());
+        allDataBundle.putInt(BUNDLE_CATEGORY, mCategories.getSelectedItemPosition());
+        allDataBundle.putString(BUNDLE_LOCATION, mLocation.getText().toString());
+        allDataBundle.putBoolean(BUNDLE_PUBLIC, mCheckBox_PublicOrPrivate.isChecked());
+        allDataBundle.putBoolean(BUNDLE_RECURRING, mCheckBox_IsRecurring.isChecked());
+        allDataBundle.putBoolean(BUNDLE_DIDSELECTNEWIMAGE, didSelectNewImage);
 
         // Open the MapActivity
-        mCreateEventFragmentInterface.openMapActivity();
+        mCreateEventFragmentInterface.openMapActivity(allDataBundle);
 
     }
 
     public void uploadImage()
     {
-
-//        mCreateEventFragmentInterface.imageUploader();
-
         mGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(mGalleryIntent, "Select image from Gallery"), 2);
 
@@ -361,17 +568,36 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                 Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
 
+                                Date date = new Date();
+                                String dateString = "Month";
 
-                                String mEventId = mDatabase.child("Events").push().getKey();
+                                try {
+
+                                    // Convert the string date to a date variable and extract the month out of it
+                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                                    date = mSimpleDateFormat.parse(mEvtDate);
+                                    dateString = String.valueOf(date.getMonth());
+
+
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                String mEventId = mDatabase.child("Events").child(dateString).push().getKey();
 
                                 if (mEventId != null) {
 
                                     Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                             mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                            mCheckBox_PublicOrPrivate.isChecked(),url, false);
+                                            mCheckBox_PublicOrPrivate.isChecked(),url, false,
+                                            getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude());
+
+//                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+//                                    String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
 
 
-                                    mDatabase.child("Events").child(mEventId).setValue(newEvent);
+                                    mDatabase.child("Events").child(dateString).child(mEvtDate).child(mEventId).setValue(newEvent);
 
                                     if (getContext() != null) {
 
@@ -411,6 +637,25 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
         }
     }
 
+    private Address getAddressFromString(String address) {
+
+        List<Address> addresses = new ArrayList<>();
+
+        if (getContext() != null) {
+
+            Geocoder geocoder = new Geocoder(getContext());
+
+            // Try to find the location
+            try {
+
+                addresses = geocoder.getFromLocationName(address, 1);
+            } catch (IOException e) {
+                 e.printStackTrace();
+            }
+        }
+        // Isolate the address
+        return addresses.get(0);
+    }
 
 
 

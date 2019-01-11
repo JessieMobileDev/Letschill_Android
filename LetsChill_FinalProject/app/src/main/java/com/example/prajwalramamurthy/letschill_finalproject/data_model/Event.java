@@ -20,12 +20,14 @@ public class Event implements Parcelable
     private boolean mIsRecurringEvent;
     private boolean mPublicOrPrivate;
     private boolean mIsDeleted;
+    private double mLatitude;
+    private double mLongitude;
 
     // Constructor
     public Event(String mEventId, String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
                  String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate, String mUrl,
-                 boolean mIsDeleted) {
+                 boolean mIsDeleted, double mLatitude, double mLongitude) {
 
         this.mEventId = mEventId;
         this.mEventName = mEventName;
@@ -41,10 +43,12 @@ public class Event implements Parcelable
         this.mPublicOrPrivate = mPublicOrPrivate;
         this.mUrl = mUrl;
         this.mIsDeleted = mIsDeleted;
+        this.mLatitude = mLatitude;
+        this.mLongitude = mLongitude;
     }
 
     // Empty Constructor
-    public Event(String eventId, String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1) {
+    public Event(String eventId, String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1, double lat, double lon) {
     }
 
     public Event() {
@@ -66,6 +70,8 @@ public class Event implements Parcelable
         mIsRecurringEvent = in.readByte() != 0;
         mPublicOrPrivate = in.readByte() != 0;
         mIsDeleted = in.readByte() != 0;
+        mLatitude = in.readDouble();
+        mLongitude = in.readDouble();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -162,5 +168,7 @@ public class Event implements Parcelable
         dest.writeByte((byte) (mIsRecurringEvent ? 1 : 0));
         dest.writeByte((byte) (mPublicOrPrivate ? 1 : 0));
         dest.writeByte((byte) (mIsDeleted ? 1 : 0));
+        dest.writeDouble(mLatitude);
+        dest.writeDouble(mLongitude);
     }
 }

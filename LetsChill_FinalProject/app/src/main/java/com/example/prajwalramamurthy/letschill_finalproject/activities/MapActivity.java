@@ -1,6 +1,8 @@
 package com.example.prajwalramamurthy.letschill_finalproject.activities;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,21 +19,23 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
-
+import com.example.prajwalramamurthy.letschill_finalproject.utility.AddressValidation;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements LocationListener {
+public class MapActivity extends AppCompatActivity implements LocationListener, MapFragment.MapFragmentInterface {
 
     // Variables
     private EditText mEditText_search;
+    private Bundle allDataBundle = new Bundle();
 
     //Constants
     private static final int REQUEST_LOCATION_PERMISSION = 0x01101;
+    public static final String INTENT_RESULT_ADDRESS = "INTENT_RESULT_ADDRESS";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +44,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
         // Assign the id to the edit text
         mEditText_search = findViewById(R.id.editText_search);
+
+        // Get the data from the intent
+        Intent receivedIntent = getIntent();
+        allDataBundle = receivedIntent.getBundleExtra(EventActivity.BUNDLE_FORM_ALL_DATA);
 
         // Get current location
         requestLocation();
@@ -74,12 +82,18 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                                 e.printStackTrace();
                             }
 
-                            // Isolate the address
-                            Address mTypedAddress = addresses.get(0);
+                            if (addresses != null && addresses.size() != 0) {
 
-                            // Reloads the fragment and pass the lat and long
-                            getFragmentManager().beginTransaction().add(R.id.frame_activity_map, MapFragment.newInstance(mTypedAddress.getLongitude(), mTypedAddress.getLatitude())).commit();
+                                // Isolate the address
+                                Address mTypedAddress = addresses.get(0);
 
+                                // Reloads the fragment and pass the lat and long
+                                getFragmentManager().beginTransaction().add(R.id.frame_activity_map, MapFragment.newInstance(mTypedAddress.getLongitude(), mTypedAddress.getLatitude(), mTypedAddress.getAddressLine(0), true, allDataBundle)).commit();
+                            } else {
+
+                                FormValidation.displayAlert(R.string.alert_title_address,
+                                        R.string.alert_message_address, R.string.alert_button_address, MapActivity.this);
+                            }
                         }
 
                         return true;
@@ -126,7 +140,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                 double mCurrentLatitude = mCurrentLocation.getLatitude();
 
                 // Start the fragment that will hold the map
-                getFragmentManager().beginTransaction().add(R.id.frame_activity_map, MapFragment.newInstance(mCurrentLongitude, mCurrentLatitude)).commit();
+                getFragmentManager().beginTransaction().add(R.id.frame_activity_map, MapFragment.newInstance(mCurrentLongitude, mCurrentLatitude, "no address", false, allDataBundle)).commit();
 
             }
         } else {
@@ -158,4 +172,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     }
 
 
+    @Override
+    public void passAddressBackToMapActivity(String address, Bundle allDataBundle) {
+
+        Log.d("address", "passAddressBackToMapActivity: address: " + address);
+        // Send the address as a result back to the EventActivity
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(INTENT_RESULT_ADDRESS, address);
+        resultIntent.putExtra(MapFragment.ARG_ALL_DATA_BUNDLE, allDataBundle);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
 }

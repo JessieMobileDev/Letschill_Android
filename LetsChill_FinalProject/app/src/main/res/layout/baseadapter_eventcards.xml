@@ -19,9 +19,9 @@
             android:alpha="0.1"
             android:scaleType="centerCrop"
             android:background="@android:color/darker_gray"
-            app:layout_constraintEnd_toEndOf="@+id/imageView11"
+            app:layout_constraintEnd_toEndOf="@+id/card_imageView"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/imageView11"
+            app:layout_constraintStart_toStartOf="@+id/card_imageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView11" />
+            app:layout_constraintTop_toBottomOf="@+id/card_imageView" />
 
         <TextView
             android:id="@+id/time_event"
@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/time_event" />
 
         <ImageView
-            android:id="@+id/imageView11"
+            android:id="@+id/card_imageView"
             android:layout_width="0dp"
             android:layout_height="96dp"
             android:layout_marginStart="8dp"
@@ -80,7 +80,7 @@
             android:layout_width="30dp"
             android:layout_height="20dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@+id/imageView11"
+            app:layout_constraintStart_toStartOf="@+id/card_imageView"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:color/background_light" />
 

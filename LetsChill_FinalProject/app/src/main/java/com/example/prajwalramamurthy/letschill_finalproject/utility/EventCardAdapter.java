@@ -81,7 +81,7 @@ public class EventCardAdapter extends BaseAdapter {
         final TextView mEventTitle;
         final TextView mEventTime;
         final TextView mEventLocation;
-        final TextView mEventHost;
+//        final TextView mEventHost;
 
 
         public ViewHolder(View mLayout){
@@ -90,7 +90,7 @@ public class EventCardAdapter extends BaseAdapter {
             mEventTitle = mLayout.findViewById(R.id.title_event);
             mEventTime = mLayout.findViewById(R.id.time_event);
             mEventLocation = mLayout.findViewById(R.id.location_event);
-            mEventHost = mLayout.findViewById(R.id.host_name);
+//            mEventHost = mLayout.findViewById(R.id.host_name);
 
         }
     }
@@ -142,7 +142,7 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
             mViewHolder.mEventTime.setText("On " + mEvent.getmEventDate() + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
-            mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
+//            mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
 
 
         }

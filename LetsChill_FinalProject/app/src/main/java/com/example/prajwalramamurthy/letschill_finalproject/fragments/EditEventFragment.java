@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.AddressValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
@@ -607,20 +608,23 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                                         Log.d("test", "saveEditEventToDatabase: retrieved NAME: " + mUsername);
 
                                         // TODO: Redo the image capture again
-                                        // Make a new event object with the new data to be stored
-                                        Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
-                                                mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
-                                                false);
+                                        if (getContext() != null) {
 
+                                            // Make a new event object with the new data to be stored
+                                            Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
+                                                    mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
+                                                    false, AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLatitude(),
+                                                    AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLongitude());
 
-                                        // Save the new object to the database under the same uid
-                                        mDBReference.setValue(mEdittedEvent);
+                                            // Save the new object to the database under the same uid
+                                            mDBReference.setValue(mEdittedEvent);
 
-                                        // Show a toast when changes were saved
-                                        Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+                                            // Show a toast when changes were saved
+                                            Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
 
-                                        // Close this activity
-                                        mEditEventInterface.closeEditEventActivity();
+                                            // Close this activity
+                                            mEditEventInterface.closeEditEventActivity();
+                                        }
 
                                     }
 
