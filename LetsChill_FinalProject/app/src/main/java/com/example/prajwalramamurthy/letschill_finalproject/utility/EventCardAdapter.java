@@ -1,8 +1,10 @@
 package com.example.prajwalramamurthy.letschill_finalproject.utility;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +114,7 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder = (ViewHolder)convertView.getTag();
         }
 
-        Event mEvent = (Event) getItem(position);
+        final Event mEvent = (Event) getItem(position);
 
         if (mEvent != null){
 
@@ -143,6 +145,17 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder.mEventTime.setText("On " + mEvent.getmEventDate() + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
 //            mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
+
+            mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String query = "geo:0,0?q=" + mEvent.getmEventLocation();
+                    Uri gmmIntentUri = Uri.parse(query);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    mContext.startActivity(mapIntent);
+                }
+            });
 
 
         }

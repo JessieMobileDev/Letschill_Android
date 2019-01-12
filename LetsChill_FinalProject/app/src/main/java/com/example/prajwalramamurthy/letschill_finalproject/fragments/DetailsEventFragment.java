@@ -2,8 +2,10 @@ package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -119,6 +121,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_join.setOnClickListener(this);
             button_leave.setOnClickListener(this);
             button_rsvp.setOnClickListener(this);
+            textView_location.setOnClickListener(this);
 
             button_leave.setVisibility(View.INVISIBLE);
             button_rsvp.setVisibility(View.INVISIBLE);
@@ -343,6 +346,17 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     }
 
+    private void openMapOnClick()
+    {
+
+        String query = "geo:0,0?q=" + mEvent.getmEventLocation();
+        Uri gmmIntentUri = Uri.parse(query);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        getContext().startActivity(mapIntent);
+
+    }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -388,6 +402,12 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             case R.id.button_detail_leave:
 
                 leaveButtonClick();
+
+                break;
+
+            case R.id.textView_detail_location:
+
+                openMapOnClick();
 
                 break;
         }
