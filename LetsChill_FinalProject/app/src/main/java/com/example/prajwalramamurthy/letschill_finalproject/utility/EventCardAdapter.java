@@ -20,7 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class EventCardAdapter extends BaseAdapter {
 
@@ -83,7 +86,6 @@ public class EventCardAdapter extends BaseAdapter {
         final TextView mEventTitle;
         final TextView mEventTime;
         final TextView mEventLocation;
-//        final TextView mEventHost;
 
 
         public ViewHolder(View mLayout){
@@ -92,7 +94,6 @@ public class EventCardAdapter extends BaseAdapter {
             mEventTitle = mLayout.findViewById(R.id.title_event);
             mEventTime = mLayout.findViewById(R.id.time_event);
             mEventLocation = mLayout.findViewById(R.id.location_event);
-//            mEventHost = mLayout.findViewById(R.id.host_name);
 
         }
     }
@@ -142,9 +143,8 @@ public class EventCardAdapter extends BaseAdapter {
             }
 
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
-            mViewHolder.mEventTime.setText("On " + mEvent.getmEventDate() + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
+            mViewHolder.mEventTime.setText("On " + mEvent.getmEventDate()+ ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
-//            mViewHolder.mEventHost.setText("Hosted by " + mEvent.getmHost());
 
             mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -156,44 +156,8 @@ public class EventCardAdapter extends BaseAdapter {
                     mContext.startActivity(mapIntent);
                 }
             });
-
-
         }
 
         return convertView;
     }
-
-//    private Bitmap downloadImage(String url) {
-//
-//        if (url != null && !url.isEmpty()) {
-//
-//            // Variables
-//            StorageReference mStorageReference = mStorage.getReferenceFromUrl(url);
-//            byte[] mImageBytes;
-//            boolean didSucceed = false;
-//
-//            final long ONE_MEGABYTE = 1024 * 1024;
-//            mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                @Override
-//                public void onSuccess(byte[] bytes) {
-//
-//                    didSucceed = true;
-//                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception exception) {
-//                    exception.printStackTrace();
-//                }
-//            });
-//
-//            if (didSucceed) {
-//
-//            }
-//
-//        }
-//
-//        return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.create_back);
-//    }
 }

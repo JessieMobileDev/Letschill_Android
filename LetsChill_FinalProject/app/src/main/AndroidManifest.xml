@@ -94,6 +94,10 @@
             android:name=".activities.MapActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <!-- Profile Activity -->
+        <activity android:name=".activities.ProfileActivity"
+            android:theme="@style/AppTheme"/>
+
         <!-- Meta-Data -->
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
