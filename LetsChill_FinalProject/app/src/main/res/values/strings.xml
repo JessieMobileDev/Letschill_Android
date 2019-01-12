@@ -133,4 +133,16 @@
     <string name="string_notify_hosting">Notify me when someone join an event that I am hosting</string>
     <string name="string_event_start">Notify me once when my events are about to start</string>
 
+    <!-- Profile Fragment Layout Strings -->
+    <string name="profile_name">Full Name</string>
+    <string name="profile_username">Username</string>
+    <string name="profile_email">Email Address</string>
+    <string name="profile_interests">Interests</string>
+    <string name="profile_feedback_title">Feedback</string>
+    <string name="profile_feedback_subtitle">We\'d would to hear your experience</string>
+    <string name="profile_termsAndConditions_title">Terms and Conditions</string>
+    <string name="profile_termsAndConditions_subtitle">Legal, Tems and Conditions, Version</string>
+    <string name="profile_notSpecified">Not specified</string>
+    <string name="profile_notVerified">not verified</string>
+
 </resources>

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MyEventsActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.ProfileActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignInFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignUpFragment;
@@ -24,7 +25,12 @@ public class MenuIntentHandler {
         switch (item.getItemId()) {
 
             case R.id.submenu_profile:
+
+                // Intent to "ProfileActivity"
+                Intent mProfileIntent = new Intent(context, ProfileActivity.class);
+                context.startActivity(mProfileIntent);
                 break;
+
             case R.id.submenu_my_events:
 
                 // Intent to "My Events" activity
