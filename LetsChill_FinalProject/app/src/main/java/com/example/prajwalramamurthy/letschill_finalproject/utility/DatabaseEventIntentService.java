@@ -378,48 +378,4 @@ public class DatabaseEventIntentService extends IntentService {
             }
         }
     }
-
-    private int getJoinedPeopleCount(final String eventId) {
-
-        mDBReference = FirebaseDatabase.getInstance().getReference("Users");
-        final ArrayList<Integer> joinedCount = new ArrayList<>();
-
-        mDBReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot user: dataSnapshot.getChildren()) {
-
-                    Log.d("joined", "onDataChange: user: " + user.getKey());
-
-                    for (DataSnapshot info: user.getChildren()) {
-
-                        Log.d("joined", "onDataChange: info: " + info.getKey());
-
-                        if (info.equals("Events")) {
-
-                            for (DataSnapshot joinedEventId: info.getChildren()) {
-
-                                Log.d("joined", "onDataChange: event id: " + joinedEventId.getKey());
-
-                                if (joinedEventId.equals(eventId)) {
-
-                                    // Add to the count
-                                    joinedCount.add(1);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        Log.d("joined", "getJoinedPeopleCount: array count for joined people: " + joinedCount.size());
-
-        return joinedCount.size();
-    }
 }

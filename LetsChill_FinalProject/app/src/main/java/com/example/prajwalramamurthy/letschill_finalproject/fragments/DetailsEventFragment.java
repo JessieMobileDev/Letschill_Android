@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -54,6 +58,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     private FirebaseUser mFirebaseUser;
     private String mUid;
     private DatabaseReference mDBReference;
+    private ArrayList<String> mJoinedUsersNames = new ArrayList<>();
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -166,6 +171,66 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 textView_category.setText(mEvent.getmCategory());
 
                 // TODO: missing the "participants"
+                // Get the event's joined users names
+                mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+
+                // Loop through the users and find the ones that have joined the event
+                mDBReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot user: dataSnapshot.getChildren()) {
+
+                            User retrievedUser = user.getValue(User.class);
+
+                            if (retrievedUser != null) {
+
+                                for (String id: mEvent.getmJoinedPeopleIds()) {
+
+                                    Log.d("test", "onDataChange: joined users ids: " + id);
+                                    if (user.getKey().equals(id)){
+                                        Log.d("test", "onDataChange: user key: " + user.getKey());
+                                        mJoinedUsersNames.add(retrievedUser.getUsername());
+                                        Log.d("arraysize", "onDataChange: username: " + retrievedUser.getUsername());
+                                    }
+                                }
+                            }
+                        }
+
+                        StringBuilder sb = new StringBuilder();
+
+                        if (mJoinedUsersNames.size() == 0) {
+
+                            textView_participants.setText("Nobody yet, be the first one!");
+                        } else if (mJoinedUsersNames.size() == 1) {
+
+                            textView_participants.setText(mJoinedUsersNames.get(0));
+                        } else {
+
+                            for (int i = 0; i < mJoinedUsersNames.size(); i++) {
+
+                                if (i == mJoinedUsersNames.size() - 1) {
+
+                                    sb.append(mJoinedUsersNames.get(i));
+                                } else {
+
+                                    sb.append(mJoinedUsersNames.get(i)).append("\n");
+                                    Log.d("test", "onActivityCreated: participants names: " + mJoinedUsersNames.get(i));
+                                }
+                            }
+                            textView_participants.setText(sb.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+//                mJoinedUsersNames = getJoinedUsersNames(mEvent.getmJoinedPeopleIds());
+
+
 
             }
 
@@ -204,8 +269,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             // Change the "join button" text to "join"
                             button_join.setText(R.string.join);
                             Log.d("test", "joinButtonClick: other's event");
-
-                            // TODO: check if the user has already joined this event
 
                             FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -338,13 +401,26 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                                     if (retrievedEvent.getmEventId().equals(mEvent.getmEventId())) {
 
+                                        final ArrayList<String> joinedPeopleIds = retrievedEvent.getmJoinedPeopleIds();
+                                        joinedPeopleIds.add(user.getUid());
+                                        mEvent.setmJoinedPeopleIds(joinedPeopleIds);
                                         query.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                                mDBReference.child(month.getKey()).child(day.getKey())
-                                                        .child(retrievedEvent.getmEventId()).child("JoinedUsers")
-                                                        .push().setValue(user.getUid());
+                                                // Check if the limit has reached before joining
+                                                if (mEvent.getmJoinedPeopleIds().size() == mEvent.getmJoinedPeople()) {
+
+                                                    // If the limit has reached, disable the "join" button and change text to
+                                                    // "event full"
+                                                    button_join.setEnabled(false);
+                                                    button_join.setText("Event Full");
+                                                } else {
+
+                                                    mDBReference = FirebaseDatabase.getInstance().getReference("Events")
+                                                            .child(month.getKey()).child(day.getKey()).child(mEvent.getmEventId());
+                                                    mDBReference.setValue(mEvent);
+                                                }
 
                                             }
 
@@ -423,6 +499,46 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    private ArrayList<String> getJoinedUsersNames(final ArrayList<String> joinedUsersIds) {
+
+        // Variables
+        final ArrayList<String> joinedUsersNames = new ArrayList<>();
+
+        mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        // Loop through the users and find the ones that have joined the event
+        mDBReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+
+                    User retrievedUser = user.getValue(User.class);
+
+                    if (retrievedUser != null) {
+
+                        for (String id: joinedUsersIds) {
+
+                            Log.d("test", "onDataChange: joined users ids: " + id);
+                            if (user.getKey().equals(id)){
+                                Log.d("test", "onDataChange: user key: " + user.getKey());
+                                joinedUsersNames.add(retrievedUser.getUsername());
+                                Log.d("arraysize", "onDataChange: username: " + retrievedUser.getUsername());
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return joinedUsersNames;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,7 +163,21 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
             mViewHolder.mEventTime.setText(dateString + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
-            mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
+//            mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
+//            int joinedCount = mEvent.getmJoinedPeopleIds().size();
+            if (mEvent.getmJoinedPeopleIds() != null) {
+                if (mEvent.getmJoinedPeopleIds().size() != 0) {
+
+                    mViewHolder.mJoinedPeople.setText(String.valueOf(mEvent.getmJoinedPeopleIds().size()) + "/" + mEvent.getmParticipants());
+                    Log.d("test", "getView: it's not null and it's not zero");
+                } else {
+                    mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
+                    Log.d("test", "getView: it's not null and it's zero");
+                }
+            } else {
+
+                Log.d("test", "getView: joined array is null");
+            }
 
             mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {
                 @Override

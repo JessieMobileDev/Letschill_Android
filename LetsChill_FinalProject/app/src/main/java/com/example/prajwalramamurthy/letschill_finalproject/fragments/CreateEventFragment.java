@@ -589,6 +589,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                 if (mEventId != null) {
 
                                     ArrayList<String> mJoinedPeopleIds = new ArrayList<>();
+                                    mJoinedPeopleIds.add(mUid);
 
                                     Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                             mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),

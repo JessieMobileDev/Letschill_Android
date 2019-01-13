@@ -8,20 +8,20 @@ import java.util.ArrayList;
 public class User implements Parcelable {
 
     // Member variables
-    private String mUsername;
+    private String username;
     private String mEmail;
     private String mProfilePhoto;
     private ArrayList<String> mInterests;
 
     // Constructor
-    public User(String mUsername, String mEmail) {
-        this.mUsername = mUsername;
+    public User(String username, String mEmail) {
+        this.username = username;
         this.mEmail = mEmail;
     }
 
     // Constructor
-    public User(String mUsername, String mEmail, String mProfilePhoto) {
-        this.mUsername = mUsername;
+    public User(String username, String mEmail, String mProfilePhoto) {
+        this.username = username;
         this.mEmail = mEmail;
         this.mProfilePhoto = mProfilePhoto;
     }
@@ -33,7 +33,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
-        mUsername = in.readString();
+        username = in.readString();
         mEmail = in.readString();
         mProfilePhoto = in.readString();
         mInterests = in.createStringArrayList();
@@ -53,7 +53,7 @@ public class User implements Parcelable {
 
     // Getters
     public String getUsername() {
-        return mUsername;
+        return username;
     }
 
     public String getEmail() {
@@ -67,7 +67,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mUsername);
+        dest.writeString(username);
         dest.writeString(mEmail);
         dest.writeString(mProfilePhoto);
         dest.writeStringList(mInterests);
