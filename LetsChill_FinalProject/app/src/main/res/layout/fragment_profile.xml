@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/imageView_profilePicture"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="172dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,8 +76,8 @@
             android:id="@+id/imageView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline10"
             app:srcCompat="@drawable/ic_person_grey_24dp" />
@@ -145,7 +145,7 @@
             app:srcCompat="@drawable/ic_email_grey_24dp" />
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraint_notVerified"
+            android:id="@+id/constraint_profile_notVerified"
             android:layout_width="0dp"
             android:layout_height="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -208,7 +208,7 @@
             android:id="@+id/imageView14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -187,11 +188,10 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                                 for (String id: mEvent.getmJoinedPeopleIds()) {
 
-                                    Log.d("test", "onDataChange: joined users ids: " + id);
                                     if (user.getKey().equals(id)){
-                                        Log.d("test", "onDataChange: user key: " + user.getKey());
+
                                         mJoinedUsersNames.add(retrievedUser.getUsername());
-                                        Log.d("arraysize", "onDataChange: username: " + retrievedUser.getUsername());
+
                                     }
                                 }
                             }
@@ -227,10 +227,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                     }
                 });
-
-//                mJoinedUsersNames = getJoinedUsersNames(mEvent.getmJoinedPeopleIds());
-
-
 
             }
 
@@ -498,47 +494,14 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 
-    private ArrayList<String> getJoinedUsersNames(final ArrayList<String> joinedUsersIds) {
+        if (getContext() != null && getActivity() != null) {
 
-        // Variables
-        final ArrayList<String> joinedUsersNames = new ArrayList<>();
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+        }
 
-        mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+        return false;
 
-        // Loop through the users and find the ones that have joined the event
-        mDBReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot user: dataSnapshot.getChildren()) {
-
-                    User retrievedUser = user.getValue(User.class);
-
-                    if (retrievedUser != null) {
-
-                        for (String id: joinedUsersIds) {
-
-                            Log.d("test", "onDataChange: joined users ids: " + id);
-                            if (user.getKey().equals(id)){
-                                Log.d("test", "onDataChange: user key: " + user.getKey());
-                                joinedUsersNames.add(retrievedUser.getUsername());
-                                Log.d("arraysize", "onDataChange: username: " + retrievedUser.getUsername());
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        return joinedUsersNames;
     }
 
     @Override

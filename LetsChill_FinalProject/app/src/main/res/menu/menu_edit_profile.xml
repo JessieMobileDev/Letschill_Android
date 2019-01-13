@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_submit_edittedProfile"
+        android:layout_height="wrap_content"
+        android:orderInCategory="100"
+        android:title="SAVE"
+        app:showAsAction="ifRoom"
+        android:visible="true">
+
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/settings">
+
+        <menu
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:context="com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity3">
+
+            <item
+                android:id="@+id/submenu_profile"
+                android:title="@string/menu_profile"/>
+            <item
+                android:id="@+id/submenu_my_events"
+                android:title="@string/menu_my_events"/>
+            <item
+                android:id="@+id/submenu_notification"
+                android:title="@string/menu_notification"/>
+            <item
+                android:id="@+id/submenu_logout"
+                android:title="@string/menu_logout"/>
+        </menu>
+    </item>
+</menu>

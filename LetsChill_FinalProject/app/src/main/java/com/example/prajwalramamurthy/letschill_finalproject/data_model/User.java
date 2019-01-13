@@ -9,20 +9,20 @@ public class User implements Parcelable {
 
     // Member variables
     private String username;
-    private String mEmail;
+    private String email;
     private String mProfilePhoto;
-    private ArrayList<String> mInterests;
+    private ArrayList<String> interests;
 
     // Constructor
-    public User(String username, String mEmail) {
+    public User(String username, String email) {
         this.username = username;
-        this.mEmail = mEmail;
+        this.email = email;
     }
 
     // Constructor
-    public User(String username, String mEmail, String mProfilePhoto) {
+    public User(String username, String email, String mProfilePhoto) {
         this.username = username;
-        this.mEmail = mEmail;
+        this.email = email;
         this.mProfilePhoto = mProfilePhoto;
     }
 
@@ -34,9 +34,9 @@ public class User implements Parcelable {
 
     protected User(Parcel in) {
         username = in.readString();
-        mEmail = in.readString();
+        email = in.readString();
         mProfilePhoto = in.readString();
-        mInterests = in.createStringArrayList();
+        interests = in.createStringArrayList();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -57,7 +57,15 @@ public class User implements Parcelable {
     }
 
     public String getEmail() {
-        return mEmail;
+        return email;
+    }
+
+    public String getmProfilePhoto() {
+        return mProfilePhoto;
+    }
+
+    public ArrayList<String> getInterests() {
+        return interests;
     }
 
     @Override
@@ -68,8 +76,8 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(username);
-        dest.writeString(mEmail);
+        dest.writeString(email);
         dest.writeString(mProfilePhoto);
-        dest.writeStringList(mInterests);
+        dest.writeStringList(interests);
     }
 }
