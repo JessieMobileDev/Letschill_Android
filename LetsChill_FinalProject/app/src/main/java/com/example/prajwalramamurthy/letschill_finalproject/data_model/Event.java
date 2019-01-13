@@ -3,6 +3,8 @@ package com.example.prajwalramamurthy.letschill_finalproject.data_model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class Event implements Parcelable
 {
     // Member variables
@@ -22,12 +24,14 @@ public class Event implements Parcelable
     private boolean mIsDeleted;
     private double mLatitude;
     private double mLongitude;
+    private int mJoinedPeople;
+    private ArrayList<String> mJoinedPeopleIds;
 
     // Constructor
     public Event(String mEventId, String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
                  String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate, String mUrl,
-                 boolean mIsDeleted, double mLatitude, double mLongitude) {
+                 boolean mIsDeleted, double mLatitude, double mLongitude, int mJoinedPeople, ArrayList<String> mJoinedPeopleIds) {
 
         this.mEventId = mEventId;
         this.mEventName = mEventName;
@@ -45,10 +49,14 @@ public class Event implements Parcelable
         this.mIsDeleted = mIsDeleted;
         this.mLatitude = mLatitude;
         this.mLongitude = mLongitude;
+        this.mJoinedPeople = mJoinedPeople;
+        this.mJoinedPeopleIds = mJoinedPeopleIds;
     }
 
     // Empty Constructor
-    public Event(String eventId, String movies_at_lincoln, String s, String s1, String s2, String s3, String s4, String movies, boolean b, boolean b1, double lat, double lon) {
+    public Event(String eventId, String movies_at_lincoln, String s, String s1, String s2,
+                 String s3, String s4, String movies, boolean b, boolean b1, double lat, double lon,
+                 int mJoinedPeople, ArrayList<String> mJoinedPeopleIds) {
     }
 
     public Event() {
@@ -72,6 +80,8 @@ public class Event implements Parcelable
         mIsDeleted = in.readByte() != 0;
         mLatitude = in.readDouble();
         mLongitude = in.readDouble();
+        mJoinedPeople = in.readInt();
+        mJoinedPeopleIds = in.readArrayList(String.class.getClassLoader());
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -147,6 +157,30 @@ public class Event implements Parcelable
         return mIsDeleted;
     }
 
+    public double getmLatitude() {
+        return mLatitude;
+    }
+
+    public double getmLongitude() {
+        return mLongitude;
+    }
+
+    public int getmJoinedPeople() {
+        return mJoinedPeople;
+    }
+
+    public void setmJoinedPeople(int mJoinedPeople) {
+        this.mJoinedPeople = mJoinedPeople;
+    }
+
+    public ArrayList<String> getmJoinedPeopleIds() {
+        return mJoinedPeopleIds;
+    }
+
+    public void setmJoinedPeopleIds(ArrayList<String> mJoinedPeopleIds) {
+        this.mJoinedPeopleIds = mJoinedPeopleIds;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -170,5 +204,7 @@ public class Event implements Parcelable
         dest.writeByte((byte) (mIsDeleted ? 1 : 0));
         dest.writeDouble(mLatitude);
         dest.writeDouble(mLongitude);
+        dest.writeInt(mJoinedPeople);
+        dest.writeList(mJoinedPeopleIds);
     }
 }

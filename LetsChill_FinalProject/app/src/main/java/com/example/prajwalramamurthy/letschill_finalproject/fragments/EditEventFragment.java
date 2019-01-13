@@ -611,10 +611,12 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                                         if (getContext() != null) {
 
                                             // Make a new event object with the new data to be stored
+                                            ArrayList<String> mJoinedUsersId = new ArrayList<>();
                                             Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
                                                     mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
                                                     false, AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLatitude(),
-                                                    AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLongitude());
+                                                    AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLongitude(),
+                                                    0, mJoinedUsersId);
 
                                             // Save the new object to the database under the same uid
                                             mDBReference.setValue(mEdittedEvent);

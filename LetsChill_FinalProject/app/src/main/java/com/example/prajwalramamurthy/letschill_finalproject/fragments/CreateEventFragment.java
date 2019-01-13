@@ -588,10 +588,13 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                 if (mEventId != null) {
 
+                                    ArrayList<String> mJoinedPeopleIds = new ArrayList<>();
+
                                     Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                             mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
                                             mCheckBox_PublicOrPrivate.isChecked(),url, false,
-                                            getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude());
+                                            getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude(),
+                                            0, mJoinedPeopleIds);
 
 //                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
 //                                    String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());

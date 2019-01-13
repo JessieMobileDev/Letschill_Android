@@ -53,6 +53,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
     private String mUid;
+    private DatabaseReference mDBReference;
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -316,6 +317,60 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                     }
                 });
             }
+
+            // Add the joined users to the event object
+            mDBReference = FirebaseDatabase.getInstance().getReference("Events");
+
+            final Query query = mDBReference.child("JoinedUsers").equalTo(user.getUid());
+            mDBReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (final DataSnapshot month: dataSnapshot.getChildren()) {
+
+                        for (final DataSnapshot day: month.getChildren()) {
+
+                            for (final DataSnapshot event: day.getChildren()) {
+
+                                final Event retrievedEvent = event.getValue(Event.class);
+
+                                if (retrievedEvent != null) {
+
+                                    if (retrievedEvent.getmEventId().equals(mEvent.getmEventId())) {
+
+                                        query.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                mDBReference.child(month.getKey()).child(day.getKey())
+                                                        .child(retrievedEvent.getmEventId()).child("JoinedUsers")
+                                                        .push().setValue(user.getUid());
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    } else {
+
+                                        break;
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
         } else if (button_join.getText().toString().equals(getResources().getString(R.string.rsvp))) {
 
             // If the button text is equal to "rsvp", continue below

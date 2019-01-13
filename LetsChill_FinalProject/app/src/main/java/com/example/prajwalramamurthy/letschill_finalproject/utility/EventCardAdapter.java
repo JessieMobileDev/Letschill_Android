@@ -86,6 +86,8 @@ public class EventCardAdapter extends BaseAdapter {
         final TextView mEventTitle;
         final TextView mEventTime;
         final TextView mEventLocation;
+        final TextView mJoinedPeople;
+        final ImageView mEventRecurringIcon;
 
 
         public ViewHolder(View mLayout){
@@ -94,6 +96,8 @@ public class EventCardAdapter extends BaseAdapter {
             mEventTitle = mLayout.findViewById(R.id.title_event);
             mEventTime = mLayout.findViewById(R.id.time_event);
             mEventLocation = mLayout.findViewById(R.id.location_event);
+            mJoinedPeople = mLayout.findViewById(R.id.textView_joinedCount);
+            mEventRecurringIcon = mLayout.findViewById(R.id.imageView_isRecurring);
 
         }
     }
@@ -142,9 +146,23 @@ public class EventCardAdapter extends BaseAdapter {
                 });
             }
 
+            String dateString = "";
+            try {
+
+                // Dates saved in the database are numbers, change it to words such as January 11, 2019
+                DateFormat format1 = new SimpleDateFormat("MM-dd-yyyy");
+                Date date = format1.parse(mEvent.getmEventDate());
+                DateFormat format2 = new SimpleDateFormat("MMMM dd, yyyy");
+                dateString = format2.format(date);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
-            mViewHolder.mEventTime.setText("On " + mEvent.getmEventDate()+ ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
+            mViewHolder.mEventTime.setText(dateString + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
+            mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
 
             mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -156,6 +174,12 @@ public class EventCardAdapter extends BaseAdapter {
                     mContext.startActivity(mapIntent);
                 }
             });
+
+            if (!mEvent.ismIsRecurringEvent()) {
+
+
+                mViewHolder.mEventRecurringIcon.setVisibility(View.GONE);
+            }
         }
 
         return convertView;
