@@ -329,9 +329,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                                                     Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
 
-                                                    // Close the activity
-                                                    mEditProfileInterface.closeEditProfileActivity();
+
                                                 }
+                                                // Close the activity
+                                                mEditProfileInterface.closeEditProfileActivity();
                                             }
                                         }
                                     }
