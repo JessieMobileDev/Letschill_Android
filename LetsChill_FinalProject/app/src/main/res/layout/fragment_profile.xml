@@ -3,15 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/topLayer">
 
     <ScrollView
         android:id="@+id/scrollView_createEvent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,22 +17,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:id="@+id/frame_inside"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
+            android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraint_card"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:background="#F2F2F2"
-                app:layout_constraintBottom_toTopOf="@+id/guideline9"
                 app:layout_constraintEnd_toEndOf="@+id/frame_inside"
                 app:layout_constraintStart_toStartOf="@+id/frame_inside"
                 app:layout_constraintTop_toTopOf="@+id/frame_inside">
@@ -152,11 +146,12 @@
                     android:id="@+id/textView_interestsSubTitle"
                     style="@style/profile_subtitle_style"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/profile_notSpecified"
+                    android:layout_marginBottom="15dp"
+                    android:maxLines="20"
                     android:scrollbars="vertical"
+                    android:text="@string/profile_notSpecified"
                     app:layout_constraintBottom_toTopOf="@+id/constraint_profile_notVerified"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/textView_interestsTitle"
@@ -174,7 +169,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/constraint_profile_notVerified"
                     android:layout_width="0dp"
-                    android:layout_height="20dp"
+                    android:layout_height="30dp"
                     android:background="#DE8282"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -184,7 +179,7 @@
                         android:id="@+id/textView29"
                         style="@style/profile_notVerified"
                         android:layout_width="0dp"
-                        android:layout_height="22dp"
+                        android:layout_height="0dp"
                         android:text="@string/profile_notVerified"
                         android:textAlignment="center"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,7 +187,7 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
+                        app:layout_constraintVertical_bias="0.51" />
                 </android.support.constraint.ConstraintLayout>
 
                 <ImageView
@@ -216,31 +211,22 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <android.support.constraint.Guideline
-                android:id="@+id/guideline9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/second_card_profile"
-                app:layout_constraintGuide_percent="0.75" />
-
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/second_card_profile"
-                android:layout_width="0dp"
-                android:layout_height="132dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#F2F2F2"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline9">
+                tools:layout_editor_absoluteY="379dp">
 
                 <ImageView
                     android:id="@+id/imageView14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_feedback_black_24dp" />
@@ -251,7 +237,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/profile_feedback_title"
                     app:layout_constraintStart_toEndOf="@+id/imageView14"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -286,7 +272,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="24dp"
                     android:text="@string/profile_feedback_subtitle"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/textView_termsTitle"
                     app:layout_constraintTop_toBottomOf="@+id/textView_termsTitle" />
@@ -300,7 +288,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView_feedbackSubTitle"
                     app:srcCompat="@drawable/ic_comment_black_24dp" />
             </android.support.constraint.ConstraintLayout>
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

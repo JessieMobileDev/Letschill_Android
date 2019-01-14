@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class User implements Parcelable {
 
     // Member variables
+    private String userID;
     private String profilePhoto;
     private String fullName;
     private String username;
@@ -18,22 +19,29 @@ public class User implements Parcelable {
 //    private ArrayList<String> joinedEvents = new ArrayList<>();
 
     // Constructor
-    public User(String username, String email) {
+    public User(String userID, String fullName, String username, String email, String phone,
+                String facebookEmail, String profilePhoto) {
+        this.userID = userID;
+        this.fullName = fullName;
         this.username = username;
         this.email = email;
+        this.phone = phone;
+        this.facebookEmail = facebookEmail;
+        this.profilePhoto = profilePhoto;
     }
 
     // Constructor
-    public User(String username, String email, String profilePhoto) {
+    public User(String userID, String username, String email, String profilePhoto) {
+        this.userID = userID;
         this.username = username;
         this.email = email;
         this.profilePhoto = profilePhoto;
     }
 
     // Constructor
-    public User(String profilePhoto, String fullName, String username, String email, String phone,
+    public User(String userID, String profilePhoto, String fullName, String username, String email, String phone,
                 String facebookEmail, ArrayList<String> interests) {
-
+        this.userID = userID;
         this.profilePhoto = profilePhoto;
         this.fullName = fullName;
         this.username = username;
@@ -51,6 +59,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
+        userID = in.readString();
         profilePhoto = in.readString();
         fullName = in.readString();
         username = in.readString();
@@ -59,6 +68,19 @@ public class User implements Parcelable {
         facebookEmail = in.readString();
         interests = in.createStringArrayList();
 //        joinedEvents = in.createStringArrayList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userID);
+        dest.writeString(profilePhoto);
+        dest.writeString(fullName);
+        dest.writeString(username);
+        dest.writeString(email);
+        dest.writeString(phone);
+        dest.writeString(facebookEmail);
+        dest.writeStringList(interests);
+//        dest.writeStringList(joinedEvents);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -73,6 +95,11 @@ public class User implements Parcelable {
         }
     };
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     // Getters
     public String getUsername() {
         return username;
@@ -82,32 +109,35 @@ public class User implements Parcelable {
         return email;
     }
 
-    public String getmProfilePhoto() {
-        return profilePhoto;
-    }
-
     public ArrayList<String> getInterests() {
         return interests;
     }
 
-//    public ArrayList<String> getJoinedEvents() {
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getFacebookEmail() {
+        return facebookEmail;
+    }
+
+    //    public ArrayList<String> getJoinedEvents() {
 //        return joinedEvents;
 //    }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(profilePhoto);
-        dest.writeString(fullName);
-        dest.writeString(username);
-        dest.writeString(email);
-        dest.writeString(phone);
-        dest.writeString(facebookEmail);
-        dest.writeStringList(interests);
-//        dest.writeStringList(joinedEvents);
-    }
+
+
 }

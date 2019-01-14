@@ -48,7 +48,7 @@ import java.util.List;
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
 
     // Variables
-    private EditText mEditText_fullName, mEditText_username, mEditText_email, mEditText_phone,
+    private EditText mEditText_fullName, mEditText_username, mEditText_phone,
             mEditText_facebookEmail;
     private TextView mTextView_interests;
     private ImageView mImageView_profilePicture;
@@ -201,7 +201,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             // Get the views
             mEditText_fullName = getView().findViewById(R.id.editText_editProfile_fullName);
             mEditText_username = getView().findViewById(R.id.editText_editProfile_username);
-            mEditText_email = getView().findViewById(R.id.editText_editProfile_email);
             mEditText_phone = getView().findViewById(R.id.editText_editProfile_phone);
             mEditText_facebookEmail = getView().findViewById(R.id.editText_editProfile_fb);
             mTextView_interests = getView().findViewById(R.id.textView_editProfile_interests);
@@ -219,7 +218,16 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                 // Assign the data back to the edit texts and text views where needed
                 mEditText_username.setText(retrievedUser.getUsername());
-                mEditText_email.setText(retrievedUser.getEmail());
+
+                if (!retrievedUser.getFullName().equals("N/A")) {
+                    mEditText_fullName.setText(retrievedUser.getFullName());
+                }
+                if (!retrievedUser.getPhone().equals("N/A")) {
+                    mEditText_phone.setText(retrievedUser.getPhone());
+                }
+                if (!retrievedUser.getFacebookEmail().equals("N/A")) {
+                    mEditText_facebookEmail.setText(retrievedUser.getFacebookEmail());
+                }
 
                 // Concatenate all the interests into one string, breaking line right after each one
                 StringBuilder sb = new StringBuilder();
@@ -282,113 +290,109 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     private void saveProfileChangesToDatabase() {
 
-
         // Validate the fields
-        if (!mEditText_fullName.getText().toString().isEmpty()) {
+        if (!mEditText_username.getText().toString().isEmpty()) {
 
-            if (!mEditText_username.getText().toString().isEmpty()) {
+            if (!mTextView_interests.getText().toString().isEmpty()) {
 
-                if (!mEditText_email.getText().toString().isEmpty()) {
+                String[] interests = mTextView_interests.getText().toString().split("\n");
 
-                    if (!mEditText_phone.getText().toString().isEmpty()) {
+                final ArrayList<String> newInterests = new ArrayList<>(Arrays.asList(interests));
 
-                        if (!mEditText_facebookEmail.getText().toString().isEmpty()) {
+                mDBReference = FirebaseDatabase.getInstance().getReference("Users");
 
-                            if (!mTextView_interests.getText().toString().isEmpty()) {
+                mDBReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                String[] interests = mTextView_interests.getText().toString().split("\n");
+                        for (DataSnapshot user: dataSnapshot.getChildren()) {
 
-                                final ArrayList<String> newInterests = new ArrayList<>(Arrays.asList(interests));
+                            User person = user.getValue(User.class);
 
-                                mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+                            if (person != null && person.getEmail().equals(retrievedUser.getEmail())) {
 
-                                mDBReference.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Variables to be saved back in the database
+                                String fullName = "Not defined";
+                                String username = "Not defined";
+                                String phone = "Not defined";
+                                String fbEmail = "Not defined";
 
-                                        for (DataSnapshot user: dataSnapshot.getChildren()) {
+                                // Full name, phone number and facebook email are not required
+                                // If they are empty, save in the database as "Not defined"
+                                if (!mEditText_fullName.getText().toString().isEmpty()) {
 
-                                            User person = user.getValue(User.class);
+                                    fullName = mEditText_fullName.getText().toString();
+                                    mDBReference.child(retrievedUser.getUserID()).child("fullName").setValue(fullName);
+                                }
+                                if (!mEditText_phone.getText().toString().isEmpty()) {
 
-                                            if (person != null && person.getEmail().equals(retrievedUser.getEmail())) {
+                                    phone = mEditText_phone.getText().toString();
+                                    mDBReference.child(retrievedUser.getUserID()).child("phone").setValue(phone);
+                                }
+                                if (!mEditText_facebookEmail.getText().toString().isEmpty()) {
 
-                                                // Collect all data from the edit texts
-                                                String fullName = mEditText_fullName.getText().toString();
-                                                String username = mEditText_username.getText().toString();
-                                                String email = mEditText_email.getText().toString();
-                                                String phone = mEditText_phone.getText().toString();
-                                                String fbEmail = mEditText_facebookEmail.getText().toString();
+                                    fbEmail = mEditText_facebookEmail.getText().toString();
+                                    mDBReference.child(retrievedUser.getUserID()).child("facebookEmail").setValue(fbEmail);
+                                }
+                                if (didSelectAnImage) {
+
+                                    mDBReference.child(retrievedUser.getUserID()).child("profilePhoto").setValue(mUrl);
+                                }
+
+                                // Username, email and interests are required in order to save the changes
+                                username = mEditText_username.getText().toString();
+
+                                // Save each individual piece of info separately
+                                mDBReference.child(retrievedUser.getUserID()).child("username").setValue(username);
+
+
 //                                                ArrayList<String> joinedEvents = retrievedUser.getJoinedEvents();
 
-                                                // Create a new object
-                                                User mEdittedUser = new User(mUrl, fullName, username, email,
-                                                        phone, fbEmail, newInterests);
-                                                mDBReference.child(user.getKey()).setValue(mEdittedUser);
 
-                                                if (getContext() != null) {
+                                if (getContext() != null) {
 
-                                                    Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
 
 
-                                                }
-                                                // Close the activity
-                                                mEditProfileInterface.closeEditProfileActivity();
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
-//                                // Compare both lists
-//                                int sameInterestCount = 0;
-//                                for (int i = 0; i < retrievedUser.getInterests().size()-1; i++) {
-//
-//                                    for (int j = 0; j < interests.length; j++) {
-//
-//                                        if (retrievedUser.getInterests().get(i).equals(interests[j])) {
-//
-//                                            sameInterestCount += 1;
-//                                        }
-//                                    }
-//                                }
-//
-//                                // Check if the count is the same as the amount of items on the retrieved array
-//                                if (sameInterestCount == retrievedUser.getInterests().size()) {
-//
-//                                    // Nothing is different, just grab the values from the text view
-//
-//                                } else {
-//
-//                                    // Something has changed, grab
-//                                }
+                                }
+                                // Close the activity
+                                mEditProfileInterface.closeEditProfileActivity();
                             }
-
-
-                        } else {
-
-                            mEditText_facebookEmail.setError(ERROR_EMPTY_FIELDS);
                         }
-
-                    } else {
-
-                        mEditText_phone.setError(ERROR_EMPTY_FIELDS);
                     }
-                } else {
 
-                    mEditText_email.setError(ERROR_EMPTY_FIELDS);
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            } else {
+                    }
+                });
 
-                mEditText_username.setError(ERROR_EMPTY_FIELDS);
+//                // Compare both lists
+//                int sameInterestCount = 0;
+//                for (int i = 0; i < retrievedUser.getInterests().size()-1; i++) {
+//
+//                    for (int j = 0; j < interests.length; j++) {
+//
+//                        if (retrievedUser.getInterests().get(i).equals(interests[j])) {
+//
+//                            sameInterestCount += 1;
+//                        }
+//                    }
+//                }
+//
+//                // Check if the count is the same as the amount of items on the retrieved array
+//                if (sameInterestCount == retrievedUser.getInterests().size()) {
+//
+//                    // Nothing is different, just grab the values from the text view
+//
+//                } else {
+//
+//                    // Something has changed, grab
+//                }
             }
         } else {
 
-            mEditText_fullName.setError(ERROR_EMPTY_FIELDS);
+            mEditText_username.setError(ERROR_EMPTY_FIELDS);
         }
     }
 

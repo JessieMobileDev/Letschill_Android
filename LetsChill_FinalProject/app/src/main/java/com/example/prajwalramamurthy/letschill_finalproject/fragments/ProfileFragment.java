@@ -17,9 +17,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
-import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -29,6 +30,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ConstraintLayout mContraintLayout_verifiedTag;
     private ProfileInterface mProfileInterface;
     private User mRetrievedUser;
+    private DatabaseReference mDBReference;
 
     // Constants
     private static final String ARG_LOGGED_USER = "ARG_LOGGED_USER";
@@ -110,8 +112,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             if (mRetrievedUser != null) {
 
                 // Apply the retrieved object data to where it's needed on the UI
+                mTextView_fullName.setText(mRetrievedUser.getFullName());
                 mTextView_username.setText(mRetrievedUser.getUsername());
                 mTextView_email.setText(mRetrievedUser.getEmail());
+
 
                 // Concatenate all the interests into one string, breaking line right after each one
                 StringBuilder sb = new StringBuilder();

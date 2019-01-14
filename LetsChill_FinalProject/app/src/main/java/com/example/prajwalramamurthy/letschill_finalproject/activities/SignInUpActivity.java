@@ -202,7 +202,21 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
                     final FirebaseUser user = mAuth.getCurrentUser();
 
-                    User createdUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+                    // user.getPhotoUrl().toString()
+                    String facebookPicture = "N/A";
+                    String facebookEmail = "N/A";
+
+                    try {
+
+                        facebookPicture = user.getPhotoUrl().toString();
+                        facebookEmail = user.getEmail();
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    User createdUser = new User(user.getUid(), user.getDisplayName(), user.getDisplayName(), "N/A",
+                            "N/A", facebookEmail, facebookPicture);
 
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(user.getUid())
@@ -211,21 +225,8 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
                         public void onComplete(@NonNull Task<Void> task) {
 
 
-                            // Hide progress bar if successful
-//                                mProgressBar.setVisibility(View.GONE);
-
-//
-//                                if (task.isSuccessful()) {
-//
-//                                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
-//
-//                                    // Clear the edit texts
-//                                    FormValidation.clearEditTexts(mAllEditTexts);
-//                                }
                         }
                     });
-
-                    //Toast.makeText(SignInUpActivity.this, "Account saved to db!", Toast.LENGTH_SHORT).show();
 
                     // Move to Interests screen
                     moveToInterestsFromSignIn();

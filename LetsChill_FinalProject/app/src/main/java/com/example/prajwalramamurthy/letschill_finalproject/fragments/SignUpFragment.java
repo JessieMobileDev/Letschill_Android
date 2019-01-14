@@ -159,36 +159,41 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                     if (task.isSuccessful()) {
 
                         // Store the additional data in the Realtime database
-                        User user = new User(mUsername, mEmail);
+                        String mUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        FirebaseDatabase.getInstance().getReference("Users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                        if (!mUserUID.isEmpty()) {
 
-                                // Hide progress bar if successful
-                                mProgressBar.setVisibility(View.GONE);
+                            User user = new User(mUserUID, "N/A", mUsername, mEmail, "N/A",
+                                    "N/A", "N/A");
 
-                                if (task.isSuccessful()) {
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(mUserUID).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
 
-                                    Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
+                                    // Hide progress bar if successful
+                                    mProgressBar.setVisibility(View.GONE);
+
+                                    if (task.isSuccessful()) {
+
+                                        Toast.makeText(getContext(), "Account created successfully", Toast.LENGTH_SHORT).show();
 
 //                                    // Save the username for later use within the application
 //                                    mPrefs.edit().putString(PREFS_USER_NAME, mUsername).apply();
 
-                                    // Save the user uid for later use within the application
-                                    mPrefs.edit().putString(PREFS_USER_UID, FirebaseDatabase.getInstance().getReference("Users")
-                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getKey()).apply();
+                                        // Save the user uid for later use within the application
+                                        mPrefs.edit().putString(PREFS_USER_UID, FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getKey()).apply();
 
-                                    // Clear the edit texts
-                                    FormValidation.clearEditTexts(mAllEditTexts);
+                                        // Clear the edit texts
+                                        FormValidation.clearEditTexts(mAllEditTexts);
 
-                                    // Perform an intent to open the "InterestsActivity"
-                                    mSignUpFragmentInterface.moveToInterestsFromSignUp();
+                                        // Perform an intent to open the "InterestsActivity"
+                                        mSignUpFragmentInterface.moveToInterestsFromSignUp();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
 
                     } else {
 
