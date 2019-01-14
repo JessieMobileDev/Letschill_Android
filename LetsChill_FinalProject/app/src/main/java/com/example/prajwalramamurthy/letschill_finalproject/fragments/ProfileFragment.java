@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     // Constants
     private static final String ARG_LOGGED_USER = "ARG_LOGGED_USER";
+    private static final String TAG = "tag";
 
     public interface ProfileInterface {
 
@@ -110,7 +112,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 // Apply the retrieved object data to where it's needed on the UI
                 mTextView_username.setText(mRetrievedUser.getUsername());
                 mTextView_email.setText(mRetrievedUser.getEmail());
-                mTextView_interests.setText(mRetrievedUser.getInterests().get(0));
+
+                // Concatenate all the interests into one string, breaking line right after each one
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < mRetrievedUser.getInterests().size(); i++) {
+
+                    if (i == mRetrievedUser.getInterests().size() - 1) {
+
+                        sb.append(mRetrievedUser.getInterests().get(i));
+                    } else {
+
+                        sb.append(mRetrievedUser.getInterests().get(i)).append("\n");
+                    }
+                }
+
+                mTextView_interests.setText(sb.toString());
             }
         }
     }
@@ -132,7 +149,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.constraint_profile_notVerified:
 
                 // Takes the user to the verification activity
-
+                Log.d(TAG, "onClick: Constraint Layout click listener works");
                 break;
         }
     }

@@ -9,7 +9,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.EditProfileFragment;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity implements EditProfileFragment.EditProfileInterface {
 
     // Variables
     private User mRetrievedUser;
@@ -35,5 +35,12 @@ public class EditProfileActivity extends AppCompatActivity {
                         EditProfileFragment.newInstance(mRetrievedUser)).commit();
             }
         }
+    }
+
+    @Override
+    public void closeEditProfileActivity() {
+
+        // Close this activity
+        finish();
     }
 }

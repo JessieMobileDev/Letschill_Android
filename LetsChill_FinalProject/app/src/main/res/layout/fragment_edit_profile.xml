@@ -37,7 +37,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/button_signin_facebook" />
+                app:srcCompat="@drawable/create_back"
+                android:contentDescription="@string/none"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline11"
@@ -307,7 +310,7 @@
                 android:id="@+id/textView_verifiedMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="@string/profile_verifyRequirements"
                 android:textAlignment="center"
                 android:fontFamily="@font/roboto_regular"
                 android:textSize="12sp"

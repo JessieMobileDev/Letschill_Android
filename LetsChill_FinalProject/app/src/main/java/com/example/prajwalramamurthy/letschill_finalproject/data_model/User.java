@@ -8,10 +8,14 @@ import java.util.ArrayList;
 public class User implements Parcelable {
 
     // Member variables
+    private String profilePhoto;
+    private String fullName;
     private String username;
     private String email;
-    private String mProfilePhoto;
-    private ArrayList<String> interests;
+    private String phone;
+    private String facebookEmail;
+    private ArrayList<String> interests = new ArrayList<>();
+//    private ArrayList<String> joinedEvents = new ArrayList<>();
 
     // Constructor
     public User(String username, String email) {
@@ -20,10 +24,24 @@ public class User implements Parcelable {
     }
 
     // Constructor
-    public User(String username, String email, String mProfilePhoto) {
+    public User(String username, String email, String profilePhoto) {
         this.username = username;
         this.email = email;
-        this.mProfilePhoto = mProfilePhoto;
+        this.profilePhoto = profilePhoto;
+    }
+
+    // Constructor
+    public User(String profilePhoto, String fullName, String username, String email, String phone,
+                String facebookEmail, ArrayList<String> interests) {
+
+        this.profilePhoto = profilePhoto;
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.facebookEmail = facebookEmail;
+        this.interests = interests;
+//        this.joinedEvents = joinedEvents;
     }
 
 
@@ -33,10 +51,14 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
+        profilePhoto = in.readString();
+        fullName = in.readString();
         username = in.readString();
         email = in.readString();
-        mProfilePhoto = in.readString();
+        phone = in.readString();
+        facebookEmail = in.readString();
         interests = in.createStringArrayList();
+//        joinedEvents = in.createStringArrayList();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -61,12 +83,16 @@ public class User implements Parcelable {
     }
 
     public String getmProfilePhoto() {
-        return mProfilePhoto;
+        return profilePhoto;
     }
 
     public ArrayList<String> getInterests() {
         return interests;
     }
+
+//    public ArrayList<String> getJoinedEvents() {
+//        return joinedEvents;
+//    }
 
     @Override
     public int describeContents() {
@@ -75,9 +101,13 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(profilePhoto);
+        dest.writeString(fullName);
         dest.writeString(username);
         dest.writeString(email);
-        dest.writeString(mProfilePhoto);
+        dest.writeString(phone);
+        dest.writeString(facebookEmail);
         dest.writeStringList(interests);
+//        dest.writeStringList(joinedEvents);
     }
 }

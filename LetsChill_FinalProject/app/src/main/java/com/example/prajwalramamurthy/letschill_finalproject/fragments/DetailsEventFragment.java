@@ -187,16 +187,18 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                         for (DataSnapshot user: dataSnapshot.getChildren()) {
 
-                            User retrievedUser = user.getValue(User.class);
+                            if (user != null) {
+                                User retrievedUser = user.getValue(User.class);
 
-                            if (retrievedUser != null) {
+                                if (retrievedUser != null) {
 
-                                for (String id: mEvent.getmJoinedPeopleIds()) {
+                                    for (String id : mEvent.getmJoinedPeopleIds()) {
 
-                                    if (user.getKey().equals(id)){
+                                        if (user.getKey().equals(id)) {
 
-                                        mJoinedUsersNames.add(retrievedUser.getUsername());
+                                            mJoinedUsersNames.add(retrievedUser.getUsername());
 
+                                        }
                                     }
                                 }
                             }
@@ -387,7 +389,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                         if (dataSnapshot.exists()) {
                             Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
                         } else {
-                            ref.child(user.getUid()).child("Events").push().setValue(mEvent.getmEventId());
+                            ref.child(user.getUid()).child("joinedEvents").push().setValue(mEvent.getmEventId());
                         }
                     }
 
