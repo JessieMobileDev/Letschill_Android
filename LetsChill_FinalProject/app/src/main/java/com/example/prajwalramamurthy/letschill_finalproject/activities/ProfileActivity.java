@@ -57,6 +57,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
 
                     // Instantiate the fragment
                     getSupportFragmentManager().beginTransaction().add(R.id.profile_frame, ProfileFragment.newInstance(loggedUser)).commit();
+
                 }
             }
 
@@ -75,5 +76,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
         Intent mEditProfileIntent = new Intent(this, EditProfileActivity.class);
         mEditProfileIntent.putExtra(INTENT_LOGGED_USER_OBJECT, user);
         startActivity(mEditProfileIntent);
+
+        // Close this activity
+        finish();
     }
 }

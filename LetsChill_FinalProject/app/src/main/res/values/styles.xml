@@ -102,7 +102,7 @@
 
     <style name="profile_notVerified">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
