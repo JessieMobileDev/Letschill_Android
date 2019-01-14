@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,6 +62,9 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     private String mUid;
     private DatabaseReference mDBReference;
     private ArrayList<String> mJoinedUsersNames = new ArrayList<>();
+    private static final String CHANNEL_ID = "id";
+    private static final String CHANNEL_NAME = "name";
+    private static final String CHANNEL_DESC = "desc";
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -340,6 +345,20 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         });
     }
 
+    private void displayNotification()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notifications_white_24dp)
+                .setContentTitle("Notification")
+                .setContentText("You have joined the event")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+
+        NotificationManagerCompat notfiManagerCompact = NotificationManagerCompat.from(getContext());
+        notfiManagerCompact.notify(1, mBuilder.build());
+
+    }
+
     private void joinButtonClick()
     {
         if (button_join.getText().toString().equals(getResources().getString(R.string.join))) {
@@ -353,6 +372,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
             // Show toast
             Toast.makeText(getContext(), R.string.toast_event_joined, Toast.LENGTH_SHORT).show();
+
+            displayNotification();
 
 
             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

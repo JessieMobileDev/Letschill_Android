@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "421267857356-oc2s79dkgilk8pkj4f2akouph180ecpq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prajwalramamurthy.letschill_finalproject",
+            "certificate_hash": "292227681d66689aeb171f80b3125c75d67ec5a5"
+          }
+        },
+        {
           "client_id": "421267857356-vokuccg1dh627p6ufo70g1g2u4caal6r.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -42,6 +50,13 @@
             {
               "client_id": "421267857356-vokuccg1dh627p6ufo70g1g2u4caal6r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "421267857356-fd38qg26us3nbq06oe7ctma9k3444si2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fullsail.Letschill-FinalProject-iOS"
+              }
             }
           ]
         },
