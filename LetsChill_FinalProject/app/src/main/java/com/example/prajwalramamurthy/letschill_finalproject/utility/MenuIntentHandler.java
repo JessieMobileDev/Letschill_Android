@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MyEventsActivity;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.NotificationsActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.ProfileActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.SignInUpActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.SignInFragment;
@@ -40,6 +41,11 @@ public class MenuIntentHandler {
 
                 break;
             case R.id.submenu_notification:
+
+                // Intent to "ProfileActivity"
+                Intent mNotIntent = new Intent(context, NotificationsActivity.class);
+                context.startActivity(mNotIntent);
+
                 break;
             case R.id.submenu_logout:
 

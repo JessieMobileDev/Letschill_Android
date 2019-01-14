@@ -56,7 +56,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
                 if (loggedUser != null) {
 
                     // Instantiate the fragment
-                    getSupportFragmentManager().beginTransaction().add(R.id.profile_frame, ProfileFragment.newInstance(loggedUser)).commit();
+                    getSupportFragmentManager().beginTransaction().add(R.id.profile_frame,
+                            ProfileFragment.newInstance(loggedUser)).commitAllowingStateLoss();
 
                 }
             }

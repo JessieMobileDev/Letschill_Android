@@ -1,16 +1,20 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
-import android.app.Fragment;
+
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 
 public class NotificationsFragment extends Fragment
 {
@@ -43,6 +47,19 @@ public class NotificationsFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_main, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (getContext() != null && getActivity() != null) {
+
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+        }
+
+        return false;
+
     }
 
     @Override

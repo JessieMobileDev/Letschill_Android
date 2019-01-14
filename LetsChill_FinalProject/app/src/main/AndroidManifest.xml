@@ -96,6 +96,10 @@
         <activity android:name=".activities.EditEventActivity"
             android:theme="@style/AppTheme"/>
 
+        <!-- Edit Event Activity -->
+        <activity android:name=".activities.NotificationsActivity"
+            android:theme="@style/AppTheme"/>
+
         <!-- Map Activity -->
         <activity
             android:name=".activities.MapActivity"

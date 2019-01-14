@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.NotificationsFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -19,7 +21,6 @@ import com.google.firebase.iid.InstanceIdResult;
 
 public class NotificationsActivity extends AppCompatActivity
 {
-
 
 
     private static final String CHANNEL_ID = "id";
@@ -33,9 +34,12 @@ public class NotificationsActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_details_event);
+        setContentView(R.layout.activity_notifications);
         setTitle("Notifications");
 
+        // Instantiate the fragment
+        getSupportFragmentManager().beginTransaction().add(R.id.notifyFrame,
+                NotificationsFragment.newInstance()).commit();
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -65,6 +69,8 @@ public class NotificationsActivity extends AppCompatActivity
         });
 
     }
+
+
 
 
     private void displayNotification()
