@@ -26,6 +26,8 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEven
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Events");
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
         // Find Views
         mFab = findViewById(R.id.fab_activity);
