@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabItem;
@@ -25,6 +26,8 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHa
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -75,6 +78,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Request events data from the database
         requestEventData();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("user")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "dsadas";
+                        if (!task.isSuccessful()) {
+                            msg = "asdasd";
+                        }
+                        Log.d(TAG, msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
