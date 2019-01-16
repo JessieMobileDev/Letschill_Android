@@ -2,6 +2,7 @@ package com.example.prajwalramamurthy.letschill_finalproject.utility;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.EditText;
 
 import java.text.ParseException;
@@ -96,6 +97,7 @@ public class FormValidation {
 
     public static boolean isStartTimeBeforeEndTime(String time, String endTime) {
 
+        Log.d("tag", "isStartTimeBeforeEndTime: time 1: " + time + " - time 2: " + endTime);
         String pattern = "HH:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 

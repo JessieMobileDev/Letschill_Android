@@ -152,6 +152,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mButton_delete.setOnClickListener(this);
             mButton_map.setOnClickListener(this);
             mEditText_eventStartTime.setOnClickListener(this);
+            mEditText_EndEvent.setOnClickListener(this);
             mEditText_eventDate.setOnClickListener(this);
             mImageView_eventImage.setOnClickListener(this);
 
