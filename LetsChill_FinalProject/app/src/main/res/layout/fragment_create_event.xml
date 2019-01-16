@@ -117,16 +117,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.45" />
 
             <TextView
                 android:id="@+id/textView"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="4dp"
                 android:text="@string/at"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toStartOf="@+id/guideline2"
@@ -138,9 +136,7 @@
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="4dp"
                 android:text="@string/to"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toStartOf="@+id/guideline5"
@@ -256,13 +252,13 @@
                 android:id="@+id/imageView_create_background"
                 android:layout_width="0dp"
                 android:layout_height="250dp"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/none"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/create_back" />
+                app:srcCompat="@drawable/select_image" />
 
             <Button
                 android:id="@+id/save_createEvent_button"
@@ -298,7 +294,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.8" />
+                app:layout_constraintGuide_percent="0.75" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline6"

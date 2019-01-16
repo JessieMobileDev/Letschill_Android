@@ -47,6 +47,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         // Get the data from the intent
         Intent receivedIntent = getIntent();
+//        allDataBundle = receivedIntent.getExtras();
         allDataBundle = receivedIntent.getBundleExtra(EventActivity.BUNDLE_FORM_ALL_DATA);
 
         // Get current location
@@ -181,6 +182,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         resultIntent.putExtra(INTENT_RESULT_ADDRESS, address);
         resultIntent.putExtra(MapFragment.ARG_ALL_DATA_BUNDLE, allDataBundle);
         setResult(Activity.RESULT_OK, resultIntent);
+
         finish();
     }
 }

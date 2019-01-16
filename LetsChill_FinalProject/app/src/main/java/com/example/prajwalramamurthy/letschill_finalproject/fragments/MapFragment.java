@@ -218,6 +218,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         // When the fragment opens, the map will be zoomed in to the device's current location
         showInitialLocationZoomedIn();
 
+
         if (getArguments() != null) {
 
             boolean mIsThisASearch = getArguments().getBoolean(ARG_ISTHISASEARCH);

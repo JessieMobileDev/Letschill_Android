@@ -352,9 +352,15 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 Log.d("address", "onActivityCreated: reloading frag address: " + address +
                         " - Participants: " + allDataBundle.getString(BUNDLE_PARTICIPANTS));
 
+                boolean imageWasSelected = allDataBundle.getBoolean(BUNDLE_DIDSELECTNEWIMAGE);
+                if (imageWasSelected) {
+
+                    // If an image was selected previously, then recover from bundle
+                    mBitmap = allDataBundle.getParcelable(BUNDLE_IMAGE);
+                    mImageView_eventBackground.setImageBitmap(mBitmap);
+                }
+
                 // Pass the data back to the fields
-                mBitmap = allDataBundle.getParcelable(BUNDLE_IMAGE);
-                mImageView_eventBackground.setImageBitmap(mBitmap);
                 mEditText_Name.setText(allDataBundle.getString(BUNDLE_NAME));
                 mEditText_Date.setText(allDataBundle.getString(BUNDLE_DATE));
                 mEditText_TimeStart.setText(allDataBundle.getString(BUNDLE_TIMESTART));
@@ -380,8 +386,13 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     {
         // Collect all the data from the form and pass through the interface
         Bundle allDataBundle = new Bundle();
-        Bitmap bitmap = ((BitmapDrawable)mImageView_eventBackground.getDrawable()).getBitmap();
-        allDataBundle.putParcelable(BUNDLE_IMAGE, bitmap);
+        if (didSelectNewImage) {
+
+            // If an image was selected, then save the uploaded image to the bundle
+            Bitmap bitmap = ((BitmapDrawable)mImageView_eventBackground.getDrawable()).getBitmap();
+            allDataBundle.putParcelable(BUNDLE_IMAGE, bitmap);
+        }
+
         allDataBundle.putString(BUNDLE_NAME, mEditText_Name.getText().toString());
         allDataBundle.putString(BUNDLE_DATE, mEditText_Date.getText().toString());
         allDataBundle.putString(BUNDLE_TIMESTART, mEditText_TimeStart.getText().toString());
@@ -396,6 +407,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
         // Open the MapActivity
         mCreateEventFragmentInterface.openMapActivity(allDataBundle);
+
+        Log.d("test", "openMap: it was pressed");
 
     }
 
@@ -723,7 +736,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    mEditText_TimeStart.setText( selectedHour + ":" + selectedMinute);
+                    mEditText_TimeStart.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                 }
             }, hour, minute, true);//Yes 24 hour time
 
@@ -735,7 +748,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    mEditText_TimeEnd.setText( selectedHour + ":" + selectedMinute);
+                    mEditText_TimeEnd.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                 }
             }, hour, minute, true);//Yes 24 hour time
 
@@ -822,7 +835,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 break;
             case R.id.button_map:
 
-                // If map button is tapped, in-built map is opened
+                // If map button is tapped
                 openMap();
                 break;
         }
