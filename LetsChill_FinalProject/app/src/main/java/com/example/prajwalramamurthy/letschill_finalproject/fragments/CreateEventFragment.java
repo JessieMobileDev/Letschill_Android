@@ -516,14 +516,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             public void onClick(View v)
             {
 
-
-
             }
         });
-
-
     }
-
 
     private void saveEventDataToDatabase() {
 
