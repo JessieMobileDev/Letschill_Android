@@ -55,6 +55,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.text.FieldPosition;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -587,56 +588,96 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
-//                    url = taskSnapshot.getUploadSessionUri().toString();
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                 url = taskSnapshot.getMetadata().getPath();
 
+                                Date date = new Date();
+                                String dateString = "Month";
+
+                                try {
+
+                                    // Convert the string date to a date variable and extract the month out of it
+                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                                    date = mSimpleDateFormat.parse(mEvtDate);
+                                    dateString = String.valueOf(date.getMonth());
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
                                 // Get the database reference
-                                mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mEvent.getmEventId());
+                                mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(dateString)
+                                        .child(mEvent.getmEventDate()).child(mEvent.getmEventId());
 
                                 // Retrieve the username from the current logged in user
                                 mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                 mUid = mFirebaseUser.getUid();
 
+                                // Check if the content collected at this point matches with the old content
+                                // Event name
+                                if (!mEvent.getmEventName().equals(mEvtName)) {
+//                                    mDBReference.child("")
+                                }
 
-                                FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // Event description
 
-                                        String mUsername = dataSnapshot.getValue(String.class);
+                                // Event location
 
-                                        Log.d("test", "saveEditEventToDatabase: retrieved NAME: " + mUsername);
+                                // Event time start
 
-                                        // TODO: Redo the image capture again
-                                        if (getContext() != null) {
+                                // Event end time
 
-                                            // Make a new event object with the new data to be stored
-                                            ArrayList<String> mJoinedUsersId = new ArrayList<>();
-                                            Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
-                                                    mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
-                                                    false, AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLatitude(),
-                                                    AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLongitude(),
-                                                    0, mJoinedUsersId);
+                                // Event date
 
-                                            // Save the new object to the database under the same uid
-                                            mDBReference.setValue(mEdittedEvent);
+                                // Event participants number
 
-                                            // Show a toast when changes were saved
-                                            Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+                                // Event category
 
-                                            // Close this activity
-                                            mEditEventInterface.closeEditEventActivity();
-                                        }
+                                // Is public
 
-                                    }
+                                // Is recurring
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // Image url
 
-                                    }
-                                });
 
+//                                FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                                        String mUsername = dataSnapshot.getValue(String.class);
+//
+//                                        // TODO: Redo the image capture again
+//                                        if (getContext() != null) {
+//
+//                                            // TODO: Do not make a new object, just overwite the same where needed
+//
+////                                            // Make a new event object with the new data to be stored
+//                                            ArrayList<String> mJoinedUsersId = new ArrayList<>();
+//                                            Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
+//                                                    mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
+//                                                    false, AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLatitude(),
+//                                                    AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLongitude(),
+//                                                    0, mJoinedUsersId);
+//
+////                                            // Save the new object to the database under the same uid
+////                                            mDBReference.setValue(mEdittedEvent);
+//
+//                                            // Show a toast when changes were saved
+//                                            Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+//
+//                                            // Close this activity
+//                                            mEditEventInterface.closeEditEventActivity();
+//                                        }
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                    }
+//                                });
+//
                             }
                         });
 
