@@ -65,7 +65,7 @@ public class EventActivity extends AppCompatActivity implements CreateEventFragm
         // Open the MapActivity
         Intent mMapIntent = new Intent(EventActivity.this, MapActivity.class);
         mMapIntent.putExtra(BUNDLE_FORM_ALL_DATA, bundle);
-//        mMapIntent.putExtras(bundle);
+        mMapIntent.putExtra(EditEventActivity.AFTER_CLICKING_MAP_ICON, 0);
         startActivityForResult(mMapIntent, MAP_REQUESTING_RESULT);
     }
 

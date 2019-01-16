@@ -81,10 +81,14 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private final Handler mHandler = new Handler();
     private Bitmap mBitmap;
     private String url;
-    private boolean didSelectAnImage = false;
+    private boolean didSelectNewImage = false;
+    private int mCameFromMapToEditEvent;
 
     // Constants
     public static final String ARGS_OBJECT = "ARGS_OBJECT";
+    public static final String ARGS_ALL_DATA_BUNDLE = "ARGS_ALL_DATA_BUNDLE";
+    public static final String ARGS_NEW_ADDRESS = "ARGS_NEW_ADDRESS";
+    public static final String ARGS_CAME_FROM_MAP = "ARGS_CAME_FROM_MAP";
     private static final String CROP_EXTRA = "crop";
     private static final String CROP_OUTPUTX = "outputX";
     private static final String CROP_OUTPUTY = "outputY";
@@ -93,17 +97,34 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private static final String CROP_SCALEUP_IFNEEDED = "scaleUpIfNeeded";
     private static final String CROP_RETURN_DATA = "return-data";
     public static final String EXTRA_DB_DELETE_ID = "EXTRA_DB_DELETE_ID";
+    private static final String BUNDLE_IMAGE = "BUNDLE_IMAGE";
+    private static final String BUNDLE_NAME = "BUNDLE_NAME";
+    private static final String BUNDLE_LOCATION = "BUNDLE_LOCATION";
+    private static final String BUNDLE_DATE = "BUNDLE_DATE";
+    private static final String BUNDLE_TIMESTART = "BUNDLE_TIMESTART";
+    private static final String BUNDLE_TIMEEND = "BUNDLE_TIMEEND";
+    private static final String BUNDLE_DESCRIPTION = "BUNDLE_DESCRIPTION";
+    public static final String BUNDLE_PARTICIPANTS = "BUNDLE_PARTICIPANTS";
+    private static final String BUNDLE_CATEGORY = "BUNDLE_CATEGORY";
+    private static final String BUNDLE_RECURRING = "BUNDLE_RECURRING";
+    private static final String BUNDLE_PUBLIC = "BUNDLE_PUBLIC";
+    private static final String BUNDLE_DIDSELECTNEWIMAGE = "BUNDLE_DIDSELECTNEWIMAGE";
 
     public interface EditEventInterface {
 
         void closeEditEventActivity();
+        void openMapActivity(Bundle bundle);
 
     }
 
-    public static EditEventFragment newInstance(Event mEvent) {
+    public static EditEventFragment newInstance(Event mEvent, Bundle allDataBundle, String mNewAddress,
+                                                int mCameFromMapToEditEvent) {
         
         Bundle args = new Bundle();
         args.putParcelable(ARGS_OBJECT, mEvent);
+        args.putParcelable(ARGS_ALL_DATA_BUNDLE, allDataBundle);
+        args.putString(ARGS_NEW_ADDRESS, mNewAddress);
+        args.putInt(ARGS_CAME_FROM_MAP, mCameFromMapToEditEvent);
         
         EditEventFragment fragment = new EditEventFragment();
         fragment.setArguments(args);
@@ -130,7 +151,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getView() != null) {
+        if (getView() != null && getArguments() != null) {
 
             // Get views
             mEditText_eventTitle = getView().findViewById(R.id.editText_eventTitle_edit);
@@ -157,117 +178,112 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mEditText_eventDate.setOnClickListener(this);
             mImageView_eventImage.setOnClickListener(this);
 
-            // Retrieve the object that was passed into this fragment
-            Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
+            mCameFromMapToEditEvent = getArguments().getInt(ARGS_CAME_FROM_MAP);
 
-            // Assign values to the fields
-            if (mEvent != null) {
+            if (mCameFromMapToEditEvent == 0) {
 
-                if (mEvent.getmUrl() != null && !mEvent.getmUrl().isEmpty()) {
+                // If the fragment was opened without an address, do the following
+                // Retrieve the object that was passed into this fragment
+                Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
-                    // Variables
-                    FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
-                    StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
-                    final long ONE_MEGABYTE = 1024 * 1024;
+                // Assign values to the fields
+                if (mEvent != null) {
 
-                    mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
+                    if (mEvent.getmUrl() != null && !mEvent.getmUrl().isEmpty()) {
 
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            mImageView_eventImage.setImageBitmap(bmp);
+                        // Variables
+                        FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
+                        StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
+                        final long ONE_MEGABYTE = 1024 * 1024;
 
+                        mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+
+                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                mImageView_eventImage.setImageBitmap(bmp);
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                exception.printStackTrace();
+                            }
+                        });
+                    }
+
+                    mEditText_eventTitle.setText(mEvent.getmEventName());
+                    mEditText_eventDate.setText(mEvent.getmEventDate());
+                    mEditText_eventStartTime.setText(mEvent.getmEventTimeStart());
+                    mEditText_EndEvent.setText(mEvent.getmEventTimeFinish());
+                    mEditText_location.setText(mEvent.getmEventLocation());
+                    mEditText_description.setText(mEvent.getmDescription());
+                    mEditText_participantsCount.setText(mEvent.getmParticipants());
+
+                    String[] mSpinnerValues = getResources().getStringArray(R.array.spinner_category);
+
+                    for (int i = 0; i < mSpinnerValues.length; i++) {
+
+                        if (mSpinnerValues[i].equals(mEvent.getmCategory())) {
+
+                            mSpinner_category.setSelection(i);
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    });
-                }
+                    }
 
-                mEditText_eventTitle.setText(mEvent.getmEventName());
-                mEditText_eventDate.setText(mEvent.getmEventDate());
-                mEditText_eventStartTime.setText(mEvent.getmEventTimeStart());
-                mEditText_EndEvent.setText(mEvent.getmEventTimeFinish());
-                mEditText_location.setText(mEvent.getmEventLocation());
-                mEditText_description.setText(mEvent.getmDescription());
-                mEditText_participantsCount.setText(mEvent.getmParticipants());
+                    Log.d("tag", "onActivityCreated: is recurring? " + mEvent.ismIsRecurringEvent());
+                    if (mEvent.ismIsRecurringEvent()) {
 
-                String[] mSpinnerValues = getResources().getStringArray(R.array.spinner_category);
+                        mCheckBox_isRecurring.setChecked(true);
+                    }
 
-                for (int i = 0; i < mSpinnerValues.length; i++) {
+                    if (mEvent.ismPublicOrPrivate()) {
 
-                    if (mSpinnerValues[i].equals(mEvent.getmCategory())) {
-
-                        mSpinner_category.setSelection(i);
+                        mCheckBox_isPublic.setChecked(true);
                     }
                 }
 
-                if (mEvent.ismIsRecurringEvent()) {
+            } else if (mCameFromMapToEditEvent == 1) {
 
-                    mCheckBox_isRecurring.setChecked(true);
-                }
+                // If this fragment was opened from MapFragment sending the address to here, then do the following
+                String address = getArguments().getString(ARGS_NEW_ADDRESS);
+                Bundle allDataBundle = getArguments().getParcelable(ARGS_ALL_DATA_BUNDLE);
 
-                if (mEvent.ismPublicOrPrivate()) {
+                // This will happen when passing the address back from the map fragment
+                if (allDataBundle != null && address != null) {
 
-                    mCheckBox_isPublic.setChecked(true);
+                    Log.d("address", "onActivityCreated: reloading frag address: " + address +
+                            " - Participants: " + allDataBundle.getString(BUNDLE_PARTICIPANTS));
+
+                    boolean imageWasSelected = allDataBundle.getBoolean(BUNDLE_DIDSELECTNEWIMAGE);
+
+                    // If an image was selected previously, then recover from bundle
+                    mBitmap = allDataBundle.getParcelable(BUNDLE_IMAGE);
+                    mImageView_eventImage.setImageBitmap(mBitmap);
+
+                    // Pass the data back to the fields
+                    mEditText_eventTitle.setText(allDataBundle.getString(BUNDLE_NAME));
+                    mEditText_eventDate.setText(allDataBundle.getString(BUNDLE_DATE));
+                    mEditText_eventStartTime.setText(allDataBundle.getString(BUNDLE_TIMESTART));
+                    mEditText_EndEvent.setText(allDataBundle.getString(BUNDLE_TIMEEND));
+                    mEditText_description.setText(allDataBundle.getString(BUNDLE_DESCRIPTION));
+                    mEditText_participantsCount.setText(allDataBundle.getString(BUNDLE_PARTICIPANTS));
+                    mSpinner_category.setSelection(allDataBundle.getInt(BUNDLE_CATEGORY));
+                    mEditText_location.setText(allDataBundle.getString(BUNDLE_LOCATION));
+                    mCheckBox_isPublic.setChecked(allDataBundle.getBoolean(BUNDLE_PUBLIC));
+                    mCheckBox_isRecurring.setChecked(allDataBundle.getBoolean(BUNDLE_RECURRING));
+                    
+                    // Apply the new address to the edit text
+                    mEditText_location.setText(address);
+
+                    // Apply the condition for "didSelectNewImage" variable
+                    didSelectNewImage = allDataBundle.getBoolean(BUNDLE_DIDSELECTNEWIMAGE);
+
                 }
             }
 
             // Check who is current logged on and see if it's the same as the host name
             // If they match, display the "delete button", otherwise don't
             getCurrentSignedInUser();
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.imageView_edit_eventImage:
-
-                // If the user selects the background image, gallery is opened
-                uploadImage();
-
-                break;
-            case R.id.editText_startTime_edit:
-
-                // When the time edit text is tapped, time picker is opened
-                timePickerDialog(0);
-
-                break;
-            case R.id.editText_endTime_edit:
-
-                // When the time edit text is tapped, time picker is opened
-                timePickerDialog(1);
-
-                break;
-            case R.id.editText_date_edit:
-
-                // When the date edit text is tapped, date picker is opened
-                pickerDialog();
-
-                break;
-            case R.id.save_editEvent_button:
-
-                saveEditEventToDatabase();
-
-                break;
-            case R.id.button_delete_edit:
-
-                // When the delete button is tapped, the event in the database has the variable
-                // isDeleted set to true and does not show anymore on the app
-                deleteEvent();
-
-                break;
-            case R.id.button_map_edit:
-
-                // If map button is tapped, in-built map is opened
-                openMap();
-
-                break;
         }
     }
 
@@ -392,7 +408,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                 mImageView_eventImage.setImageBitmap(mBitmap);
 
-                didSelectAnImage = true;
+                didSelectNewImage = true;
 
 
                 Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
@@ -433,10 +449,29 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
     public void openMap()
     {
-        Uri gmmIntentUri = Uri.parse("geo:0,0?q=");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
+        // Collect all the data from the form and pass through the interface
+        Bundle allDataBundle = new Bundle();
+
+        // If an image was selected, then save the uploaded image to the bundle
+        Bitmap bitmap = ((BitmapDrawable)mImageView_eventImage.getDrawable()).getBitmap();
+        allDataBundle.putParcelable(BUNDLE_IMAGE, bitmap);
+
+        allDataBundle.putString(BUNDLE_NAME, mEditText_eventTitle.getText().toString());
+        allDataBundle.putString(BUNDLE_DATE, mEditText_eventDate.getText().toString());
+        allDataBundle.putString(BUNDLE_TIMESTART, mEditText_eventStartTime.getText().toString());
+        allDataBundle.putString(BUNDLE_TIMEEND, mEditText_EndEvent.getText().toString());
+        allDataBundle.putString(BUNDLE_DESCRIPTION, mEditText_description.getText().toString());
+        allDataBundle.putString(BUNDLE_PARTICIPANTS, mEditText_participantsCount.getText().toString());
+        allDataBundle.putInt(BUNDLE_CATEGORY, mSpinner_category.getSelectedItemPosition());
+        allDataBundle.putString(BUNDLE_LOCATION, mEditText_location.getText().toString());
+        allDataBundle.putBoolean(BUNDLE_PUBLIC, mCheckBox_isPublic.isChecked());
+        allDataBundle.putBoolean(BUNDLE_RECURRING, mCheckBox_isRecurring.isChecked());
+        allDataBundle.putBoolean(BUNDLE_DIDSELECTNEWIMAGE, didSelectNewImage);
+
+        // Open the MapActivity
+        mEditEventInterface.openMapActivity(allDataBundle);
+
+        Log.d("test", "openMap: it was pressed");
     }
 
     // shows the date picker when user clicks on select date
@@ -469,7 +504,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    mEditText_eventStartTime.setText( selectedHour + ":" + selectedMinute);
+                    mEditText_eventStartTime.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                 }
             }, hour, minute, true);//Yes 24 hour time
 
@@ -481,7 +516,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    mEditText_EndEvent.setText( selectedHour + ":" + selectedMinute);
+                    mEditText_EndEvent.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                 }
             }, hour, minute, true);//Yes 24 hour time
 
@@ -554,7 +589,6 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                     final boolean mIsPublic = mCheckBox_isPublic.isChecked();
                     final boolean mIsRecurring = mCheckBox_isRecurring.isChecked();
 
-
                     // Retrieve the object that was passed into this fragment
                     final Event mEvent = getArguments().getParcelable(ARGS_OBJECT);
 
@@ -568,7 +602,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                        if (didSelectAnImage) {
+                        if (didSelectNewImage) {
                             mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                         } else {
                             mBitmap = ((BitmapDrawable)mImageView_eventImage.getDrawable()).getBitmap();
@@ -616,68 +650,61 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                                 // Check if the content collected at this point matches with the old content
                                 // Event name
-                                if (!mEvent.getmEventName().equals(mEvtName)) {
-//                                    mDBReference.child("")
+                                if (!mEvent.getmEventName().equals(mEvtName) && !mEvtName.isEmpty()) {
+                                    mDBReference.child("mEventName").setValue(mEvtName);
                                 }
 
                                 // Event description
+                                if (!mEvent.getmDescription().equals(mEvtDesc) && !mEvtDesc.isEmpty()) {
+                                    mDBReference.child("mDescription").setValue(mEvtDesc);
+                                }
 
                                 // Event location
+                                if (!mEvent.getmEventLocation().equals(mEvtLocation) && !mEvtLocation.isEmpty()) {
+                                    mDBReference.child("mEventLocation").setValue(mEvtLocation);
+                                }
 
                                 // Event time start
+                                if (!mEvent.getmEventTimeStart().equals(mEvtTimeStart) && !mEvtTimeStart.isEmpty()) {
+                                    mDBReference.child("mEventTimeStart").setValue(mEvtTimeStart);
+                                }
 
                                 // Event end time
+                                if (!mEvent.getmEventTimeFinish().equals(mEvtTimeEnd) && !mEvtTimeEnd.isEmpty()) {
+                                    mDBReference.child("mEventTimeFinish").setValue(mEvtTimeEnd);
+                                }
 
                                 // Event date
+                                if (!mEvent.getmEventDate().equals(mEvtDate) && !mEvtDate.isEmpty()) {
+                                    mDBReference.child("mEventDate").setValue(mEvtDate);
+                                }
 
                                 // Event participants number
+                                if (!mEvent.getmParticipants().equals(mEvtPart) && !mEvtPart.isEmpty()) {
+                                    mDBReference.child("mParticipants").setValue(mEvtPart);
+                                }
 
                                 // Event category
+                                if (!mEvent.getmCategory().equals(mEvtCategory) && !mEvtCategory.isEmpty()) {
+                                    mDBReference.child("mCategory").setValue(mEvtCategory);
+                                }
 
                                 // Is public
+                                if (mEvent.ismPublicOrPrivate() != mIsPublic) {
+                                    mDBReference.child("mPublicOrPrivate").setValue(mIsPublic);
+                                }
 
                                 // Is recurring
+                                mDBReference.child("mIsRecurringEvent").setValue(mIsRecurring);
 
                                 // Image url
+                                if (!mEvent.getmUrl().equals(url) && !url.isEmpty()) {
+                                    mDBReference.child("mUrl").setValue(url);
+                                }
 
+                                // Close this activity
+                                mEditEventInterface.closeEditEventActivity();
 
-//                                FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("username").addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                                        String mUsername = dataSnapshot.getValue(String.class);
-//
-//                                        // TODO: Redo the image capture again
-//                                        if (getContext() != null) {
-//
-//                                            // TODO: Do not make a new object, just overwite the same where needed
-//
-////                                            // Make a new event object with the new data to be stored
-//                                            ArrayList<String> mJoinedUsersId = new ArrayList<>();
-//                                            Event mEdittedEvent = new Event(mEvent.getmEventId(), mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart,
-//                                                    mEvtTimeEnd, mEvtDesc, mEvtPart, mEvtCategory, mUsername, mIsRecurring, mIsPublic, url,
-//                                                    false, AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLatitude(),
-//                                                    AddressValidation.getAddressFromString(mEvtLocation, getContext()).getLongitude(),
-//                                                    0, mJoinedUsersId);
-//
-////                                            // Save the new object to the database under the same uid
-////                                            mDBReference.setValue(mEdittedEvent);
-//
-//                                            // Show a toast when changes were saved
-//                                            Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
-//
-//                                            // Close this activity
-//                                            mEditEventInterface.closeEditEventActivity();
-//                                        }
-//
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                    }
-//                                });
-//
                             }
                         });
 
@@ -686,5 +713,55 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             }
         }
 
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+
+            case R.id.imageView_edit_eventImage:
+
+                // If the user selects the background image, gallery is opened
+                uploadImage();
+
+                break;
+            case R.id.editText_startTime_edit:
+
+                // When the time edit text is tapped, time picker is opened
+                timePickerDialog(0);
+
+                break;
+            case R.id.editText_endTime_edit:
+
+                // When the time edit text is tapped, time picker is opened
+                timePickerDialog(1);
+
+                break;
+            case R.id.editText_date_edit:
+
+                // When the date edit text is tapped, date picker is opened
+                pickerDialog();
+
+                break;
+            case R.id.save_editEvent_button:
+
+                saveEditEventToDatabase();
+
+                break;
+            case R.id.button_delete_edit:
+
+                // When the delete button is tapped, the event in the database has the variable
+                // isDeleted set to true and does not show anymore on the app
+                deleteEvent();
+
+                break;
+            case R.id.button_map_edit:
+
+                // If map button is tapped, in-built map is opened
+                openMap();
+
+                break;
+        }
     }
 }

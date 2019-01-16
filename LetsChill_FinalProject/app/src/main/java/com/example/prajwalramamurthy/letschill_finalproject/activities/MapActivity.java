@@ -47,11 +47,22 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         // Get the data from the intent
         Intent receivedIntent = getIntent();
-//        allDataBundle = receivedIntent.getExtras();
-        allDataBundle = receivedIntent.getBundleExtra(EventActivity.BUNDLE_FORM_ALL_DATA);
+        int requestFromCreateEventOrEditEvent = receivedIntent.getIntExtra(EditEventActivity.AFTER_CLICKING_MAP_ICON, 3);
 
-        // Get current location
-        requestLocation();
+        if (requestFromCreateEventOrEditEvent == 0) {
+
+            allDataBundle = receivedIntent.getBundleExtra(EventActivity.BUNDLE_FORM_ALL_DATA);
+
+            // Get current location
+            requestLocation();
+
+        } else if (requestFromCreateEventOrEditEvent == 1) {
+
+            allDataBundle = receivedIntent.getBundleExtra(EditEventActivity.BUNDLE_FORM_ALL_DATA_EDIT);
+
+            // Get current location
+            requestLocation();
+        }
 
         // Edit text on touch listener
         mEditText_search.setOnTouchListener(new View.OnTouchListener() {
