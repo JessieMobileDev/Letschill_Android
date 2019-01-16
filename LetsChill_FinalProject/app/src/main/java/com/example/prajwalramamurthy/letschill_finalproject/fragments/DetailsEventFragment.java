@@ -41,8 +41,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -363,6 +368,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     private void joinButtonClick()
     {
+
         if (button_join.getText().toString().equals(getResources().getString(R.string.join))) {
 
             // If the button text is equal to "Join", continue below
@@ -441,6 +447,9 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                                     mDBReference.setValue(mEvent);
                                                 }
 
+                                                // send message
+                                                sendPost();
+
                                             }
 
                                             @Override
@@ -457,6 +466,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             }
                         }
                     }
+
+
                 }
 
                 @Override
@@ -479,6 +490,58 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             Log.d("test", "onClick (rsvp): Host is equal to logged in user");
             rsvpButtonClick();
         }
+    }
+
+    public void sendPost() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://fcm.googleapis.com/v1/projects/letschill_finalproject/messages:send HTTP/1.1");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                    conn.setRequestProperty("Accept","application/json");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+
+                    String message = "{\n" +
+                            "  \"message\":{\n" +
+                            "    \"topic\" : \"user\",\n" +
+                            "    \"notification\" : {\n" +
+                            "      \"body\" : \"This is a Firebase Cloud Messaging Topic Message!\",\n" +
+                            "      \"title\" : \"FCM Message\"\n" +
+                            "      }\n" +
+                            "   }\n" +
+                            "}";
+
+//                    jsonParam.put("timestamp", 1488873360);
+//                    jsonParam.put("uname", message.getUser());
+//                    jsonParam.put("message", message.getMessage());
+//                    jsonParam.put("latitude", 0D);
+//                    jsonParam.put("longitude", 0D);
+
+
+
+                    Log.i("JSON", message);
+                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+                    os.writeBytes(message);
+
+                    os.flush();
+                    os.close();
+
+                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                    Log.i("MSG" , conn.getResponseMessage());
+
+                    conn.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
     }
 
     private void leaveButtonClick()

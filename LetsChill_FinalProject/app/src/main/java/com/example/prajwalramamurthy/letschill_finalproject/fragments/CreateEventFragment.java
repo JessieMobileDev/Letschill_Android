@@ -442,7 +442,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mImageUri = data.getData();
 
-                cropImage();
+               cropImage();
             }
         }
     }
