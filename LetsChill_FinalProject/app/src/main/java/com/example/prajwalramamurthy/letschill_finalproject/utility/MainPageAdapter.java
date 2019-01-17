@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
@@ -15,8 +17,9 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabTodayFr
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomingFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainPageAdapter extends FragmentStatePagerAdapter {
+public class MainPageAdapter extends FragmentStatePagerAdapter implements Filterable {
 
     // Variables
     private final int mNumOfTabs;
@@ -33,6 +36,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
         this.mTodayEvents = mTodayEvents;
         this.mUpcomingEvents = mUpcomingEvents;
         this.mPastEvents = mPastEvents;
+        this.filteredData = mUpcomingEvents;
     }
 
     @Override
@@ -42,6 +46,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+
 
         Bundle mFragmentBundle = new Bundle();
 
@@ -86,10 +91,67 @@ public class MainPageAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
+    // Get count
     @Override
-    public int getCount() {
+    public int getCount(){
 
-        return mNumOfTabs;
+
+        if(filteredData != null && filteredData.size() > 0){
+
+            return filteredData.size();
+        }
+
+        return 0;
     }
+
+    private final MainPageAdapter.ItemFilter mFilter = new MainPageAdapter.ItemFilter();
+
+
+    // will hanfle filter for the handymen
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    public List<Event> filteredData = null;
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<Event> list = mUpcomingEvents;
+
+            int count = list.size();
+            final ArrayList<Event> nlist = new ArrayList<>(count);
+
+            Event filterableString ;
+
+            for (int i = 0; i < count; i++) {
+                filterableString = list.get(i);
+                if (filterableString.getmEventName().toLowerCase().contains(filterString)) {
+                    nlist.add(filterableString);
+                }
+            }
+
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredData = (ArrayList<Event>) results.values;
+            notifyDataSetChanged();
+        }
+
+    }
+
+
 }
 

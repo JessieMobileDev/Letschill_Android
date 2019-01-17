@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
@@ -27,6 +28,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabTodayFr
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomingFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,7 +41,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         TabTodayFragment.TabTodayInterface, TabUpcomingFragment.TabUpcomingInterface,
-        TabPastFragment.TabPastInterface {
+        TabPastFragment.TabPastInterface, SearchView.OnQueryTextListener {
 
     // Variables
     private FloatingActionButton mFab;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Event> mPastEvents;
     private ProgressBar mProgressBar;
     MenuItem searchMenuItem;
+    private EventCardAdapter mAdapter;
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
@@ -78,6 +81,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabLayout = findViewById(R.id.tablayout_events);
         mProgressBar = findViewById(R.id.progress_bar_main);
         searchMenuItem = findViewById(R.id.action_search);
+
+        mAdapter = new EventCardAdapter(this, mUpcomingEvents);
+//
+//        ListView myListView = findViewById(R.id.Mylistviewtest);
+//        myListView.setAdapter(mAdapter);
 
         // Assign the click listener to the floating button
         mFab.setOnClickListener(this);
@@ -106,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Request events data from the database
         requestEventData();
 
+        //mTabAdapter.notifyDataSetChanged();
+
 
     }
 
@@ -123,7 +133,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
                 getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
         searchView.setSubmitButtonEnabled(true);
-        //searchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextListener(this);
+
     }
 
     @Override
@@ -136,10 +147,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchMenuItem.getActionView();
 
-//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
-//                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
-//        searchView.setSubmitButtonEnabled(true);
-        //searchView.setOnQueryTextListener(this);
+        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
+                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -172,6 +183,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, R.string.alert_content_noInternet, Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (mAdapter != null && !newText.isEmpty()) {
+            mAdapter.getFilter().filter(newText);
+            mAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+
+            mAdapter.filteredData = mUpcomingEvents;
+            mAdapter.notifyDataSetChanged();
+        }
+        return false;
+    }
+
 
 
 
