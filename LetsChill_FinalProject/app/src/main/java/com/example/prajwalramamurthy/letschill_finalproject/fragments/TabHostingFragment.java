@@ -38,6 +38,8 @@ public class TabHostingFragment extends ListFragment {
         return fragment;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();

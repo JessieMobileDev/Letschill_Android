@@ -406,6 +406,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 });
             }
 
+            sendPost();
+
             // Add the joined users to the event object
             mDBReference = FirebaseDatabase.getInstance().getReference("Events");
 

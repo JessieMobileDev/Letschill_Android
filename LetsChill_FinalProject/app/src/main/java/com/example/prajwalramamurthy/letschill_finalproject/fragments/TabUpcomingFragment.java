@@ -1,13 +1,18 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,12 +24,28 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAda
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class TabUpcomingFragment extends ListFragment {
+public class TabUpcomingFragment extends ListFragment implements SearchView.OnQueryTextListener  {
 
     // Variables
     private ArrayList<Event> mEventList = new ArrayList<>();
     private TabUpcomingInterface mTabUpcomingInterface;
+    private EventCardAdapter mAdapter;
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (mAdapter != null && !newText.isEmpty()) {
+            mAdapter.getFilter().filter(newText);
+            mAdapter.notifyDataSetChanged();
+        }
+        return false;
+    }
 
     public interface TabUpcomingInterface {
 
@@ -54,6 +75,8 @@ public class TabUpcomingFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
+        mAdapter.notifyDataSetChanged();
+
     }
 
     @Nullable
@@ -61,6 +84,8 @@ public class TabUpcomingFragment extends ListFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tab_upcoming, container, false);
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -70,7 +95,7 @@ public class TabUpcomingFragment extends ListFragment {
         populateEventList();
 
         // Adapter that will populate the list view
-        EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mEventList);
+        mAdapter = new EventCardAdapter(getContext(), mEventList);
         setListAdapter(mAdapter);
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,6 +108,15 @@ public class TabUpcomingFragment extends ListFragment {
 
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mAdapter = new EventCardAdapter(getContext(), mEventList);
+
+
     }
 
     public void populateEventList() {
