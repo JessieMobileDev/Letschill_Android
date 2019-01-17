@@ -63,9 +63,13 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private final Handler mHandler = new Handler();
     private boolean didSelectAnImage = false;
     private EditProfileInterface mEditProfileInterface;
+    private ArrayList<String> mNewInterests;
+    private Bundle allTypedData;
 
     // Constants
     private static final String ARG_LOGGED_USER = "ARG_LOGGED_USER";
+    private static final String ARG_ALL_TYPED_DATA = "ARG_ALL_TYPED_DATA";
+    private static final String ARG_INTERESTS = "ARG_INTERESTS";
     private static final String ERROR_EMPTY_FIELDS = "Do not leave this field empty";
     private static final String CROP_EXTRA = "crop";
     private static final String CROP_OUTPUTX = "outputX";
@@ -74,16 +78,26 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private static final String CROP_ASPECTY = "aspectY";
     private static final String CROP_SCALEUP_IFNEEDED = "scaleUpIfNeeded";
     private static final String CROP_RETURN_DATA = "return-data";
+    private static final String BUNDLE_FULL_NAME = "BUNDLE_FULL_NAME";
+    private static final String BUNDLE_USERNAME = "BUNDLE_USERNAME";
+    private static final String BUNDLE_PHONE = "BUNDLE_PHONE";
+    private static final String BUNDLE_FB_EMAIL = "BUNDLE_FB_EMAIL";
+    private static final String BUNDLE_INTERESTS = "BUNDLE_INTERESTS";
+
 
     public interface EditProfileInterface {
 
         void closeEditProfileActivity();
+        void openInterestsActivity(User loggedUser, int openedFromProfile, Bundle allTypedData,
+                                   ArrayList<String> interests);
     }
 
-    public static EditProfileFragment newInstance(User loggedUser) {
+    public static EditProfileFragment newInstance(User loggedUser, Bundle allTypedData, ArrayList<String> newInterests) {
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_LOGGED_USER, loggedUser);
+        args.putBundle(ARG_ALL_TYPED_DATA, allTypedData);
+        args.putStringArrayList(ARG_INTERESTS, newInterests);
 
         EditProfileFragment fragment = new EditProfileFragment();
         fragment.setArguments(args);
@@ -210,9 +224,12 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
             // Collect the user object passed into this fragment
             retrievedUser = getArguments().getParcelable(ARG_LOGGED_USER);
+            allTypedData = getArguments().getBundle(ARG_ALL_TYPED_DATA);
+            mNewInterests = getArguments().getStringArrayList(ARG_INTERESTS);
 
             // Assign click listeners
             mImageView_profilePicture.setOnClickListener(this);
+            mButton_chooseInterests.setOnClickListener(this);
 
             if (retrievedUser != null) {
 
@@ -240,6 +257,40 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                     } else {
 
                         sb.append(retrievedUser.getInterests().get(i)).append("\n");
+                    }
+                }
+
+                mTextView_interests.setText(sb.toString());
+            }
+
+            if (allTypedData != null && mNewInterests != null) {
+
+                // Paste all the data back into the edit texts
+                if (!allTypedData.getString(BUNDLE_FULL_NAME).isEmpty()) {
+                    mEditText_fullName.setText(allTypedData.getString(BUNDLE_FULL_NAME));
+                }
+                if (!allTypedData.getString(BUNDLE_USERNAME).isEmpty()) {
+                    mEditText_username.setText(allTypedData.getString(BUNDLE_USERNAME));
+                }
+                if (!allTypedData.getString(BUNDLE_PHONE).isEmpty()) {
+                    mEditText_phone.setText(allTypedData.getString(BUNDLE_PHONE));
+                }
+                if (!allTypedData.getString(BUNDLE_FB_EMAIL).isEmpty()) {
+                    mEditText_facebookEmail.setText(allTypedData.getString(BUNDLE_FB_EMAIL));
+                }
+
+                // Concatenate all the interests into one string, breaking line right after each one
+//                ArrayList<String> userInterests = (ArrayList<String>)FirebaseDatabase.getInstance().getReference("Users").child(retrievedUser.getUserID()).child("interests");
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < mNewInterests.size(); i++) {
+
+                    if (i == mNewInterests.size() - 1) {
+
+                        sb.append(mNewInterests.get(i));
+                    } else {
+
+                        sb.append(mNewInterests.get(i)).append("\n");
                     }
                 }
 
@@ -295,9 +346,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
             if (!mTextView_interests.getText().toString().isEmpty()) {
 
-                String[] interests = mTextView_interests.getText().toString().split("\n");
-
-                final ArrayList<String> newInterests = new ArrayList<>(Arrays.asList(interests));
+//                String[] interests = mTextView_interests.getText().toString().split("\n");
+//
+//                final ArrayList<String> newInterests = new ArrayList<>(Arrays.asList(interests));
 
                 mDBReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -405,6 +456,21 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                 // Open gallery if the image view is tapped
                 openGallery();
+                break;
+            case R.id.button_editProfile_interests:
+
+                // Retrieve whatever was typed in the fields and save in a bundle
+                Bundle allTypedData = new Bundle();
+                allTypedData.putString(BUNDLE_FULL_NAME, mEditText_fullName.getText().toString());
+                allTypedData.putString(BUNDLE_USERNAME, mEditText_username.getText().toString());
+                allTypedData.putString(BUNDLE_PHONE, mEditText_phone.getText().toString());
+                allTypedData.putString(BUNDLE_FB_EMAIL, mEditText_facebookEmail.getText().toString());
+
+                // Split the interests string and turn into an array
+                String[] interests = mTextView_interests.getText().toString().split("\n");
+                ArrayList<String> interestsArrayList = new ArrayList<>(Arrays.asList(interests));
+
+                mEditProfileInterface.openInterestsActivity(retrievedUser, 1, allTypedData, interestsArrayList);
                 break;
         }
     }

@@ -53,6 +53,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     private static final int REQUEST_LOCATION_PERMISSION = 0x01101;
     private static final int REQUEST_WRITE_PERMISSION = 0x01101111;
     public static final String EXTRA_REQUESTER = "EXTRA_REQUESTER";
+    public static final String INTENT_COMES_FROM_SIGN_UP = "INTENT_COMES_FROM_SIGN_UP";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,7 +129,6 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     @Override
     public void moveToInterestsFromSignIn() {
 
-//        requestUsernameUsingUid(0);
         // Move to the "InterestsActivity"
         Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
         startActivity(mInterestsIntent);
@@ -155,6 +155,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
         // Move to the "InterestsActivity"
         Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
+        mInterestsIntent.putExtra(INTENT_COMES_FROM_SIGN_UP, 0);
         startActivity(mInterestsIntent);
     }
 
