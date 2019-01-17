@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +27,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class EventCardAdapter extends BaseAdapter {
+public class EventCardAdapter extends BaseAdapter implements Filterable {
 
     // Base ID
     private static final long BASE_ID = 0x01011;
@@ -44,7 +47,7 @@ public class EventCardAdapter extends BaseAdapter {
 
         this.mContext = mContext;
         this.mEventList = mEventList;
-
+        this.filteredData = mEventList;
     }
 
     // Get count
@@ -52,9 +55,9 @@ public class EventCardAdapter extends BaseAdapter {
     public int getCount(){
 
 
-        if(mEventList != null && mEventList.size() > 0){
+        if(filteredData != null && filteredData.size() > 0){
 
-            return mEventList.size();
+            return filteredData.size();
         }
 
         return 0;
@@ -64,9 +67,9 @@ public class EventCardAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position){
 
-        if(mEventList != null && position >= 0 || position < mEventList.size()){
+        if(filteredData != null && position >= 0 || position < filteredData.size()){
 
-            return mEventList.get(position);
+            return filteredData.get(position);
         }
 
         return null;
@@ -76,6 +79,56 @@ public class EventCardAdapter extends BaseAdapter {
     public long getItemId(int position) {
 
         return BASE_ID + position;
+
+    }
+
+
+
+    private final ItemFilter mFilter = new ItemFilter();
+
+
+    // will hanfle filter for the handymen
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    public List<Event> filteredData = null;
+
+    private class ItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<Event> list = mEventList;
+
+            int count = list.size();
+            final ArrayList<Event> nlist = new ArrayList<>(count);
+
+            Event filterableString ;
+
+            for (int i = 0; i < count; i++) {
+                filterableString = list.get(i);
+                if (filterableString.getmEventName().toLowerCase().contains(filterString)) {
+                    nlist.add(filterableString);
+                }
+            }
+
+            results.values = nlist;
+            results.count = nlist.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredData = (ArrayList<Event>) results.values;
+            notifyDataSetChanged();
+        }
 
     }
 

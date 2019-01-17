@@ -1,5 +1,7 @@
 package com.example.prajwalramamurthy.letschill_finalproject.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         TabTodayFragment.TabTodayInterface, TabUpcomingFragment.TabUpcomingInterface,
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Event> mUpcomingEvents;
     private ArrayList<Event> mPastEvents;
     private ProgressBar mProgressBar;
+    MenuItem searchMenuItem;
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mViewPager = findViewById(R.id.viewPager_tabs);
         mTabLayout = findViewById(R.id.tablayout_events);
         mProgressBar = findViewById(R.id.progress_bar_main);
+        searchMenuItem = findViewById(R.id.action_search);
 
         // Assign the click listener to the floating button
         mFab.setOnClickListener(this);
@@ -103,10 +109,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // create our search manager to handle the search functionality
+        SearchManager searchManager = (SearchManager)
+                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
+        //MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
+                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
+        searchView.setSubmitButtonEnabled(true);
+        //searchView.setOnQueryTextListener(this);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        // create our search manager to handle the search functionality
+        SearchManager searchManager = (SearchManager)
+                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
+//                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
+//        searchView.setSubmitButtonEnabled(true);
+        //searchView.setOnQueryTextListener(this);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -114,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         MenuIntentHandler.getMenuIntents(item, this, this);
+
         return super.onOptionsItemSelected(item);
     }
 

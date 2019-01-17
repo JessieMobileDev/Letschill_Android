@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,27 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdap
 
 import java.util.ArrayList;
 
-public class TabTodayFragment extends ListFragment {
+public class TabTodayFragment extends ListFragment implements SearchView.OnQueryTextListener {
 
     // Variables
     private ArrayList<Event> mTodayEvents = new ArrayList<>();
     private TabTodayInterface mTabTodayInterface;
+    private EventCardAdapter mAdapter;
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (mAdapter != null && !newText.isEmpty()) {
+            mAdapter.getFilter().filter(newText);
+            mAdapter.notifyDataSetChanged();
+        }
+        return false;
+    }
 
     public interface TabTodayInterface {
 
@@ -76,7 +93,7 @@ public class TabTodayFragment extends ListFragment {
         if (mTodayEvents != null) {
 
             // Adapter that will populate the list view
-            EventCardAdapter mAdapter = new EventCardAdapter(getContext(), mTodayEvents);
+            mAdapter = new EventCardAdapter(getContext(), mTodayEvents);
             setListAdapter(mAdapter);
 
 
