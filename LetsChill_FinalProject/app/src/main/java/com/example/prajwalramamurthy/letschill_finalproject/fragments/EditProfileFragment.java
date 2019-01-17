@@ -12,6 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,10 +61,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private User retrievedUser;
     private DatabaseReference mDBReference;
     private Bitmap mBitmap;
-    private String mUrl;
+    private String mUrl, mPhotoPath;
     private Intent mGalleryIntent, mCropIntent;
     private Uri mImageUri;
-    private final Handler mHandler = new Handler();
     private boolean didSelectAnImage = false;
     private EditProfileInterface mEditProfileInterface;
     private ArrayList<String> mNewInterests;
@@ -83,7 +86,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private static final String BUNDLE_PHONE = "BUNDLE_PHONE";
     private static final String BUNDLE_FB_EMAIL = "BUNDLE_FB_EMAIL";
     private static final String BUNDLE_INTERESTS = "BUNDLE_INTERESTS";
-
+    private static final String BUNDLE_IMAGE = "BUNDLE_IMAGE";
 
     public interface EditProfileInterface {
 
@@ -261,6 +264,23 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 }
 
                 mTextView_interests.setText(sb.toString());
+
+                Log.d("pic1", "onActivityCreated: pic: " + retrievedUser.getProfilePhoto());
+                // Check if photo contains facebook in it, if so, download the image to display
+                if (retrievedUser.getProfilePhoto().contains("https")) {
+
+                    mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
+                            .downloadFacebookImageToBitmap(retrievedUser.getProfilePhoto()));
+                } else {
+
+                    if (retrievedUser.getProfilePhoto().contains("IDImages")) {
+
+                        ImageDownloadHandler.downloadFirebaseImageAndSetBitmap
+                                (retrievedUser.getProfilePhoto(), mImageView_profilePicture);
+                    }
+                }
+
+                mPhotoPath = retrievedUser.getProfilePhoto();
             }
 
             if (allTypedData != null && mNewInterests != null) {
@@ -295,8 +315,62 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 }
 
                 mTextView_interests.setText(sb.toString());
+
+                // Check if photo contains facebook in it, if so, download the image to display
+                String photoPath = allTypedData.getString(BUNDLE_IMAGE);
+
+                Log.d("pic1-2", "onActivityCreated: pic: " + photoPath);
+
+                if (photoPath != null) {
+
+                    if (photoPath.contains("https")) {
+
+                        mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
+                                .downloadFacebookImageToBitmap(photoPath));
+                    } else {
+
+                        if (photoPath.contains("IDImages")) {
+
+                            ImageDownloadHandler.downloadFirebaseImageAndSetBitmap
+                                    (photoPath, mImageView_profilePicture);
+                        }
+                    }
+                }
             }
 
+            // Add a listener to the phone edit text so we can insert ( ) and - to the phone number
+            mEditText_phone.addTextChangedListener(new TextWatcher() {
+
+                int length = 0;
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    String str = mEditText_phone.getText().toString();
+                    length = str.length();
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    String str = mEditText_phone.getText().toString();
+
+                    if(str.length() == 1 && length < str.length()){
+                        mEditText_phone.setText("");
+                        mEditText_phone.append("(" + str);
+                    }
+                    if(str.length() == 4 && length < str.length()){//len check for backspace
+                        mEditText_phone.append(")");
+                    }
+                    if(str.length() == 8 && length < str.length()){//len check for backspace
+                        mEditText_phone.append("-");
+                    }
+                }
+            });
         }
     }
 
@@ -417,29 +491,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                     }
                 });
-
-//                // Compare both lists
-//                int sameInterestCount = 0;
-//                for (int i = 0; i < retrievedUser.getInterests().size()-1; i++) {
-//
-//                    for (int j = 0; j < interests.length; j++) {
-//
-//                        if (retrievedUser.getInterests().get(i).equals(interests[j])) {
-//
-//                            sameInterestCount += 1;
-//                        }
-//                    }
-//                }
-//
-//                // Check if the count is the same as the amount of items on the retrieved array
-//                if (sameInterestCount == retrievedUser.getInterests().size()) {
-//
-//                    // Nothing is different, just grab the values from the text view
-//
-//                } else {
-//
-//                    // Something has changed, grab
-//                }
             }
         } else {
 
@@ -457,6 +508,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 // Open gallery if the image view is tapped
                 openGallery();
                 break;
+
             case R.id.button_editProfile_interests:
 
                 // Retrieve whatever was typed in the fields and save in a bundle
@@ -465,6 +517,9 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 allTypedData.putString(BUNDLE_USERNAME, mEditText_username.getText().toString());
                 allTypedData.putString(BUNDLE_PHONE, mEditText_phone.getText().toString());
                 allTypedData.putString(BUNDLE_FB_EMAIL, mEditText_facebookEmail.getText().toString());
+                allTypedData.putString(BUNDLE_IMAGE, mPhotoPath);
+
+                Log.d("pic", "onClick: pic (when clicking interests button): " + mPhotoPath);
 
                 // Split the interests string and turn into an array
                 String[] interests = mTextView_interests.getText().toString().split("\n");

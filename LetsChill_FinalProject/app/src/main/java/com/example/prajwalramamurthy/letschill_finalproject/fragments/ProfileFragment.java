@@ -1,6 +1,8 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +16,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -28,6 +36,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView mTextView_fullName, mTextView_username, mTextView_email, mTextView_interests;
     private Button mButton_edit;
     private ConstraintLayout mContraintLayout_verifiedTag;
+    private ImageView mImageView_profilePicture;
     private ProfileInterface mProfileInterface;
     private User mRetrievedUser;
     private DatabaseReference mDBReference;
@@ -101,6 +110,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             mTextView_interests = getView().findViewById(R.id.textView_interestsSubTitle);
             mContraintLayout_verifiedTag = getView().findViewById(R.id.constraint_profile_notVerified);
             mButton_edit = getView().findViewById(R.id.button_profileEdit);
+            mImageView_profilePicture = getView().findViewById(R.id.imageView_profilePicture);
 
             // Assign click listeners
             mButton_edit.setOnClickListener(this);
@@ -116,6 +126,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 mTextView_username.setText(mRetrievedUser.getUsername());
                 mTextView_email.setText(mRetrievedUser.getEmail());
 
+                // Check if photo contains facebook in it, if so, download the image to display
+                if (mRetrievedUser.getProfilePhoto().contains("https")) {
+
+                    mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
+                            .downloadFacebookImageToBitmap(mRetrievedUser.getProfilePhoto()));
+                } else {
+
+                    if (mRetrievedUser.getProfilePhoto().contains("IDImages")) {
+
+                        ImageDownloadHandler.downloadFirebaseImageAndSetBitmap
+                                (mRetrievedUser.getProfilePhoto(), mImageView_profilePicture);
+                    }
+                }
 
                 // Concatenate all the interests into one string, breaking line right after each one
                 StringBuilder sb = new StringBuilder();

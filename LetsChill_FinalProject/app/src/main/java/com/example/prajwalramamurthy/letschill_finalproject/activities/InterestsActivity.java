@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.InterestsFragment;
-
 import java.util.ArrayList;
 
 public class InterestsActivity extends AppCompatActivity implements InterestsFragment.InterestsFragmentInterface {
@@ -37,7 +35,6 @@ public class InterestsActivity extends AppCompatActivity implements InterestsFra
             User loggedUser = receivedIntent.getParcelableExtra(EditProfileActivity.INTENT_LOGGED_USER);
             int codeRequest = receivedIntent.getIntExtra(EditProfileActivity.INTENT_COMES_FROM_EDIT_PROFILE, 3);
             Bundle allTypedData = receivedIntent.getBundleExtra(EditProfileActivity.INTENT_ALL_TYPED_DATA);
-//            ArrayList<String> interests = receivedIntent.getStringArrayListExtra(EditProfileActivity.INTENT_INTERESTS);
 
             if (loggedUser != null && codeRequest != 3 && allTypedData != null) {
 
@@ -63,6 +60,9 @@ public class InterestsActivity extends AppCompatActivity implements InterestsFra
         mNewEditProfileIntent.putExtra(INTENT_ALL_TYPED_DATA, allTypedData);
         mNewEditProfileIntent.putExtra(INTENT_NEW_INTERESTS, newInterests);
         startActivity(mNewEditProfileIntent);
+
+        // Close this activity
+        finish();
 
     }
 }

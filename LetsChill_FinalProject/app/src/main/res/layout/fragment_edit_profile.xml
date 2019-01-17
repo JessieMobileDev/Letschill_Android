@@ -165,6 +165,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="(000) 000-0000"
+                android:maxLength="13"
                 android:inputType="phone"
                 android:paddingTop="5dp"
                 android:paddingBottom="10dp"
