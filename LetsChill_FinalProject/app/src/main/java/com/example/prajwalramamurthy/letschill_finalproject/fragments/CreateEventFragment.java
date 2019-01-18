@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -58,14 +57,10 @@ import java.io.IOException;
 import java.text.FieldPosition;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 public class CreateEventFragment extends Fragment implements DatePickerDialog.OnDateSetListener,
         View.OnClickListener {
@@ -476,7 +471,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                             mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
                                             mCheckBox_PublicOrPrivate.isChecked(),url, false,
                                             getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude(),
-                                            0, mJoinedPeopleIds);
+                                            0, mFirebaseUser.getUid(), mJoinedPeopleIds);
 
 //                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
 //                                    String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());

@@ -25,13 +25,14 @@ public class Event implements Parcelable
     private double mLatitude;
     private double mLongitude;
     private int mJoinedPeople;
+    private String mHost_uid;
     private ArrayList<String> mJoinedPeopleIds;
 
     // Constructor
     public Event(String mEventId, String mEventName, String mEventLocation, String mEventDate, String mEventTimeStart,
                  String mEventTimeFinish, String mDescription, String mParticipants,
                  String mCategory, String mHost, boolean mIsRecurringEvent, boolean mPublicOrPrivate, String mUrl,
-                 boolean mIsDeleted, double mLatitude, double mLongitude, int mJoinedPeople, ArrayList<String> mJoinedPeopleIds) {
+                 boolean mIsDeleted, double mLatitude, double mLongitude, int mJoinedPeople, String mHost_uid, ArrayList<String> mJoinedPeopleIds) {
 
         this.mEventId = mEventId;
         this.mEventName = mEventName;
@@ -50,13 +51,15 @@ public class Event implements Parcelable
         this.mLatitude = mLatitude;
         this.mLongitude = mLongitude;
         this.mJoinedPeople = mJoinedPeople;
+        this.mHost_uid = mHost_uid;
         this.mJoinedPeopleIds = mJoinedPeopleIds;
     }
 
     // Empty Constructor
     public Event(String eventId, String movies_at_lincoln, String s, String s1, String s2,
                  String s3, String s4, String movies, boolean b, boolean b1, double lat, double lon,
-                 int mJoinedPeople, ArrayList<String> mJoinedPeopleIds) {
+                 int mJoinedPeople, ArrayList<String> mJoinedPeopleIds, String mHost_uid) {
+
     }
 
     public Event() {
@@ -82,6 +85,7 @@ public class Event implements Parcelable
         mLongitude = in.readDouble();
         mJoinedPeople = in.readInt();
         mJoinedPeopleIds = in.readArrayList(String.class.getClassLoader());
+        mHost_uid = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -149,6 +153,10 @@ public class Event implements Parcelable
         return mHost;
     }
 
+    public String getmHost_uid() {
+        return mHost_uid;
+    }
+
     public String getmEventId() {
         return mEventId;
     }
@@ -206,5 +214,6 @@ public class Event implements Parcelable
         dest.writeDouble(mLongitude);
         dest.writeInt(mJoinedPeople);
         dest.writeList(mJoinedPeopleIds);
+        dest.writeString(mHost_uid);
     }
 }

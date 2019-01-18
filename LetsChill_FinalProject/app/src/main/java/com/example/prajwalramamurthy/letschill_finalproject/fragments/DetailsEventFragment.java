@@ -52,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class DetailsEventFragment extends Fragment implements View.OnClickListener
 {
@@ -406,7 +407,14 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 });
             }
 
-            sendPost();
+            HashMap<String,String> notification = new HashMap<>();
+
+            notification.put("from", user.getUid());
+            notification.put("to", mEvent.getmHost_uid());
+            notification.put("type", "joined");
+
+            FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+
 
             // Add the joined users to the event object
             mDBReference = FirebaseDatabase.getInstance().getReference("Events");
@@ -450,7 +458,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                                 }
 
                                                 // send message
-                                                sendPost();
+                                                //sendPost();
 
                                             }
 
@@ -494,57 +502,57 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    public void sendPost() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("https://fcm.googleapis.com/v1/projects/letschill_finalproject/messages:send HTTP/1.1");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-                    conn.setRequestProperty("Accept","application/json");
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
-
-                    String message = "{\n" +
-                            "  \"message\":{\n" +
-                            "    \"topic\" : \"user\",\n" +
-                            "    \"notification\" : {\n" +
-                            "      \"body\" : \"This is a Firebase Cloud Messaging Topic Message!\",\n" +
-                            "      \"title\" : \"FCM Message\"\n" +
-                            "      }\n" +
-                            "   }\n" +
-                            "}";
-
-//                    jsonParam.put("timestamp", 1488873360);
-//                    jsonParam.put("uname", message.getUser());
-//                    jsonParam.put("message", message.getMessage());
-//                    jsonParam.put("latitude", 0D);
-//                    jsonParam.put("longitude", 0D);
-
-
-
-                    Log.i("JSON", message);
-                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-                    os.writeBytes(message);
-
-                    os.flush();
-                    os.close();
-
-                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                    Log.i("MSG" , conn.getResponseMessage());
-
-                    conn.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-    }
+//    public void sendPost() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    URL url = new URL("https://fcm.googleapis.com/v1/projects/letschill_finalproject/messages:send HTTP/1.1");
+//                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                    conn.setRequestMethod("POST");
+//                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+//                    conn.setRequestProperty("Accept","application/json");
+//                    conn.setDoOutput(true);
+//                    conn.setDoInput(true);
+//
+//                    String message = "{\n" +
+//                            "  \"message\":{\n" +
+//                            "    \"topic\" : \"user\",\n" +
+//                            "    \"notification\" : {\n" +
+//                            "      \"body\" : \"This is a Firebase Cloud Messaging Topic Message!\",\n" +
+//                            "      \"title\" : \"FCM Message\"\n" +
+//                            "      }\n" +
+//                            "   }\n" +
+//                            "}";
+//
+////                    jsonParam.put("timestamp", 1488873360);
+////                    jsonParam.put("uname", message.getUser());
+////                    jsonParam.put("message", message.getMessage());
+////                    jsonParam.put("latitude", 0D);
+////                    jsonParam.put("longitude", 0D);
+//
+//
+//
+//                    Log.i("JSON", message);
+//                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+//                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+//                    os.writeBytes(message);
+//
+//                    os.flush();
+//                    os.close();
+//
+//                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+//                    Log.i("MSG" , conn.getResponseMessage());
+//
+//                    conn.disconnect();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        thread.start();
+//    }
 
     private void leaveButtonClick()
     {
@@ -557,6 +565,15 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         // Note: this method is being called inside the "joinButtonClick()". I'm recycling the buttons
         // instead of having a bunch of buttons on the layout. It's all connected and working. Just do
         // the rsvp functionality in this method and it will work.
+
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        HashMap<String,String> notification = new HashMap<>();
+
+        notification.put("from", user.getUid());
+        notification.put("to", mEvent.getmHost_uid());
+        notification.put("type", "rsvp");
+
+        FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
 
 
     }

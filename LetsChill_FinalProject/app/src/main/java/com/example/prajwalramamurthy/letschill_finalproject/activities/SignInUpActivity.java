@@ -36,6 +36,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 
@@ -215,9 +216,11 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
                         e.printStackTrace();
                     }
 
+                    String token = FirebaseInstanceId.getInstance().getToken();
+
 
                     User createdUser = new User(user.getUid(), user.getDisplayName(), user.getDisplayName(), "N/A",
-                            "N/A", facebookEmail, facebookPicture);
+                            "N/A", facebookEmail, facebookPicture,token);
 
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(user.getUid())

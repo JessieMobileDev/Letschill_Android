@@ -23,7 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
@@ -161,10 +163,12 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                         // Store the additional data in the Realtime database
                         String mUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+                        String token = FirebaseInstanceId.getInstance().getToken();
+
                         if (!mUserUID.isEmpty()) {
 
                             User user = new User(mUserUID, "N/A", mUsername, mEmail, "N/A",
-                                    "N/A", "N/A");
+                                    "N/A", "N/A",token);
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(mUserUID).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
