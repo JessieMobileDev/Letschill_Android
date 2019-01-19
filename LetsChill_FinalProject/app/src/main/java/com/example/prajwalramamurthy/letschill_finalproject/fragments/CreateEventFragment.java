@@ -308,22 +308,22 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mImageUri = data.getData();
 
-                if (getContext() != null) {
-
-                    try {
-
-                        mBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mImageUri);
-
-                        mImageView_eventBackground.setImageBitmap(mBitmap);
-
-                        didSelectNewImage = true;
-
-                    } catch (Exception e) {
-
-                        e.printStackTrace();
-                    }
-                }
-//               cropImage();
+//                if (getContext() != null) {
+//
+//                    try {
+//
+//                        mBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mImageUri);
+//
+//                        mImageView_eventBackground.setImageBitmap(mBitmap);
+//
+//                        didSelectNewImage = true;
+//
+//                    } catch (Exception e) {
+//
+//                        e.printStackTrace();
+//                    }
+//                }
+               cropImage();
             }
         }
     }

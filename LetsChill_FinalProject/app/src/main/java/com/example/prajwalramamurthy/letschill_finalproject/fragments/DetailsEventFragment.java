@@ -279,7 +279,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             button_join.setText(R.string.join);
                             Log.d("test", "joinButtonClick: other's event");
 
-                            FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
+                            FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("joinedEvents").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

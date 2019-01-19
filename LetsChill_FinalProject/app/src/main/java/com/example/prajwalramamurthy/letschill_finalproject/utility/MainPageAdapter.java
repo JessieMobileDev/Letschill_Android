@@ -96,12 +96,14 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
     public int getCount(){
 
 
-        if(filteredData != null && filteredData.size() > 0){
+//        if(filteredData != null && filteredData.size() > 0){
+//
+//            return filteredData.size();
+//        }
+//
+//        return 0;
 
-            return filteredData.size();
-        }
-
-        return 0;
+        return mNumOfTabs;
     }
 
     private final MainPageAdapter.ItemFilter mFilter = new MainPageAdapter.ItemFilter();

@@ -87,6 +87,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private static final String BUNDLE_FB_EMAIL = "BUNDLE_FB_EMAIL";
     private static final String BUNDLE_INTERESTS = "BUNDLE_INTERESTS";
     private static final String BUNDLE_IMAGE = "BUNDLE_IMAGE";
+    private static final String BUNDLE_EMAIL = "BUNDLE_EMAIL";
+    private static final String BUNDLE_ID = "BUNDLE_ID";
 
     public interface EditProfileInterface {
 
@@ -434,55 +436,58 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                             User person = user.getValue(User.class);
 
-                            if (person != null && person.getEmail().equals(retrievedUser.getEmail())) {
+//                            if (retrievedUser != null) {
 
-                                // Variables to be saved back in the database
-                                String fullName = "Not defined";
-                                String username = "Not defined";
-                                String phone = "Not defined";
-                                String fbEmail = "Not defined";
+                                if (person != null && person.getEmail().equals(retrievedUser.getEmail())) {
 
-                                // Full name, phone number and facebook email are not required
-                                // If they are empty, save in the database as "Not defined"
-                                if (!mEditText_fullName.getText().toString().isEmpty()) {
+                                    // Variables to be saved back in the database
+                                    String fullName = "Not defined";
+                                    String username = "Not defined";
+                                    String phone = "Not defined";
+                                    String fbEmail = "Not defined";
 
-                                    fullName = mEditText_fullName.getText().toString();
-                                    mDBReference.child(retrievedUser.getUserID()).child("fullName").setValue(fullName);
-                                }
-                                if (!mEditText_phone.getText().toString().isEmpty()) {
+                                    // Full name, phone number and facebook email are not required
+                                    // If they are empty, save in the database as "Not defined"
+                                    if (!mEditText_fullName.getText().toString().isEmpty()) {
 
-                                    phone = mEditText_phone.getText().toString();
-                                    mDBReference.child(retrievedUser.getUserID()).child("phone").setValue(phone);
-                                }
-                                if (!mEditText_facebookEmail.getText().toString().isEmpty()) {
+                                        fullName = mEditText_fullName.getText().toString();
+                                        mDBReference.child(retrievedUser.getUserID()).child("fullName").setValue(fullName);
+                                    }
+                                    if (!mEditText_phone.getText().toString().isEmpty()) {
 
-                                    fbEmail = mEditText_facebookEmail.getText().toString();
-                                    mDBReference.child(retrievedUser.getUserID()).child("facebookEmail").setValue(fbEmail);
-                                }
-                                if (didSelectAnImage) {
+                                        phone = mEditText_phone.getText().toString();
+                                        mDBReference.child(retrievedUser.getUserID()).child("phone").setValue(phone);
+                                    }
+                                    if (!mEditText_facebookEmail.getText().toString().isEmpty()) {
 
-                                    mDBReference.child(retrievedUser.getUserID()).child("profilePhoto").setValue(mUrl);
-                                }
+                                        fbEmail = mEditText_facebookEmail.getText().toString();
+                                        mDBReference.child(retrievedUser.getUserID()).child("facebookEmail").setValue(fbEmail);
+                                    }
+                                    if (didSelectAnImage) {
 
-                                // Username, email and interests are required in order to save the changes
-                                username = mEditText_username.getText().toString();
+                                        mDBReference.child(retrievedUser.getUserID()).child("profilePhoto").setValue(mUrl);
+                                    }
 
-                                // Save each individual piece of info separately
-                                mDBReference.child(retrievedUser.getUserID()).child("username").setValue(username);
+                                    // Username, email and interests are required in order to save the changes
+                                    username = mEditText_username.getText().toString();
+
+                                    // Save each individual piece of info separately
+                                    mDBReference.child(retrievedUser.getUserID()).child("username").setValue(username);
 
 
 //                                                ArrayList<String> joinedEvents = retrievedUser.getJoinedEvents();
 
 
-                                if (getContext() != null) {
+                                    if (getContext() != null) {
 
-                                    Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
 
 
+                                    }
+                                    // Close the activity
+                                    mEditProfileInterface.closeEditProfileActivity();
                                 }
-                                // Close the activity
-                                mEditProfileInterface.closeEditProfileActivity();
-                            }
+//                            }
                         }
                     }
 
@@ -518,6 +523,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 allTypedData.putString(BUNDLE_PHONE, mEditText_phone.getText().toString());
                 allTypedData.putString(BUNDLE_FB_EMAIL, mEditText_facebookEmail.getText().toString());
                 allTypedData.putString(BUNDLE_IMAGE, mPhotoPath);
+//                allTypedData.putString(BUNDLE_EMAIL, retrievedUser.getEmail());
+//                allTypedData.putString(BUNDLE_ID, retrievedUser.getUserID());
 
                 Log.d("pic", "onClick: pic (when clicking interests button): " + mPhotoPath);
 
