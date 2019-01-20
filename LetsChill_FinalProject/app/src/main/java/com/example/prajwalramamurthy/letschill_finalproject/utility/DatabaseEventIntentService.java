@@ -261,7 +261,7 @@ public class DatabaseEventIntentService extends IntentService {
                                             Log.d(TAG, "onReceiveResult: User uid: " + mUid);
 
                                             // Look for events that the current logged in user is participating
-                                            mDBUsersReference.child(mUid).child("Events").addValueEventListener(new ValueEventListener() {
+                                            mDBUsersReference.child(mUid).child("joinedEvents").addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
