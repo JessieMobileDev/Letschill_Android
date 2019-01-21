@@ -144,7 +144,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
             } else if (item.getItemId() == R.id.action_settings) {
 
-                MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+                MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.EDIT_PROFILE_ACTIVITY);
             }
         }
 

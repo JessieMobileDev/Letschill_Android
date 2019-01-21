@@ -127,8 +127,6 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
         // Swap the SignInFragment for the ForgotPasswordFragment
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.signin_frame, ForgotPasswordFragment.newInstance()).commit();
 
-        // Close this activity
-        finish();
     }
 
     @Override
@@ -145,7 +143,6 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
     @Override
     public void moveToMainActivityFromSignIn() {
 
-//        requestUsernameUsingUid(1);
         // Move to the "MainActivity"
         Intent mMainActivityIntent = new Intent(SignInUpActivity.this, MainActivity.class);
         startActivity(mMainActivityIntent);

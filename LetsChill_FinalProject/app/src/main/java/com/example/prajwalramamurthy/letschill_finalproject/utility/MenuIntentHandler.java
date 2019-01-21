@@ -21,7 +21,16 @@ public class MenuIntentHandler {
     // Variables
     private static SharedPreferences mPrefs;
 
-    public static void getMenuIntents(MenuItem item, Context context, Activity activity) {
+    // Constants
+    public static String CREATE_EVENT_ACTIVITY = "CREATE_EVENT_ACTIVITY";
+    public static String MAIN_ACTIVITY = "MAIN_ACTIVITY";
+    public static String MY_EVENTS_ACTIVITY = "MY_EVENTS_ACTIVITY";
+    public static String DETAILS_EVENT_ACTIVITY = "DETAILS_EVENT_ACTIVITY";
+    public static String EDIT_PROFILE_ACTIVITY = "EDIT_PROFILE_ACTIVITY";
+    public static String NOTIFICATIONS_ACTIVITY = "NOTIFICATIONS_ACTIVITY";
+    public static String PROFILE_ACTIVITY = "PROFILE_ACTIVITY";
+
+    public static void getMenuIntents(MenuItem item, Context context, Activity activity, String activityName) {
 
         switch (item.getItemId()) {
 
@@ -30,6 +39,13 @@ public class MenuIntentHandler {
                 // Intent to "ProfileActivity"
                 Intent mProfileIntent = new Intent(context, ProfileActivity.class);
                 context.startActivity(mProfileIntent);
+
+                if (!activityName.equals(MAIN_ACTIVITY)) {
+
+                    // Close current activity
+                    activity.finish();
+                }
+
                 break;
 
             case R.id.submenu_my_events:
@@ -39,12 +55,24 @@ public class MenuIntentHandler {
                 context.startActivity(mMyEventsIntent);
                 Log.d("test", "getMenuIntents: menu was clicked - events");
 
+                if (!activityName.equals(MAIN_ACTIVITY)) {
+
+                    // Close current activity
+                    activity.finish();
+                }
+
                 break;
             case R.id.submenu_notification:
 
                 // Intent to "ProfileActivity"
                 Intent mNotIntent = new Intent(context, NotificationsActivity.class);
                 context.startActivity(mNotIntent);
+
+                if (!activityName.equals(MAIN_ACTIVITY)) {
+
+                    // Close current activity
+                    activity.finish();
+                }
 
                 break;
             case R.id.submenu_logout:

@@ -80,6 +80,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
+        menu.clear();
         inflater.inflate(R.menu.menu_settings, menu);
     }
 
@@ -88,7 +89,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         if (getContext() != null && getActivity() != null) {
 
-            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.PROFILE_ACTIVITY);
         }
 
         return false;

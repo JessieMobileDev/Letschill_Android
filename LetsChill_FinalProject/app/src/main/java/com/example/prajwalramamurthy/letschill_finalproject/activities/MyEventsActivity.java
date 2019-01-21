@@ -86,7 +86,7 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        MenuIntentHandler.getMenuIntents(item, this, this);
+        MenuIntentHandler.getMenuIntents(item, this, this, MenuIntentHandler.MY_EVENTS_ACTIVITY);
         return super.onOptionsItemSelected(item);
     }
 

@@ -602,7 +602,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
         if (getContext() != null && getActivity() != null) {
 
-            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.DETAILS_EVENT_ACTIVITY);
         }
 
         return false;

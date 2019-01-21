@@ -363,7 +363,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
         if (getContext() != null && getActivity() != null) {
 
-            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.CREATE_EVENT_ACTIVITY);
         }
 
         return false;

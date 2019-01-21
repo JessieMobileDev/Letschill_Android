@@ -42,25 +42,25 @@ public class NotificationsFragment extends Fragment
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        inflater.inflate(R.menu.menu_main, menu);
+//    }
 
-        inflater.inflate(R.menu.menu_main, menu);
-    }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (getContext() != null && getActivity() != null) {
-
-            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
-        }
-
-        return false;
-
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        if (getContext() != null && getActivity() != null) {
+//
+//            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.NOTIFICATIONS_ACTIVITY);
+//        }
+//
+//        return false;
+//
+//    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
