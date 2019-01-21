@@ -45,19 +45,20 @@
             android:layout_marginTop="8dp"
             android:fontFamily="@font/roboto_regular"
             android:text="@string/example_dateTime"
-            app:layout_constraintEnd_toEndOf="@+id/title_event"
             app:layout_constraintStart_toStartOf="@+id/title_event"
             app:layout_constraintTop_toBottomOf="@+id/title_event" />
 
         <TextView
             android:id="@+id/location_event"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:text="@string/example_location"
-            android:textStyle="italic"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/roboto_regular"
+            android:text="@string/example_location"
             android:textColor="@android:color/holo_blue_light"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@+id/view"
             app:layout_constraintEnd_toEndOf="@+id/title_event"
             app:layout_constraintStart_toStartOf="@+id/title_event"
             app:layout_constraintTop_toBottomOf="@+id/time_event" />
@@ -65,7 +66,7 @@
         <ImageView
             android:id="@+id/card_imageView"
             android:layout_width="0dp"
-            android:layout_height="96dp"
+            android:layout_height="110dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -78,10 +79,19 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <ImageView
-            android:id="@+id/imageView13"
-            android:layout_width="30dp"
+            android:id="@+id/imageView_joinedBackground"
+            android:layout_width="80dp"
             android:layout_height="20dp"
             android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/card_imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:color/background_light" />
+
+        <ImageView
+            android:id="@+id/imageView_recurringBackground"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="36dp"
             app:layout_constraintStart_toStartOf="@+id/card_imageView"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:color/background_light" />
@@ -90,28 +100,30 @@
             android:id="@+id/textView_joinedCount"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:text="0/10"
+            android:layout_marginTop="2dp"
+            android:text="0/10 joined"
             android:textAlignment="center"
             android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView13"
-            app:layout_constraintEnd_toEndOf="@+id/imageView13"
-            app:layout_constraintStart_toStartOf="@+id/imageView13"
-            app:layout_constraintTop_toTopOf="@+id/imageView13" />
+            android:fontFamily="@font/roboto_regular"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView_joinedBackground"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_joinedBackground"
+            app:layout_constraintStart_toStartOf="@+id/imageView_joinedBackground"
+            app:layout_constraintTop_toTopOf="@+id/imageView_joinedBackground" />
 
-        <ImageView
-            android:id="@+id/imageView_isRecurring"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:elevation="20dp"
-            app:layout_constraintEnd_toEndOf="@+id/card_imageView"
-            app:layout_constraintTop_toTopOf="@+id/card_imageView"
-            app:srcCompat="@drawable/recurring_icon" />
+        <TextView
+            android:id="@+id/textView_recurring"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="RECURRING"
+            android:textAlignment="center"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView_recurringBackground"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_recurringBackground"
+            app:layout_constraintStart_toStartOf="@+id/imageView_recurringBackground"
+            app:layout_constraintTop_toTopOf="@+id/imageView_recurringBackground" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

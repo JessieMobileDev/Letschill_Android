@@ -370,24 +370,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
-        view.findViewById(R.id.save_createEvent_button).setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
-    }
-
     private void saveEventDataToDatabase() {
 
         if (mEditText_Name.getText().toString().isEmpty() || mLocation.getText().toString().isEmpty()
@@ -416,88 +398,99 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     if (FormValidation.isStartTimeBeforeEndTime(mEditText_TimeStart.getText().toString(),
                             mEditText_TimeEnd.getText().toString())) {
 
-                        // Make the progress bar show up
-                        mProgressBar.setVisibility(View.VISIBLE);
+                        Log.d("opa", "saveEventDataToDatabase: participants: " + mParticipants.getText().toString());
 
-                        // Catch and store the user input and pass it to our data model
-                        final String mEvtName = mEditText_Name.getText().toString();
-                        final String mEvtDesc = mEditText_Description.getText().toString();
-                        final String mEvtLocation = mLocation.getText().toString();
-                        final String mEvtTimeStart = mEditText_TimeStart.getText().toString();
-                        final String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
-                        final String mEvtDate = mEditText_Date.getText().toString();
-                        final String mEvtPart = mParticipants.getText().toString();
-                        final String mEvtCategory = mCategories.getSelectedItem().toString();
+//                        if (Integer.valueOf(mParticipants.getText().toString()) != 0 || Integer.valueOf(mParticipants.getText().toString()) != 1) {
 
-                        // Retrieve the username from the current logged in user
-                        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                        mUid = mFirebaseUser.getUid();
+                        if (!mParticipants.getText().toString().equals("0") && !mParticipants.getText().toString().equals("1")) {
 
-                        mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+                            // Disable save button
+                            mButton_saveButton.setEnabled(false);
 
-                        mDBReference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // Make the progress bar show up
+                            mProgressBar.setVisibility(View.VISIBLE);
 
-                                // Read each data from uid
-                                String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
+                            // Catch and store the user input and pass it to our data model
+                            final String mEvtName = mEditText_Name.getText().toString();
+                            final String mEvtDesc = mEditText_Description.getText().toString();
+                            final String mEvtLocation = mLocation.getText().toString();
+                            final String mEvtTimeStart = mEditText_TimeStart.getText().toString();
+                            final String mEvtTimeEnd = mEditText_TimeEnd.getText().toString();
+                            final String mEvtDate = mEditText_Date.getText().toString();
+                            final String mEvtPart = mParticipants.getText().toString();
+                            final String mEvtCategory = mCategories.getSelectedItem().toString();
 
-                                Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
+                            // Retrieve the username from the current logged in user
+                            mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            mUid = mFirebaseUser.getUid();
 
-                                Date date = new Date();
-                                String dateString = "Month";
+                            mDBReference = FirebaseDatabase.getInstance().getReference("Users");
 
-                                try {
+                            mDBReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                    // Convert the string date to a date variable and extract the month out of it
-                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                                    date = mSimpleDateFormat.parse(mEvtDate);
-                                    dateString = String.valueOf(date.getMonth());
+                                    // Read each data from uid
+                                    String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
 
+                                    Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
 
+                                    Date date = new Date();
+                                    String dateString = "Month";
 
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+                                    try {
 
-                                String mEventId = mDatabase.child("Events").child(dateString).push().getKey();
-
-                                if (mEventId != null) {
-
-                                    ArrayList<String> mJoinedPeopleIds = new ArrayList<>();
-                                    mJoinedPeopleIds.add(mUid);
-
-                                    Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
-                                            mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                            mCheckBox_PublicOrPrivate.isChecked(),url, false,
-                                            getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude(),
-                                            0, mFirebaseUser.getUid(), mJoinedPeopleIds);
-
-//                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-//                                    String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
+                                        // Convert the string date to a date variable and extract the month out of it
+                                        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                                        date = mSimpleDateFormat.parse(mEvtDate);
+                                        dateString = String.valueOf(date.getMonth());
 
 
-                                    mDatabase.child("Events").child(dateString).child(mEvtDate).child(mEventId).setValue(newEvent);
 
-                                    if (getContext() != null) {
-
-                                        // show toast for confirmation
-                                        Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
                                     }
 
-                                    // Make the progress bar disappear
-                                    mProgressBar.setVisibility(View.GONE);
+                                    String mEventId = mDatabase.child("Events").child(dateString).push().getKey();
 
-                                    // Exit the current activity
-                                    mCreateEventFragmentInterface.closeCreateEventActivity();
+                                    if (mEventId != null) {
+
+                                        ArrayList<String> mJoinedPeopleIds = new ArrayList<>();
+                                        mJoinedPeopleIds.add(mUid);
+
+                                        Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
+                                                mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
+                                                mCheckBox_PublicOrPrivate.isChecked(),url, false,
+                                                getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude(),
+                                                0, mFirebaseUser.getUid(), mJoinedPeopleIds);
+
+                                        mDatabase.child("Events").child(dateString).child(mEvtDate).child(mEventId).setValue(newEvent);
+
+                                        if (getContext() != null) {
+
+                                            // show toast for confirmation
+                                            Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                                        }
+
+                                        // Make the progress bar disappear
+                                        mProgressBar.setVisibility(View.GONE);
+
+                                        // Exit the current activity
+                                        mCreateEventFragmentInterface.closeCreateEventActivity();
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
+                                }
+                            });
+                        } else {
+
+                            mParticipants.setError("Must be at least 2 participants");
+                            mProgressBar.setVisibility(View.INVISIBLE);
+                        }
+
                     } else {
 
                         // Make the progress bar disappear
@@ -541,7 +534,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     private void saveImagetoStorageDatabase()
     {
-//        if(mImageView_eventBackground.getDrawable() != null) {
+
         if (didSelectNewImage) {
             // will save our ID image to our database
 
@@ -552,7 +545,6 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             StorageReference imagesRef = storageRef.child(String.valueOf((new Date()).getTime()) + ".jpg");
 
             // convert bitmap
-//            Bitmap bitmap = ((BitmapDrawable) mImageView_eventBackground.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
@@ -568,14 +560,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
-//                    url = taskSnapshot.getUploadSessionUri().toString();
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                     url = taskSnapshot.getMetadata().getPath();
 
                     saveEventDataToDatabase();
-
-
                 }
             });
 
