@@ -185,6 +185,9 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 // TODO: missing the "participants"
                 // Get the event's joined users names
                 mDBReference = FirebaseDatabase.getInstance().getReference("Users");
+//
+//                // Clear the array list
+//                mJoinedUsersNames.clear();
 
                 // Loop through the users and find the ones that have joined the event
                 mDBReference.addValueEventListener(new ValueEventListener() {
@@ -228,10 +231,11 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                 } else {
 
                                     sb.append(mJoinedUsersNames.get(i)).append("\n");
-                                    Log.d("test", "onActivityCreated: participants names: " + mJoinedUsersNames.get(i));
+                                    Log.d("opa", "onActivityCreated: participants names: " + mJoinedUsersNames.get(i));
                                 }
                             }
                             textView_participants.setText(sb.toString());
+                            mJoinedUsersNames.clear();
                         }
                     }
 
@@ -602,7 +606,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
         if (getContext() != null && getActivity() != null) {
 
-            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity());
+            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.DETAILS_EVENT_ACTIVITY);
         }
 
         return false;

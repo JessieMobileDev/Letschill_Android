@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 });
+
     }
 
     @Override
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        MenuIntentHandler.getMenuIntents(item, this, this);
+        MenuIntentHandler.getMenuIntents(item, this, this, MenuIntentHandler.MAIN_ACTIVITY);
 
         return super.onOptionsItemSelected(item);
     }

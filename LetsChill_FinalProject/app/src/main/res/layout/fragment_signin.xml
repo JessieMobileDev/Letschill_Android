@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -34,29 +35,29 @@
 
     <EditText
         android:id="@+id/editText_password"
+        style="@style/editText_signIn_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/edittext_icon_password"
         android:ems="10"
+        android:hint="@string/editText_passwordHint"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/editText_email"
         app:layout_constraintStart_toStartOf="@+id/editText_email"
-        app:layout_constraintTop_toBottomOf="@+id/editText_email"
-        android:hint="@string/editText_passwordHint"
-        style="@style/editText_signIn_style"
-        android:drawableStart="@drawable/edittext_icon_password"/>
+        app:layout_constraintTop_toBottomOf="@+id/editText_email" />
 
     <Button
         android:id="@+id/button_signin"
+        style="@style/button_orange_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:text="@string/button_signIn"
         app:layout_constraintEnd_toEndOf="@+id/editText_password"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/editText_password"
-        app:layout_constraintTop_toBottomOf="@+id/editText_password"
-        style="@style/button_orange_style"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/textView_forgotPw" />
 
     <CheckBox
         android:id="@+id/checkBox_create_recurring"
@@ -102,17 +103,17 @@
     <TextView
         android:id="@+id/textView_forgotPw"
         style="@style/clickable_textViews"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="@string/button_forgotPassword"
+        android:textAlignment="center"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/button_signin"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toEndOf="@+id/editText_email"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/checkBox_create_recurring" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_password" />
 
     <TextView
         android:id="@+id/textView_noAccount"
@@ -121,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text="@string/button_noAccount"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
@@ -135,7 +136,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/textView_noAccount"
         app:layout_constraintEnd_toEndOf="@+id/button_signin"
         app:layout_constraintStart_toStartOf="@+id/button_signin" />
@@ -146,11 +147,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="8dp"
+        android:indeterminateTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@+id/textView_forgotPw"
         app:layout_constraintStart_toStartOf="@+id/checkBox_create_recurring"
-        app:layout_constraintTop_toBottomOf="@+id/button_signin"
-        android:indeterminateTint="@color/colorAccent"/>
+        app:layout_constraintTop_toTopOf="@+id/editText_email" />
 
 </android.support.constraint.ConstraintLayout>

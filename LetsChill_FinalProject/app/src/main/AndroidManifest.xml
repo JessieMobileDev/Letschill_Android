@@ -25,7 +25,8 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Splash Screen Activity -->
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,12 +37,14 @@
         <!-- Main Activity -->
         <activity
             android:name=".activities.SignInUpActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <!-- Interests Activity -->
         <activity
             android:name=".activities.InterestsActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Facebook -->
         <meta-data
@@ -51,10 +54,13 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -74,44 +80,54 @@
 
         <!-- Create Event Activity -->
         <activity android:name=".activities.EventActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Main Activity -->
         <activity android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- My Events Activity -->
         <activity android:name=".activities.MyEventsActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Database Event Intent Service -->
         <service android:name=".utility.DatabaseEventIntentService"
-            android:exported="false"/>
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <!-- Details Event Activity -->
         <activity android:name=".activities.DetailsEventActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Edit Event Activity -->
         <activity android:name=".activities.EditEventActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Edit Event Activity -->
         <activity android:name=".activities.NotificationsActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Map Activity -->
         <activity
             android:name=".activities.MapActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"/>
 
         <!-- Profile Activity -->
         <activity android:name=".activities.ProfileActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Edit Profile Activity -->
         <activity android:name=".activities.EditProfileActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <!-- Meta-Data -->
         <meta-data android:name="com.google.android.gms.version"

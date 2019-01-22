@@ -118,6 +118,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
         // Swap the SignInFragment for the SignUpFragment
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.signin_frame, SignUpFragment.newInstance()).commit();
+        
     }
 
     @Override
@@ -125,6 +126,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
         // Swap the SignInFragment for the ForgotPasswordFragment
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.signin_frame, ForgotPasswordFragment.newInstance()).commit();
+
     }
 
     @Override
@@ -133,15 +135,20 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
         // Move to the "InterestsActivity"
         Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
         startActivity(mInterestsIntent);
+
+        // Close this activity
+        finish();
     }
 
     @Override
     public void moveToMainActivityFromSignIn() {
 
-//        requestUsernameUsingUid(1);
         // Move to the "MainActivity"
         Intent mMainActivityIntent = new Intent(SignInUpActivity.this, MainActivity.class);
         startActivity(mMainActivityIntent);
+
+        // Close this activity
+        finish();
     }
 
     @Override
@@ -149,6 +156,9 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
         // Swap the ForgotPasswordFragment for the SignInFragment
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.signin_frame, SignInFragment.newInstance()).commit();
+
+        // Close this activity
+        finish();
     }
 
     @Override
@@ -158,6 +168,9 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
         Intent mInterestsIntent = new Intent(SignInUpActivity.this, InterestsActivity.class);
         mInterestsIntent.putExtra(INTENT_COMES_FROM_SIGN_UP, 0);
         startActivity(mInterestsIntent);
+
+        // Close this activity
+        finish();
     }
 
     @Override

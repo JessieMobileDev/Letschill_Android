@@ -50,6 +50,9 @@ public class InterestsActivity extends AppCompatActivity implements InterestsFra
         // Move to "MainActivity"
         Intent mMainIntent = new Intent(InterestsActivity.this, MainActivity.class);
         startActivity(mMainIntent);
+
+        // Close this activity
+        finish();
     }
 
     @Override

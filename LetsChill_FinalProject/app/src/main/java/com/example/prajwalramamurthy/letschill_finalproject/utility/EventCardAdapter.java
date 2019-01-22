@@ -141,7 +141,8 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
         final TextView mEventTime;
         final TextView mEventLocation;
         final TextView mJoinedPeople;
-        final ImageView mEventRecurringIcon;
+        final TextView mRecurring;
+        final ImageView mRecurringBackground;
 
 
         public ViewHolder(View mLayout){
@@ -151,7 +152,8 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
             mEventTime = mLayout.findViewById(R.id.time_event);
             mEventLocation = mLayout.findViewById(R.id.location_event);
             mJoinedPeople = mLayout.findViewById(R.id.textView_joinedCount);
-            mEventRecurringIcon = mLayout.findViewById(R.id.imageView_isRecurring);
+            mRecurring = mLayout.findViewById(R.id.textView_recurring);
+            mRecurringBackground = mLayout.findViewById(R.id.imageView_recurringBackground);
 
         }
     }
@@ -221,7 +223,7 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
             if (mEvent.getmJoinedPeopleIds() != null) {
                 if (mEvent.getmJoinedPeopleIds().size() != 0) {
 
-                    mViewHolder.mJoinedPeople.setText(String.valueOf(mEvent.getmJoinedPeopleIds().size()) + "/" + mEvent.getmParticipants());
+                    mViewHolder.mJoinedPeople.setText(String.valueOf(mEvent.getmJoinedPeopleIds().size()) + "/" + mEvent.getmParticipants() + " joined");
                     Log.d("test", "getView: it's not null and it's not zero");
                 } else {
                     mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
@@ -246,7 +248,8 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
             if (!mEvent.ismIsRecurringEvent()) {
 
 
-                mViewHolder.mEventRecurringIcon.setVisibility(View.GONE);
+                mViewHolder.mRecurring.setVisibility(View.GONE);
+                mViewHolder.mRecurringBackground.setVisibility(View.GONE);
             }
         }
 
