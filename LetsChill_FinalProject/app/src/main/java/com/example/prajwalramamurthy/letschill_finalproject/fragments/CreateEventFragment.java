@@ -237,6 +237,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
     public void openMap()
     {
+
+        Toast.makeText(getContext(), R.string.map_open_toast, Toast.LENGTH_LONG).show();
         // Collect all the data from the form and pass through the interface
         Bundle allDataBundle = new Bundle();
         if (didSelectNewImage) {
@@ -402,7 +404,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
 //                        if (Integer.valueOf(mParticipants.getText().toString()) != 0 || Integer.valueOf(mParticipants.getText().toString()) != 1) {
 
-                        if (!mParticipants.getText().toString().equals("0") && !mParticipants.getText().toString().equals("1")) {
+                        if (!mParticipants.getText().toString().equals("0") &&
+                                !mParticipants.getText().toString().equals("1") &&
+                                mParticipants.getText().toString().equals("1001")) {
 
                             // Disable save button
                             mButton_saveButton.setEnabled(false);
@@ -469,7 +473,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                         if (getContext() != null) {
 
                                             // show toast for confirmation
-                                            Toast.makeText(getContext(), "Event successfully created.", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), R.string.string_event_success, Toast.LENGTH_LONG).show();
                                         }
 
                                         // Make the progress bar disappear
@@ -487,7 +491,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                             });
                         } else {
 
-                            mParticipants.setError("Must be at least 2 participants");
+                            mParticipants.setError(getString(R.string.max_participants_string));
                             mProgressBar.setVisibility(View.INVISIBLE);
                         }
 
@@ -583,14 +587,22 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
         TimePickerDialog mTimePicker;
 
+
         if (mStartOrEndTime == 0) { // Start Time
 
             mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    mEditText_TimeStart.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+
+                    if(selectedHour >= 12) {
+                        mEditText_TimeStart.setText(String.format("%02d:%02d" + " PM", selectedHour, selectedMinute));
+                    }
+                    else
+                    {
+                        mEditText_TimeStart.setText(String.format("%02d:%02d" + " AM", selectedHour, selectedMinute));
+                    }
                 }
-            }, hour, minute, true);//Yes 24 hour time
+            }, hour, minute, false);//No 24 hour time
 
             mTimePicker.setTitle("Select Time");
             mTimePicker.show();
@@ -600,9 +612,15 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    mEditText_TimeEnd.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+                    if(selectedHour >= 12) {
+                        mEditText_TimeEnd.setText(String.format("%02d:%02d" + " PM", selectedHour, selectedMinute));
+                    }
+                    else
+                    {
+                        mEditText_TimeEnd.setText(String.format("%02d:%02d" + " AM", selectedHour, selectedMinute));
+                    }
                 }
-            }, hour, minute, true);//Yes 24 hour time
+            }, hour, minute, false);//No 24 hour time
 
             mTimePicker.setTitle("Select Time");
             mTimePicker.show();
@@ -629,7 +647,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR,year);

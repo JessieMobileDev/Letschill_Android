@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.MapMarker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -79,6 +80,8 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        //Toast.makeText(getContext(), "Select any location on the map", Toast.LENGTH_LONG).show();
 
         if (getContext() != null) {
 

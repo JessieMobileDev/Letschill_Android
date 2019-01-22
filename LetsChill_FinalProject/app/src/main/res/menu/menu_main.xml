@@ -4,14 +4,6 @@
     tools:context="com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity3">
 
     <item
-        android:id="@+id/action_map"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_map_white_24dp"/>
-
-
-    <item
         android:id="@+id/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:orderInCategory="100"

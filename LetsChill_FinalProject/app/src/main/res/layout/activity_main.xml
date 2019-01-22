@@ -18,22 +18,22 @@
             android:id="@+id/tab_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab_today"
+            android:text="List View"
             app:tabSelectedTextColor="@android:color/white"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_upcoming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tab_upcoming"
+            android:text="Map View"
             app:tabSelectedTextColor="@android:color/white"/>
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/tab_past"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tab_past"
-            app:tabSelectedTextColor="@android:color/white"/>
+        <!--<android.support.design.widget.TabItem-->
+            <!--android:id="@+id/tab_past"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/tab_past"-->
+            <!--app:tabSelectedTextColor="@android:color/white"/>-->
     </android.support.design.widget.TabLayout>
 
     <android.support.design.widget.FloatingActionButton

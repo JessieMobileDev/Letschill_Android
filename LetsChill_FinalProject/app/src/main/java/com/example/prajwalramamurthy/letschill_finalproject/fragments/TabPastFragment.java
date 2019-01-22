@@ -90,6 +90,6 @@ public class TabPastFragment extends ListFragment {
     public void populateEventList() {
 
         // Get the array list from the fragment arguments
-        mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_PASTEVENTS);
+        //mEventList = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_PASTEVENTS);
     }
 }

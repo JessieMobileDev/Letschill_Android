@@ -148,5 +148,8 @@
     <!-- Edit Profile Fragment Strings -->
     <string name="profile_phone">Phone Number</string>
     <string name="profile_verifyRequirements">You must sign up with a Facebook Account, provide a phone number, and an email address in order to be verified</string>
+    <string name="map_open_toast">Select any location on the map</string>
+    <string name="max_participants_string">Must be min 2 max 1000 participants</string>
+    <string name="string_event_success">Event successfully created.</string>
 
 </resources>
