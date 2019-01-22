@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -12,21 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
-
 import java.util.ArrayList;
 
-public class TabTodayFragment extends ListFragment implements SearchView.OnQueryTextListener {
+public class TabListViewFragment extends ListFragment implements SearchView.OnQueryTextListener {
 
     // Variables
-    private ArrayList<Event> mTodayEvents = new ArrayList<>();
-    private TabTodayInterface mTabTodayInterface;
+    private ArrayList<Event> mAllEvents = new ArrayList<>();
+    private TabTodayInterface mTabListViewInterface;
     private EventCardAdapter mAdapter;
 
     @Override
@@ -49,11 +44,11 @@ public class TabTodayFragment extends ListFragment implements SearchView.OnQuery
         void openDetailsPageFromTodayTab(Event mEvent);
     }
 
-    public static TabTodayFragment newInstance() {
+    public static TabListViewFragment newInstance() {
         
         Bundle args = new Bundle();
         
-        TabTodayFragment fragment = new TabTodayFragment();
+        TabListViewFragment fragment = new TabListViewFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,17 +59,10 @@ public class TabTodayFragment extends ListFragment implements SearchView.OnQuery
 
         if (context instanceof TabTodayInterface) {
 
-            mTabTodayInterface = (TabTodayInterface)context;
+            mTabListViewInterface = (TabTodayInterface)context;
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-
-    }
+    
 
     @Nullable
     @Override
@@ -88,12 +76,12 @@ public class TabTodayFragment extends ListFragment implements SearchView.OnQuery
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mTodayEvents = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_TODAYEVENTS);
+        mAllEvents = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_ALL_EVENTS);
 
-        if (mTodayEvents != null) {
+        if (mAllEvents != null) {
 
             // Adapter that will populate the list view
-            mAdapter = new EventCardAdapter(getContext(), mTodayEvents);
+            mAdapter = new EventCardAdapter(getContext(), mAllEvents);
             setListAdapter(mAdapter);
 
 
@@ -102,8 +90,7 @@ public class TabTodayFragment extends ListFragment implements SearchView.OnQuery
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     // Pass the selected event object to the "DetailsEventActivity"
-                    mTabTodayInterface.openDetailsPageFromTodayTab(mTodayEvents.get(position));
-                    Log.d("test", "onItemClick: ITEM WAS CLICKED YAY. position: " + position + " - id: " + id);
+                    mTabListViewInterface.openDetailsPageFromTodayTab(mAllEvents.get(position));
 
                 }
             });

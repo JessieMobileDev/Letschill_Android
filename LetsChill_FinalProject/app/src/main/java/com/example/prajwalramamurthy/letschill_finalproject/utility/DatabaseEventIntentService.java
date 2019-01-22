@@ -42,24 +42,17 @@ public class DatabaseEventIntentService extends IntentService {
 
     // Variables
     private DatabaseReference mDBReference;
-    private ArrayList<Event> mTodayEvents;
-    private ArrayList<Event> mUpcomingEvents;
-    private ArrayList<Event> mPastEvents;
     private ArrayList<Event> mJoinedEvents;
     private ArrayList<Event> mHostingEvents;
+    private ArrayList<Event> mAllEvents;
     private String mUsername;
 
     // Constants
     public static final String EXTRA_RESULT_RECEIVER = "com.example.prajwalramamurthy.letschill_finalproject.utility.EXTRA_RESULT_RECEIVER";
     private static final String TAG = "test";
-    public static final String BUNDLE_EXTRA_TODAY_EVENTS = "BUNDLE_EXTRA_TODAY_EVENTS";
-    public static final String BUNDLE_EXTRA_UPCOMING_EVENTS = "BUNDLE_EXTRA_UPCOMING_EVENTS";
-    public static final String BUNDLE_EXTRA_PAST_EVENTS = "BUNDLE_EXTRA_PAST_EVENTS";
     public static final String BUNDLE_EXTRA_JOINED_EVENTS = "BUNDLE_EXTRA_JOINED_EVENTS";
     public static final String BUNDLE_EXTRA_HOSTING_EVENTS = "BUNDLE_EXTRA_HOSTING_EVENTS";
-    public static final String BUNDLE_EXTRA_OK_USERNAME = "BUNDLE_EXTRA_OK_USERNAME";
-    public static final String PREFS_USER_NAME = "PREFS_USER_NAME";
-
+    public static final String BUNDLE_EXTRA_ALL_EVENTS = "BUNDLE_EXTRA_ALL_EVENTS";
 
     public DatabaseEventIntentService() {
         super("DatabaseEventIntentService");
@@ -105,13 +98,8 @@ public class DatabaseEventIntentService extends IntentService {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    // Clear the lists before adding
-                    mTodayEvents = new ArrayList<>();
-                    mUpcomingEvents = new ArrayList<>();
-                    mPastEvents = new ArrayList<>();
-
-                    Log.d(TAG, "onReceiveResult (service): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
-                            " - Past list: " + mPastEvents.size());
+                    // Clear the list before adding
+                    mAllEvents = new ArrayList<>();
 
                     for (DataSnapshot day: dataSnapshot.getChildren()) {
 
@@ -123,67 +111,13 @@ public class DatabaseEventIntentService extends IntentService {
                                 SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
                                 String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
 
-                                // Check all the events happening today
-                                if (mEvent.getmEventDate().equals(mTodayDateString)) {
+                                // If the event deletion is set to false, then display
+                                if (!mEvent.ismIsDeleted()) {
 
-                                    // If the event deletion is set to false, then display
-                                    if (!mEvent.ismIsDeleted()) {
+                                    mAllEvents.add(mEvent);
 
-//                                        mEvent.setmJoinedPeople(getJoinedPeopleCount(mEvent.getmEventId()));
-                                        mTodayEvents.add(mEvent);
-
-                                        Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
-                                                " - Today date: " + mTodayDateString);
-                                    }
-                                }
-
-                                // Check all the events happening in the upcoming days
-                                try {
-
-                                    Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
-                                    Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
-
-                                    if (mSelectedEventDate.after(mTodayDate)) {
-
-                                        // If the event deletion is set to false, then display
-                                        if (!mEvent.ismIsDeleted()) {
-
-//                                            mEvent.setmJoinedPeople(getJoinedPeopleCount(mEvent.getmEventId()));
-                                            mUpcomingEvents.add(mEvent);
-
-                                            Log.d(TAG, "onDataChange (upcoming): (2) Upcoming - Selected event date: " + mEvent.getmEventDate() +
-                                                    " - Today date: " + mTodayDateString);
-                                        }
-                                    }
-
-                                } catch (Exception e) {
-
-                                    e.printStackTrace();
-                                }
-
-
-                                // Check all the events that have happened already
-                                try {
-
-                                    Date mSelectedEventDate = mSimpleDateFormat.parse(mEvent.getmEventDate());
-                                    Date mTodayDate = mSimpleDateFormat.parse(mTodayDateString);
-
-                                    if (mSelectedEventDate.before(mTodayDate)) {
-
-                                        // If the event deletion is set to false, then display
-                                        if (!mEvent.ismIsDeleted()) {
-
-//                                            mEvent.setmJoinedPeople(getJoinedPeopleCount(mEvent.getmEventId()));
-                                            mPastEvents.add(mEvent);
-
-                                            Log.d(TAG, "onDataChange (past): (3) Past - Selected event date: " + mEvent.getmEventDate() +
-                                                    " - Today date: " + mTodayDateString);
-                                        }
-                                    }
-
-                                } catch (Exception e) {
-
-                                    e.printStackTrace();
+                                    Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
+                                            " - Today date: " + mTodayDateString);
                                 }
 
                             } else {
@@ -193,17 +127,11 @@ public class DatabaseEventIntentService extends IntentService {
                         }
                     }
 
-                    Log.d(TAG, "onReceiveResult (service - after populating): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
-                            " - Past list: " + mPastEvents.size());
-
                     // Send a message to the receiver with all the 3 array lists
                     Bundle mArraysBundle = new Bundle();
-                    mArraysBundle.putSerializable(BUNDLE_EXTRA_TODAY_EVENTS, mTodayEvents);
-                    mArraysBundle.putSerializable(BUNDLE_EXTRA_UPCOMING_EVENTS, mUpcomingEvents);
-                    mArraysBundle.putSerializable(BUNDLE_EXTRA_PAST_EVENTS, mPastEvents);
+                    mArraysBundle.putSerializable(BUNDLE_EXTRA_ALL_EVENTS, mAllEvents);
                     mReceiver.send(Activity.RESULT_OK, mArraysBundle);
 
-                    Log.d(TAG, "onDataChange: ");
                 }
 
                 @Override

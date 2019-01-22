@@ -1,23 +1,14 @@
 package com.example.prajwalramamurthy.letschill_finalproject.utility;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
-import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
-
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.MapFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabPastFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabTodayFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomingFragment;
-
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabListViewFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabMapViewFragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,20 +16,16 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
 
     // Variables
     private final int mNumOfTabs;
-    private ArrayList<Event> mTodayEvents, mUpcomingEvents, mPastEvents;
+    private ArrayList<Event> mAllEvents;
 
     // Constants
-    public static final String ARGS_TODAYEVENTS = "ARGS_TODAYEVENTS";
-    public static final String ARGS_UPCOMINGEVENTS = "ARGS_UPCOMINGEVENTS";
-   // public static final String ARGS_PASTEVENTS = "ARGS_PASTEVENTS";
+    public static final String ARGS_ALL_EVENTS = "ARGS_ALL_EVENTS";
 
-    public MainPageAdapter(FragmentManager fm, int mNumOfTabs, ArrayList<Event> mTodayEvents, ArrayList<Event> mUpcomingEvents, ArrayList<Event> mPastEvents) {
+    public MainPageAdapter(FragmentManager fm, int mNumOfTabs, ArrayList<Event> mAllEvents) {
         super(fm);
         this.mNumOfTabs = mNumOfTabs;
-        this.mTodayEvents = mTodayEvents;
-        this.mUpcomingEvents = mUpcomingEvents;
-        this.mPastEvents = mPastEvents;
-        this.filteredData = mUpcomingEvents;
+        this.mAllEvents = mAllEvents;
+//        this.filteredData = mUpcomingEvents;
     }
 
     @Override
@@ -54,42 +41,25 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
 
         switch (position) {
 
-            case 0: // Today to Listview
+            case 0: // Today to ListView
 
                 // Pass the array list with all the events that are due on the upcoming days
-                mFragmentBundle.putSerializable(ARGS_UPCOMINGEVENTS, mUpcomingEvents);
-                TabUpcomingFragment mTabUpcomingFragment = new TabUpcomingFragment();
-                mTabUpcomingFragment.setArguments(mFragmentBundle);
+                mFragmentBundle.putSerializable(ARGS_ALL_EVENTS, mAllEvents);
+                TabMapViewFragment mTabMapViewFragment = new TabMapViewFragment();
+                mTabMapViewFragment.setArguments(mFragmentBundle);
 
-                return mTabUpcomingFragment;
+                return mTabMapViewFragment;
 
 
 
-            case 1: // Upcoming to MapVIew
+            case 1: // Upcoming to MapView
 
                 // Pass the array list with all the events that are due today
-                mFragmentBundle.putSerializable(ARGS_TODAYEVENTS, mTodayEvents);
-                TabTodayFragment mTabTodayFragment = new TabTodayFragment();
-                mTabTodayFragment.setArguments(mFragmentBundle);
+                mFragmentBundle.putSerializable(ARGS_ALL_EVENTS, mAllEvents);
+                TabListViewFragment mTabListViewFragment = new TabListViewFragment();
+                mTabListViewFragment.setArguments(mFragmentBundle);
 
-                Log.i("MAIN TODAY", "getItem: " + mTodayEvents.size());
-
-                return mTabTodayFragment;
-
-
-
-
-//            case 2: // Past
-//
-//
-//
-//                // Pass the array list with all the events that were due already
-//                mFragmentBundle.putSerializable(ARGS_PASTEVENTS, mPastEvents);
-//                TabPastFragment mTabPastFragment = new TabPastFragment();
-//                mTabPastFragment.setArguments(mFragmentBundle);
-//
-//
-//                return mTabPastFragment;
+                return mTabListViewFragment;
         }
 
         return null;
@@ -129,7 +99,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
 
             FilterResults results = new FilterResults();
 
-            final List<Event> list = mUpcomingEvents;
+            final List<Event> list = mAllEvents;
 
             int count = list.size();
             final ArrayList<Event> nlist = new ArrayList<>(count);
@@ -155,9 +125,6 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
             filteredData = (ArrayList<Event>) results.values;
             notifyDataSetChanged();
         }
-
     }
-
-
 }
 

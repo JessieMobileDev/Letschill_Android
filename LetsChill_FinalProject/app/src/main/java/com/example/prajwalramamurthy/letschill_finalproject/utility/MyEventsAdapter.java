@@ -3,15 +3,11 @@ package com.example.prajwalramamurthy.letschill_finalproject.utility;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabHostingFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabJoinedFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabPastFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabTodayFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomingFragment;
 
 import java.util.ArrayList;
 

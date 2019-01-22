@@ -18,14 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabPastFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabTodayFragment;
-import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabUpcomingFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabListViewFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabMapViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
@@ -33,20 +31,14 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdap
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        TabTodayFragment.TabTodayInterface, TabUpcomingFragment.TabUpcomingInterface,
-        TabPastFragment.TabPastInterface, SearchView.OnQueryTextListener {
+        TabListViewFragment.TabTodayInterface, TabMapViewFragment.TabUpcomingInterface, SearchView.OnQueryTextListener {
 
     // Variables
     private FloatingActionButton mFab;
@@ -61,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Event> mTodayEvents;
     private ArrayList<Event> mUpcomingEvents;
     private ArrayList<Event> mPastEvents;
+    private ArrayList<Event> mAllEvents;
     private ProgressBar mProgressBar;
     MenuItem searchMenuItem;
     private EventCardAdapter mAdapter;
@@ -88,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mProgressBar = findViewById(R.id.progress_bar_main);
         searchMenuItem = findViewById(R.id.action_search);
 
-        mAdapter = new EventCardAdapter(this, mUpcomingEvents);
+//        mAdapter = new EventCardAdapter(this, mUpcomingEvents);
 //
 //        ListView myListView = findViewById(R.id.Mylistviewtest);
 //        myListView.setAdapter(mAdapter);
@@ -220,24 +213,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (resultData != null) {
 
-                // Retrieve all the array lists from the bundle
-                mTodayEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_TODAY_EVENTS);
-                mUpcomingEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_UPCOMING_EVENTS);
-                mPastEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_PAST_EVENTS);
-
-                Log.d(TAG, "onReceiveResult: Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
-                " - Past list: " + mPastEvents.size());
+                // Retrieve the array list containing all the events
+                mAllEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_ALL_EVENTS);
+//                // Retrieve all the array lists from the bundle
+//                mTodayEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_TODAY_EVENTS);
+//                mUpcomingEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_UPCOMING_EVENTS);
+//                mPastEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_PAST_EVENTS);
 
                 // Assign the adapter to the view pager that will display the screen for each tab item
-                mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mTodayEvents,
-                        mUpcomingEvents, mPastEvents);
+                mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mAllEvents);
 
                 mTabAdapter.notifyDataSetChanged();
                 mViewPager.setAdapter(mTabAdapter);
-
-
-                Log.d(TAG, "onReceiveResult (after adapter is set): Today list: " + mTodayEvents.size() + " - Upcoming list: " + mUpcomingEvents.size() +
-                        " - Past list: " + mPastEvents.size());
 
                 // Set the progress bar to be invisible
                 mProgressBar.setVisibility(View.GONE);
@@ -297,12 +284,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void openDetailsPageFromTodayTab(Event mEvent) {
-
-        openDetailsPage(mEvent);
-    }
-
-    @Override
-    public void openDetailsPageFromPastTab(Event mEvent) {
 
         openDetailsPage(mEvent);
     }
