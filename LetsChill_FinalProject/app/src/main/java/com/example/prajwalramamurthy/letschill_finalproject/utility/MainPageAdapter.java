@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.widget.Filter;
 import android.widget.Filterable;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
@@ -17,14 +18,21 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
     // Variables
     private final int mNumOfTabs;
     private ArrayList<Event> mAllEvents;
+    private double mLatitude;
+    private double mLongitude;
 
     // Constants
     public static final String ARGS_ALL_EVENTS = "ARGS_ALL_EVENTS";
+    public static final String ARGS_LATITUDE = "ARGS_LATITUDE";
+    public static final String ARGS_LONGITUDE = "ARGS_LONGITUDE";
 
-    public MainPageAdapter(FragmentManager fm, int mNumOfTabs, ArrayList<Event> mAllEvents) {
+    public MainPageAdapter(FragmentManager fm, int mNumOfTabs, ArrayList<Event> mAllEvents, double lat, double lng) {
         super(fm);
         this.mNumOfTabs = mNumOfTabs;
         this.mAllEvents = mAllEvents;
+        this.mLatitude = lat;
+        this.mLongitude = lng;
+
 //        this.filteredData = mUpcomingEvents;
     }
 
@@ -45,10 +53,10 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
 
                 // Pass the array list with all the events that are due on the upcoming days
                 mFragmentBundle.putSerializable(ARGS_ALL_EVENTS, mAllEvents);
-                TabMapViewFragment mTabMapViewFragment = new TabMapViewFragment();
-                mTabMapViewFragment.setArguments(mFragmentBundle);
+                TabListViewFragment mTabListViewFragment = new TabListViewFragment();
+                mTabListViewFragment.setArguments(mFragmentBundle);
 
-                return mTabMapViewFragment;
+                return mTabListViewFragment;
 
 
 
@@ -56,10 +64,14 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
 
                 // Pass the array list with all the events that are due today
                 mFragmentBundle.putSerializable(ARGS_ALL_EVENTS, mAllEvents);
-                TabListViewFragment mTabListViewFragment = new TabListViewFragment();
-                mTabListViewFragment.setArguments(mFragmentBundle);
+                mFragmentBundle.putDouble(ARGS_LATITUDE, mLatitude);
+                mFragmentBundle.putDouble(ARGS_LONGITUDE, mLongitude);
 
-                return mTabListViewFragment;
+                Log.d("boa", "getItem: lat  view: " + mLatitude + " long view: " + mLongitude + " array size: " + mAllEvents.size());
+                TabMapViewFragment mTabMapViewFragment = new TabMapViewFragment();
+                mTabMapViewFragment.setArguments(mFragmentBundle);
+
+                return mTabMapViewFragment;
         }
 
         return null;

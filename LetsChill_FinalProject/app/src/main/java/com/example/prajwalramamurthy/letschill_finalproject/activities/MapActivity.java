@@ -20,7 +20,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.MapFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabMapViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.AddressValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import java.io.IOException;
@@ -36,6 +38,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     //Constants
     private static final int REQUEST_LOCATION_PERMISSION = 0x01101;
     public static final String INTENT_RESULT_ADDRESS = "INTENT_RESULT_ADDRESS";
+    public static final String INTENT_EVENT_FROM_MAP = "INTENT_EVENT_FROM_MAP";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

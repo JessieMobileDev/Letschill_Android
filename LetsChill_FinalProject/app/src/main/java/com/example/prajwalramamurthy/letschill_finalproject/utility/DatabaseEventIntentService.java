@@ -59,7 +59,7 @@ public class DatabaseEventIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    protected void onHandleIntent(@Nullable final Intent intent) {
 
         // If the intent passed does not contain any of the extras variables, throw an exception
         if (!Objects.requireNonNull(intent).hasExtra(EXTRA_RESULT_RECEIVER)) {
@@ -127,9 +127,15 @@ public class DatabaseEventIntentService extends IntentService {
                         }
                     }
 
+                    // Retrieve the latitude and longitude from the extras
+                    double mLatitude = intent.getDoubleExtra(MainActivity.EXTRA_LAT, 0.0);
+                    double mLongitude = intent.getDoubleExtra(MainActivity.EXTRA_LONG, 0.0);
+
                     // Send a message to the receiver with all the 3 array lists
                     Bundle mArraysBundle = new Bundle();
                     mArraysBundle.putSerializable(BUNDLE_EXTRA_ALL_EVENTS, mAllEvents);
+                    mArraysBundle.putDouble(MainActivity.EXTRA_LAT, mLatitude);
+                    mArraysBundle.putDouble(MainActivity.EXTRA_LONG, mLongitude);
                     mReceiver.send(Activity.RESULT_OK, mArraysBundle);
 
                 }
