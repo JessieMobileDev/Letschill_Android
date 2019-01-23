@@ -531,7 +531,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     {
 
 
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR,year);
@@ -632,7 +632,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                                 try {
 
                                     // Convert the string date to a date variable and extract the month out of it
-                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
                                     date = mSimpleDateFormat.parse(mEvtDate);
                                     dateString = String.valueOf(date.getMonth());
 

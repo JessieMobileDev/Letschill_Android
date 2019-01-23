@@ -405,7 +405,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                         Log.d("opa", "saveEventDataToDatabase: participants: " + mParticipants.getText().toString());
 
-                        if (Integer.valueOf(mParticipants.getText().toString()) != 0 || Integer.valueOf(mParticipants.getText().toString()) != 1) {
+                        if (Integer.valueOf(mParticipants.getText().toString()) != 0
+                                || Integer.valueOf(mParticipants.getText().toString()) != 1
+                                || Integer.valueOf(mParticipants.getText().toString()) < 1000) {
 
 //                        if (!mParticipants.getText().toString().equals("0") &&
 //                                !mParticipants.getText().toString().equals("1") &&
@@ -448,7 +450,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                     try {
 
                                         // Convert the string date to a date variable and extract the month out of it
-                                        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                                        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
                                         date = mSimpleDateFormat.parse(mEvtDate);
                                         dateString = String.valueOf(date.getMonth());
 
@@ -486,6 +488,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                         // Exit the current activity
                                         mCreateEventFragmentInterface.closeCreateEventActivity();
+
                                     }
                                 }
 
@@ -497,7 +500,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                         } else {
 
 //                            mParticipants.setError(getString(R.string.max_participants_string));
-                            mParticipants.setError("Must be at least 2 participants");
+                            mParticipants.setError("Must be at least 2 participants and less than 1000");
                             mProgressBar.setVisibility(View.INVISIBLE);
                         }
 
@@ -653,7 +656,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth)
     {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR,year);
