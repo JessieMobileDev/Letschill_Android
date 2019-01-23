@@ -6,10 +6,11 @@ public class MapMarker {
     private String mAddress;
     private double mLatitude;
     private double mLongitude;
-    private String mMarkerId = "0";
+    private String mEventId = "0";
 
     // Constructor
-    public MapMarker(String mAddress, double mLatitude, double mLongitude) {
+    public MapMarker(String mEventId, String mAddress, double mLatitude, double mLongitude) {
+        this.mEventId = mEventId;
         this.mAddress = mAddress;
         this.mLatitude = mLatitude;
         this.mLongitude = mLongitude;
@@ -31,6 +32,6 @@ public class MapMarker {
     // Setters
 
     public void setmMarkerId(String mMarkerId) {
-        this.mMarkerId = mMarkerId;
+        this.mEventId = mMarkerId;
     }
 }

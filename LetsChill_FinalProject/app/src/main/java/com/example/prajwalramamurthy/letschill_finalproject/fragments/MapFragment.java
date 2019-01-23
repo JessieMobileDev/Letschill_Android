@@ -111,7 +111,7 @@ public class MapFragment extends com.google.android.gms.maps.MapFragment impleme
         }
 
         // Add the new marker to the array list
-        mSavedMarkers.add(new MapMarker(mAddress, mLatitude, mLongitude));
+        mSavedMarkers.add(new MapMarker("nothing", mAddress, mLatitude, mLongitude));
     }
 
     @Override
