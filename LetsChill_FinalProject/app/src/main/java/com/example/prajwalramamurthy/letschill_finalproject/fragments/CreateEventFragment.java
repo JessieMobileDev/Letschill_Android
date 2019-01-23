@@ -295,11 +295,13 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mBitmap = mBundle.getParcelable("data");
 
-                mImageView_eventBackground.setImageBitmap(mBitmap);
+                if (mBitmap != null) {
 
-                didSelectNewImage = true;
+                    Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, 400, 300, true);
+                    mImageView_eventBackground.setImageBitmap(newBitmap);
 
-
+                    didSelectNewImage = true;
+                }
 
                 Log.d("test", "onActivityResult: inside request code 1 - bitmap: " + mBitmap.toString());
             }
@@ -310,22 +312,23 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 mImageUri = data.getData();
 
-//                if (getContext() != null) {
-//
-//                    try {
-//
-//                        mBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mImageUri);
-//
-//                        mImageView_eventBackground.setImageBitmap(mBitmap);
-//
-//                        didSelectNewImage = true;
-//
-//                    } catch (Exception e) {
-//
-//                        e.printStackTrace();
-//                    }
-//                }
-               cropImage();
+                if (getContext() != null) {
+
+                    try {
+
+                        mBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mImageUri);
+                        Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, 400, 300, true);
+
+                        mImageView_eventBackground.setImageBitmap(newBitmap);
+
+                        didSelectNewImage = true;
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+                    }
+                }
+//               cropImage();
             }
         }
     }
@@ -402,11 +405,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                         Log.d("opa", "saveEventDataToDatabase: participants: " + mParticipants.getText().toString());
 
-//                        if (Integer.valueOf(mParticipants.getText().toString()) != 0 || Integer.valueOf(mParticipants.getText().toString()) != 1) {
+                        if (Integer.valueOf(mParticipants.getText().toString()) != 0 || Integer.valueOf(mParticipants.getText().toString()) != 1) {
 
-                        if (!mParticipants.getText().toString().equals("0") &&
-                                !mParticipants.getText().toString().equals("1") &&
-                                mParticipants.getText().toString().equals("1001")) {
+//                        if (!mParticipants.getText().toString().equals("0") &&
+//                                !mParticipants.getText().toString().equals("1") &&
+//                                mParticipants.getText().toString().equals("1001")) {
 
                             // Disable save button
                             mButton_saveButton.setEnabled(false);
@@ -445,7 +448,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                     try {
 
                                         // Convert the string date to a date variable and extract the month out of it
-                                        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
+                                        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
                                         date = mSimpleDateFormat.parse(mEvtDate);
                                         dateString = String.valueOf(date.getMonth());
 
@@ -456,6 +459,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                     }
 
                                     String mEventId = mDatabase.child("Events").child(dateString).push().getKey();
+
+                                    Log.d("opa", "onDataChange: event id pushed: " + mEventId);
 
                                     if (mEventId != null) {
 
@@ -491,7 +496,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                             });
                         } else {
 
-                            mParticipants.setError(getString(R.string.max_participants_string));
+//                            mParticipants.setError(getString(R.string.max_participants_string));
+                            mParticipants.setError("Must be at least 2 participants");
                             mProgressBar.setVisibility(View.INVISIBLE);
                         }
 
