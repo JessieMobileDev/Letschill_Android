@@ -87,6 +87,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private boolean didSelectNewImage = false;
     private Bitmap mBitmap;
     private boolean mFirstInstance;
+    private Bitmap newBitmap;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -316,10 +317,10 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                     try {
 
-                        mBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mImageUri);
-                        Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, 400, 300, true);
+                        mBitmap = Bitmap.createScaledBitmap((MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), mImageUri)), 400, 300, true);
+//                        newBitmap = Bitmap.createScaledBitmap(mBitmap, 400, 300, true);
 
-                        mImageView_eventBackground.setImageBitmap(newBitmap);
+                        mImageView_eventBackground.setImageBitmap(mBitmap);
 
                         didSelectNewImage = true;
 
@@ -442,9 +443,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                     // Read each data from uid
                                     String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
 
-                                    Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
-
-                                    Date date = new Date();
+                                    Date date;
                                     String dateString = "Month";
 
                                     try {
@@ -454,15 +453,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                         date = mSimpleDateFormat.parse(mEvtDate);
                                         dateString = String.valueOf(date.getMonth());
 
-
-
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
 
                                     String mEventId = mDatabase.child("Events").child(dateString).push().getKey();
-
-                                    Log.d("opa", "onDataChange: event id pushed: " + mEventId);
 
                                     if (mEventId != null) {
 
@@ -471,7 +466,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                         Event newEvent = new Event(mEventId, mEvtName, mEvtLocation, mEvtDate, mEvtTimeStart, mEvtTimeEnd, mEvtDesc,
                                                 mEvtPart, mEvtCategory, mUsername, mCheckBox_IsRecurring.isChecked(),
-                                                mCheckBox_PublicOrPrivate.isChecked(),url, false,
+                                                mCheckBox_PublicOrPrivate.isChecked(), url, false,
                                                 getAddressFromString(mEvtLocation).getLatitude(), getAddressFromString(mEvtLocation).getLongitude(),
                                                 0, mFirebaseUser.getUid(), mJoinedPeopleIds);
 

@@ -160,6 +160,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                     StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
                     final long ONE_MEGABYTE = 1024 * 1024;
 
+                    Log.d("image", "onActivityCreated: url: " + mEvent.getmUrl());
+
                     mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
