@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        TabListViewFragment.TabTodayInterface, TabMapViewFragment.TabUpcomingInterface, SearchView.OnQueryTextListener {
+        TabListViewFragment.TabTodayInterface, TabMapViewFragment.TabUpcomingInterface {
 
     // Variables
     private FloatingActionButton mFab;
@@ -115,37 +115,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // create our search manager to handle the search functionality
-        SearchManager searchManager = (SearchManager)
-                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
-        //MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-
-        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
-                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        // create our search manager to handle the search functionality
+//        SearchManager searchManager = (SearchManager)
+//                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
+//        //MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+//
+//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
+//                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
+//        searchView.setSubmitButtonEnabled(true);
+//        searchView.setOnQueryTextListener(this);
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        // create our search manager to handle the search functionality
-        SearchManager searchManager = (SearchManager)
-                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-
-        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
-                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener(this);
+       getMenuInflater().inflate(R.menu.menu_main, menu);
+//        // create our search manager to handle the search functionality
+//        SearchManager searchManager = (SearchManager)
+//                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
+//        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+//
+//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
+//                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
+//        searchView.setSubmitButtonEnabled(true);
+//        searchView.setOnQueryTextListener(this);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -178,26 +178,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, R.string.alert_content_noInternet, Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (mAdapter != null && !newText.isEmpty()) {
-            mAdapter.getFilter().filter(newText);
-            mAdapter.notifyDataSetChanged();
-        }
-        else
-        {
-
-            mAdapter.filteredData = mUpcomingEvents;
-            mAdapter.notifyDataSetChanged();
-        }
-        return false;
-    }
+//
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//
+//
+////        if (mAdapter != null && !newText.isEmpty()) {
+////            mAdapter.getFilter().filter(newText);
+////            mAdapter.notifyDataSetChanged();
+////        }
+////        else
+////        {
+////
+////            mAdapter.filteredData = mUpcomingEvents;
+////            mAdapter.notifyDataSetChanged();
+////        }
+//        return false;
+//    }
 
 
 

@@ -26,6 +26,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
+        Log.e(TAG, "onMessageReceived: ");
 
         displayNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
     }
