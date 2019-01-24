@@ -161,6 +161,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                     StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
                     final long ONE_MEGABYTE = 1024 * 1024;
 
+                    Log.d("image", "onActivityCreated: url: " + mEvent.getmUrl());
+
                     mStorageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -564,13 +566,13 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     private void leaveButtonClick()
     {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
                 alertDialogBuilder.setPositiveButton("yes",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                Toast.makeText(getContext(),"You clicked yes button",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(),"You left the event",Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -578,14 +580,15 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Toast.makeText(getContext(),"You clicked no button",Toast.LENGTH_LONG).show();
+
+                //Toast.makeText(getContext(),"You clicked no button",Toast.LENGTH_LONG).show();
             }
         });
 
         alertDialogBuilder.show();
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+//        AlertDialog alertDialog = alertDialogBuilder.create();
+//        alertDialog.show();
 
 
     }
@@ -672,19 +675,47 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                 // This method will be called ONLY when host is not equal to logged in user
                 Log.d("test", "onClick (rsvp): Host is not equal to logged in user");
-                rsvpButtonClick();
+
+                if (ConnectionHandler.isConnected(getContext())) {
+
+                    rsvpButtonClick();
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
+                }
+
 
                 break;
 
             case R.id.button_detail_leave:
 
-                leaveButtonClick();
+
+                if (ConnectionHandler.isConnected(getContext())) {
+
+                    leaveButtonClick();
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
+                }
 
                 break;
 
             case R.id.textView_detail_location:
 
-                openMapOnClick();
+                if (ConnectionHandler.isConnected(getContext())) {
+
+                    openMapOnClick();
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
+                }
+
 
                 break;
         }

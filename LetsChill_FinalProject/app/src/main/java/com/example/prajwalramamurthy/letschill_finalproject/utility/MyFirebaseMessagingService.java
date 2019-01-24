@@ -58,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService
 
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
-        displayNotification();
+       // displayNotification();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
         // If you want to send messages to this application instance or

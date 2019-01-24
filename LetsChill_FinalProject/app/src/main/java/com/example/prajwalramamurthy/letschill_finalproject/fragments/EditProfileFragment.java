@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -417,6 +418,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     private void saveProfileChangesToDatabase() {
 
+        if (ConnectionHandler.isConnected(getContext())) {
+
+
+
         // Validate the fields
         if (!mEditText_username.getText().toString().isEmpty()) {
 
@@ -515,6 +520,13 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         } else {
 
             mEditText_username.setError(ERROR_EMPTY_FIELDS);
+        }
+
+
+        }
+        else
+        {
+            Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
         }
     }
 
