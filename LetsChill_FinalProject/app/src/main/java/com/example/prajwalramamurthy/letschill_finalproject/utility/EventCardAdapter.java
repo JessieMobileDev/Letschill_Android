@@ -58,6 +58,7 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
         if(filteredData != null && filteredData.size() > 0){
 
             return filteredData.size();
+
         }
 
         return 0;
@@ -182,6 +183,7 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
             if (mEvent.getmUrl() != null && !mEvent.getmUrl().isEmpty()) {
 
                 // Variables
+                final boolean imageFailedToDownload = false;
                 FirebaseStorage mFirebaseStorage = FirebaseStorage.getInstance();
                 StorageReference mStorageReference = mFirebaseStorage.getReference().child(mEvent.getmUrl());
                 final long ONE_MEGABYTE = 1024 * 1024;
@@ -197,9 +199,16 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
+
+                        mViewHolder.mEventImage.setImageResource(R.drawable.create_back);
                         exception.printStackTrace();
                     }
                 });
+
+                if (!ConnectionHandler.isConnected(mContext)) {
+
+                    mViewHolder.mEventImage.setImageResource(R.drawable.create_back);
+                }
             }
 
             String dateString = "";
@@ -218,8 +227,7 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
             mViewHolder.mEventTitle.setText(mEvent.getmEventName());
             mViewHolder.mEventTime.setText(dateString + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
-//            mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
-//            int joinedCount = mEvent.getmJoinedPeopleIds().size();
+
             if (mEvent.getmJoinedPeopleIds() != null) {
                 if (mEvent.getmJoinedPeopleIds().size() != 0) {
 

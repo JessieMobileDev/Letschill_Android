@@ -120,27 +120,28 @@ public class TabListViewFragment extends ListFragment implements SearchView.OnQu
 
         mAllEvents = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_ALL_EVENTS);
 
-        if (ConnectionHandler.isConnected(getContext())) {
-            if (mAllEvents != null) {
 
-                // Adapter that will populate the list view
-                mAdapter = new EventCardAdapter(getContext(), mAllEvents);
-                setListAdapter(mAdapter);
+        if (mAllEvents != null && getContext() != null) {
 
 
-                getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // Adapter that will populate the list view
+            mAdapter = new EventCardAdapter(getContext(), mAllEvents);
+            setListAdapter(mAdapter);
 
-                        // Pass the selected event object to the "DetailsEventActivity"
-                        mTabListViewInterface.openDetailsPageFromTodayTab(mAllEvents.get(position));
 
-                    }
-                });
+            getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                mAdapter.notifyDataSetChanged();
-            }
+                    // Pass the selected event object to the "DetailsEventActivity"
+                    mTabListViewInterface.openDetailsPageFromTodayTab(mAllEvents.get(position));
+
+                }
+            });
+
+            mAdapter.notifyDataSetChanged();
         }
+
 
     }
 }

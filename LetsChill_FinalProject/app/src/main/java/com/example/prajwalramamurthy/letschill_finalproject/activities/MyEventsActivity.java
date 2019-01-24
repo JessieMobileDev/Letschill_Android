@@ -23,6 +23,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabHosting
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabJoinedFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.LocalStorageHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MyEventsAdapter;
@@ -111,7 +112,48 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
 
         } else {
 
+            mProgressBar.setVisibility(View.GONE);
             Toast.makeText(this, R.string.alert_content_noInternet, Toast.LENGTH_SHORT).show();
+
+            // Retrieve an EventLocalStorage object arrayList, turn into Event array list and populate adapter
+            mJoinedEvents = LocalStorageHandler.loadFromFileAndConvertEventLocalStorageToEvent(this, "joined");
+            mHostingEvents = LocalStorageHandler.loadFromFileAndConvertEventLocalStorageToEvent(this, "hosting");
+
+            // Assign the adapter to the view pager that will display the screen for each tab item
+            mTabAdapter = new MyEventsAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mJoinedEvents,
+                    mHostingEvents);
+
+            mTabAdapter.notifyDataSetChanged();
+            mViewPager.setAdapter(mTabAdapter);
+
+            // Set the progress bar to be invisible
+            mProgressBar.setVisibility(View.GONE);
+
+            // Manage what to display when a tab is selected
+            mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+
+                    mViewPager.setCurrentItem(tab.getPosition());
+
+
+                    Log.d("test", "onTabSelected: tab was selected: " + tab.getText());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+
+                }
+            });
+
+            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         }
     }
 
@@ -167,6 +209,11 @@ public class MyEventsActivity extends AppCompatActivity implements TabJoinedFrag
                 });
 
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+                // Event object model is parcelable, we need one that is Serializable in order to save locally
+                // Loop through the list and save as EventLocalStorage, and then save to local
+                LocalStorageHandler.convertFromEventToEventLocalStorageAndSave(mJoinedEvents, MyEventsActivity.this, "joined");
+                LocalStorageHandler.convertFromEventToEventLocalStorageAndSave(mHostingEvents, MyEventsActivity.this, "hosting");
 
             }
 

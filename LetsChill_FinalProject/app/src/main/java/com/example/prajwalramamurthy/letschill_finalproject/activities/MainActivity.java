@@ -30,12 +30,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.EventLocalStorage;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.MapFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabListViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabMapViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.LocalStorageHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -238,6 +240,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
 
             Toast.makeText(this, R.string.alert_content_noInternet, Toast.LENGTH_SHORT).show();
+
+            // Retrieve an EventLocalStorage object arraylist, turn into Event array list and populate adapter
+            mAllEvents = LocalStorageHandler.loadFromFileAndConvertEventLocalStorageToEvent(this, "allEvents");
+
+            // Load the user's last known location
+            ArrayList<Double> mLastKnownLocation = LocalStorageHandler.loadUserLastKnownLocation(this);
+
+            Log.d("localStorage", "getStoredFiles: All events size: " + mAllEvents.size() +
+                    " Location size: " + mLastKnownLocation.size());
+            Log.d("localStorage", "getStoredFiles: data: " + mAllEvents.get(0).getmEventName());
+
+            if (mLastKnownLocation != null && mAllEvents != null) {
+
+                // Apply the adapter
+                // Assign the adapter to the view pager that will display the screen for each tab item
+                mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),
+                        mAllEvents, mLastKnownLocation.get(0), mLastKnownLocation.get(1));
+
+                mTabAdapter.notifyDataSetChanged();
+                mViewPager.setAdapter(mTabAdapter);
+
+                // Set the progress bar to be invisible
+                mProgressBar.setVisibility(View.GONE);
+
+                // Manage what to display when a tab is selected
+                mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+
+                        mViewPager.setCurrentItem(tab.getPosition());
+
+
+                        Log.d("test", "onTabSelected: tab was selected: " + tab.getText());
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+
+                    }
+                });
+
+                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+            }
         }
     }
 //
@@ -296,11 +349,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 double mCurrentLatitude = resultData.getDouble(EXTRA_LAT);
                 double mCurrentLongitude = resultData.getDouble(EXTRA_LONG);
 
-//                // Retrieve all the array lists from the bundle
-//                mTodayEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_TODAY_EVENTS);
-//                mUpcomingEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_UPCOMING_EVENTS);
-//                mPastEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_PAST_EVENTS);
-
                 // Assign the adapter to the view pager that will display the screen for each tab item
                 mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),
                         mAllEvents, mCurrentLatitude, mCurrentLongitude);
@@ -336,6 +384,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
 
                 mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+                // Event object model is parcelable, we need one that is Serializable in order to save locally
+                // Loop through the list and save as EventLocalStorage, and then save to local
+                LocalStorageHandler.convertFromEventToEventLocalStorageAndSave(mAllEvents, MainActivity.this, "allEvents");
+
+                // Save the user's current location to file
+                LocalStorageHandler.saveUserLastKnownLocation(mCurrentLatitude, mCurrentLongitude, MainActivity.this);
 
             }
 
