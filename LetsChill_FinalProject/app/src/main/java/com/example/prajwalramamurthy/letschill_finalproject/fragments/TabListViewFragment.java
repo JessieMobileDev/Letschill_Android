@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import java.util.ArrayList;
@@ -119,26 +120,27 @@ public class TabListViewFragment extends ListFragment implements SearchView.OnQu
 
         mAllEvents = (ArrayList<Event>) getArguments().getSerializable(MainPageAdapter.ARGS_ALL_EVENTS);
 
-        if (mAllEvents != null) {
+        if (ConnectionHandler.isConnected(getContext())) {
+            if (mAllEvents != null) {
 
-            // Adapter that will populate the list view
-            mAdapter = new EventCardAdapter(getContext(), mAllEvents);
-            setListAdapter(mAdapter);
+                // Adapter that will populate the list view
+                mAdapter = new EventCardAdapter(getContext(), mAllEvents);
+                setListAdapter(mAdapter);
 
 
-            getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    // Pass the selected event object to the "DetailsEventActivity"
-                    mTabListViewInterface.openDetailsPageFromTodayTab(mAllEvents.get(position));
+                        // Pass the selected event object to the "DetailsEventActivity"
+                        mTabListViewInterface.openDetailsPageFromTodayTab(mAllEvents.get(position));
 
-                }
-            });
+                    }
+                });
 
-            mAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
+            }
         }
-
 
     }
 }

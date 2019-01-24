@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MapActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,6 +48,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -442,6 +444,14 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                     // Read each data from uid
                                     String mUsername = dataSnapshot.child(mUid).child("username").getValue(String.class);
 
+                                    String device_token = dataSnapshot.child(mUid).child("device_token").getValue(String.class);
+
+                                    String current_token = FirebaseInstanceId.getInstance().getToken();
+
+                                    if(!device_token.equals(current_token)) {
+                                        mDBReference.child(mUid).child("device_token").setValue(current_token);
+                                    }
+
                                     Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
 
                                     Date date = new Date();
@@ -577,7 +587,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                     url = taskSnapshot.getMetadata().getPath();
 
-                    saveEventDataToDatabase();
+                    if (ConnectionHandler.isConnected(getContext())) {
+                        saveEventDataToDatabase();
+                    }
                 }
             });
 
@@ -714,8 +726,11 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                 break;
             case R.id.button_map:
 
-                // If map button is tapped
-                openMap();
+                if (ConnectionHandler.isConnected(getContext())) {
+                    // If map button is tapped
+                    openMap();
+
+                }
                 break;
         }
     }
