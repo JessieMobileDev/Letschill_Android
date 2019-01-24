@@ -455,9 +455,9 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                                     Log.d("test", "onDataChange: USERNAMEEEEEE: " + mUsername);
 
-                                    Date date = new Date();
+                                    //Date date = new Date();
 
-                                    //Date date;
+                                    Date date;
 
                                     String dateString = "Month";
 

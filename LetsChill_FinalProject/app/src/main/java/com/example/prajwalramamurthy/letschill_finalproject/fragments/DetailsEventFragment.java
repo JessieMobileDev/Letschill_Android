@@ -573,6 +573,13 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
                                 Toast.makeText(getContext(),"You left the event",Toast.LENGTH_LONG).show();
+
+                                // This part will only work if the logged in user is not the same as the event host
+                                button_join.setVisibility(View.VISIBLE);
+
+                                button_leave.setVisibility(View.INVISIBLE);
+                                button_rsvp.setVisibility(View.INVISIBLE);
+
                             }
                         });
 
@@ -598,6 +605,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         // Note: this method is being called inside the "joinButtonClick()". I'm recycling the buttons
         // instead of having a bunch of buttons on the layout. It's all connected and working. Just do
         // the rsvp functionality in this method and it will work.
+
+        Toast.makeText(getContext(), "Thank You for the event RSVP", Toast.LENGTH_LONG).show();
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         HashMap<String,String> notification = new HashMap<>();
