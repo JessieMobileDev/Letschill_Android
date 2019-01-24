@@ -234,16 +234,18 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
                 Log.d("test", "getView: joined array is null");
             }
 
-            mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String query = "geo:0,0?q=" + mEvent.getmEventLocation();
-                    Uri gmmIntentUri = Uri.parse(query);
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    mContext.startActivity(mapIntent);
-                }
-            });
+            if (ConnectionHandler.isConnected(mContext)) {
+                mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String query = "geo:0,0?q=" + mEvent.getmEventLocation();
+                        Uri gmmIntentUri = Uri.parse(query);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        mContext.startActivity(mapIntent);
+                    }
+                });
+            }
 
             if (!mEvent.ismIsRecurringEvent()) {
 

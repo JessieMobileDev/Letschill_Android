@@ -30,6 +30,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -655,7 +656,15 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
             case R.id.button_detail_joinEvent:
 
-                joinButtonClick();
+                if (ConnectionHandler.isConnected(getContext())) {
+
+                    joinButtonClick();
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
+                }
 
                 break;
 
