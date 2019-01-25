@@ -253,7 +253,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
                 {
                     Toast.makeText(SignInUpActivity.this, R.string.facebook_toast_fail,
                             Toast.LENGTH_SHORT).show();
-                    moveToInterestsFromSignIn();
+                    //moveToInterestsFromSignIn();
                 }
             }
         });
