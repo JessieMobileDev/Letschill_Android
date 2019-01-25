@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EventCardAdapter extends BaseAdapter implements Filterable {
+public class EventCardAdapter extends BaseAdapter {
 
     // Base ID
     private static final long BASE_ID = 0x01011;
@@ -47,7 +47,6 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
 
         this.mContext = mContext;
         this.mEventList = mEventList;
-        this.filteredData = mEventList;
     }
 
     // Get count
@@ -55,9 +54,9 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
     public int getCount(){
 
 
-        if(filteredData != null && filteredData.size() > 0){
+        if(mEventList != null && mEventList.size() > 0){
 
-            return filteredData.size();
+            return mEventList.size();
 
         }
 
@@ -68,9 +67,9 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
     @Override
     public Object getItem(int position){
 
-        if(filteredData != null && position >= 0 || position < filteredData.size()){
+        if(mEventList != null && position >= 0 || position < mEventList.size()){
 
-            return filteredData.get(position);
+            return mEventList.get(position);
         }
 
         return null;
@@ -83,58 +82,6 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
 
     }
 
-
-
-    private final ItemFilter mFilter = new ItemFilter();
-
-
-    // will hanfle filter for the handymen
-    @Override
-    public Filter getFilter() {
-        return mFilter;
-    }
-
-    public List<Event> filteredData = null;
-
-    private class ItemFilter extends Filter {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            String filterString = constraint.toString().toLowerCase();
-
-            FilterResults results = new FilterResults();
-
-            final List<Event> list = mEventList;
-
-            int count = list.size();
-            final ArrayList<Event> nlist = new ArrayList<>(count);
-
-            Event filterableString ;
-
-            for (int i = 0; i < count; i++) {
-                filterableString = list.get(i);
-                if (filterableString.getmEventName().toLowerCase().contains(filterString)) {
-                    nlist.add(filterableString);
-                }
-            }
-
-            results.values = nlist;
-            results.count = nlist.size();
-
-            return results;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredData = (ArrayList<Event>) results.values;
-            notifyDataSetChanged();
-        }
-
-    }
-
-
-    // Optimize with view holder!
     static class ViewHolder{
 
         final ImageView mEventImage;

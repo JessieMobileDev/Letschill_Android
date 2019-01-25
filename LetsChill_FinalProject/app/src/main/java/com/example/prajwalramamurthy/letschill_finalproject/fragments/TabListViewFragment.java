@@ -1,31 +1,23 @@
 package com.example.prajwalramamurthy.letschill_finalproject.fragments;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
-import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class TabListViewFragment extends ListFragment implements SearchView.OnQueryTextListener {
+public class TabListViewFragment extends ListFragment {
 
     // Variables
     private ArrayList<Event> mAllEvents = new ArrayList<>();
@@ -39,37 +31,6 @@ public class TabListViewFragment extends ListFragment implements SearchView.OnQu
         menu.clear();
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
-
-
-
-
-//
-//        // create our search manager to handle the search functionality
-//        SearchManager searchManager = (SearchManager)
-//                Objects.requireNonNull(getContext()).getSystemService(Context.SEARCH_SERVICE);
-//        MenuItem searchMenuItem = menu.findItem(R.id.search_button);
-//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-//
-//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
-//                getSearchableInfo(Objects.requireNonNull(getActivity()).getComponentName()));
-//        searchView.setSubmitButtonEnabled(true);
-//        searchView.setOnQueryTextListener(this);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (mAdapter != null && !newText.isEmpty()) {
-            mAdapter.getFilter().filter(newText);
-            mAdapter.notifyDataSetChanged();
-        }
-        return false;
     }
 
     public interface TabTodayInterface {
@@ -101,8 +62,6 @@ public class TabListViewFragment extends ListFragment implements SearchView.OnQu
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
 
         return inflater.inflate(R.layout.fragment_tab_today, container, false);
     }

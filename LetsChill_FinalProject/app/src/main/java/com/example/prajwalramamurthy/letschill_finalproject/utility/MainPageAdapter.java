@@ -67,7 +67,7 @@ public class MainPageAdapter extends FragmentStatePagerAdapter implements Filter
                 mFragmentBundle.putDouble(ARGS_LATITUDE, mLatitude);
                 mFragmentBundle.putDouble(ARGS_LONGITUDE, mLongitude);
 
-                Log.d("boa", "getItem: lat  view: " + mLatitude + " long view: " + mLongitude + " array size: " + mAllEvents.size());
+//                Log.d("boa", "getItem: lat  view: " + mLatitude + " long view: " + mLongitude + " array size: " + mAllEvents.size());
                 TabMapViewFragment mTabMapViewFragment = new TabMapViewFragment();
                 mTabMapViewFragment.setArguments(mFragmentBundle);
 

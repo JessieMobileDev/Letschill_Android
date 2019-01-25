@@ -23,10 +23,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
@@ -49,7 +54,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
-        TabListViewFragment.TabTodayInterface, SearchView.OnQueryTextListener, TabMapViewFragment.TabMapViewInterface {
+        TabListViewFragment.TabTodayInterface, TabMapViewFragment.TabMapViewInterface {
 
 
     // Variables
@@ -62,10 +67,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDBReference;
     private final Handler mHandler = new Handler();
     private ArrayList<Event> mAllEvents;
+    private ArrayList<Event> mFilteredEvents;
     private ProgressBar mProgressBar;
     MenuItem searchMenuItem;
-    private EventCardAdapter mAdapter;
     private SharedPreferences mPrefs;
+    private EditText mEditText_search;
+    private Button mButton_return;
+    private boolean isSearching = false;
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
@@ -92,20 +100,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabLayout = findViewById(R.id.tablayout_events);
         mProgressBar = findViewById(R.id.progress_bar_main);
         searchMenuItem = findViewById(R.id.action_search);
-
-//        mAdapter = new EventCardAdapter(this, mUpcomingEvents);
-//
-//        ListView myListView = findViewById(R.id.Mylistviewtest);
-//        myListView.setAdapter(mAdapter);
+        mEditText_search = findViewById(R.id.editText_search);
+        mButton_return = findViewById(R.id.button_returnSearch);
 
         // Assign the click listener to the floating button
         mFab.setOnClickListener(this);
+        mButton_return.setOnClickListener(this);
 
         // Get current location
         requestLocation();
-
-//        // Request events data from the database
-//        requestEventData();
 
         FirebaseMessaging.getInstance().subscribeToTopic("user")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -115,6 +118,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
 
+        // When the user presses "done" after typing in the search edit text, the following happens
+        mEditText_search.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || event != null &&
+                        event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+
+                    if (event == null || !event.isShiftPressed()) {
+
+                        if (!isSearching) {
+
+                            isSearching = true;
+                            requestLocation();
+                        } else {
+
+                            requestLocation();
+                        }
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -172,39 +201,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        // create our search manager to handle the search functionality
-//        SearchManager searchManager = (SearchManager)
-//                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
-//        //MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-//
-//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
-//                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
-//        searchView.setSubmitButtonEnabled(true);
-//        searchView.setOnQueryTextListener(this);
-//
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        // create our search manager to handle the search functionality
-//        SearchManager searchManager = (SearchManager)
-//                Objects.requireNonNull(this).getSystemService(Context.SEARCH_SERVICE);
-//        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-//        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-//
-//        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).
-//                getSearchableInfo(Objects.requireNonNull(this).getComponentName()));
-//        searchView.setSubmitButtonEnabled(true);
-//        searchView.setOnQueryTextListener(this);
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -212,6 +212,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         MenuIntentHandler.getMenuIntents(item, this, this, MenuIntentHandler.MAIN_ACTIVITY);
+
+        switch (item.getItemId()) {
+
+            case R.id.action_search:
+
+                // Display the edit text
+                if (mEditText_search.getVisibility() == View.GONE) {
+
+                    mEditText_search.setVisibility(View.VISIBLE);
+                    mButton_return.setVisibility(View.VISIBLE);
+
+                } else if (mEditText_search.getVisibility() == View.VISIBLE) {
+
+                    mEditText_search.setVisibility(View.GONE);
+                    mButton_return.setVisibility(View.GONE);
+
+                }
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -289,45 +308,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-//
-//    @Override
-//    public boolean onQueryTextSubmit(String query) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onQueryTextChange(String newText) {
-//
-//
-////        if (mAdapter != null && !newText.isEmpty()) {
-////            mAdapter.getFilter().filter(newText);
-////            mAdapter.notifyDataSetChanged();
-////        }
-////        else
-////        {
-////
-////            mAdapter.filteredData = mUpcomingEvents;
-////            mAdapter.notifyDataSetChanged();
-////        }
-//        return false;
-//    }
 
     @Override
     public void openDetailsEventFragment(Event event) {
 
         openDetailsPage(event);
     }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
 
     public class DatabaseEventDataReceiver extends ResultReceiver {
 
@@ -345,9 +331,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 double mCurrentLatitude = resultData.getDouble(EXTRA_LAT);
                 double mCurrentLongitude = resultData.getDouble(EXTRA_LONG);
 
-                // Assign the adapter to the view pager that will display the screen for each tab item
-                mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),
-                        mAllEvents, mCurrentLatitude, mCurrentLongitude);
+                if (isSearching) {
+
+                    String userInput = mEditText_search.getText().toString().toLowerCase();
+                    mFilteredEvents = new ArrayList<>();
+                    mEditText_search.setText("");
+
+                    for (Event savedEvent: mAllEvents) {
+
+                        if (savedEvent.getmEventName().toLowerCase().contains(userInput)) {
+
+                            mFilteredEvents.add(savedEvent);
+                        }
+                    }
+
+                    // Assign the adapter to the view pager that will display the screen for each tab item
+                    mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),
+                            mFilteredEvents, mCurrentLatitude, mCurrentLongitude);
+
+                    // Turn boolean to false
+                    isSearching = false;
+                } else {
+
+                    // Assign the adapter to the view pager that will display the screen for each tab item
+                    mTabAdapter = new MainPageAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(),
+                            mAllEvents, mCurrentLatitude, mCurrentLongitude);
+                }
 
                 mTabAdapter.notifyDataSetChanged();
                 mViewPager.setAdapter(mTabAdapter);
@@ -404,6 +413,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent mCreateEventIntent = new Intent(MainActivity.this, EventActivity.class);
                 startActivity(mCreateEventIntent);
 
+                break;
+            case R.id.button_returnSearch:
+
+                requestLocation();
                 break;
         }
     }

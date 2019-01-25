@@ -64,7 +64,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/editText_search" />
 
         <ProgressBar
             android:id="@+id/progress_bar_main"
@@ -74,6 +74,32 @@
             app:layout_constraintEnd_toEndOf="@+id/viewPager_tabs"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/viewPager_tabs" />
+
+        <EditText
+            android:id="@+id/editText_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="Search term"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/button_returnSearch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_returnSearch"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            android:background="@drawable/ic_keyboard_return_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
