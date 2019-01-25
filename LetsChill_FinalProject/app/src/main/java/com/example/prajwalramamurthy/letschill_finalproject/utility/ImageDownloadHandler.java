@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,5 +59,45 @@ public class ImageDownloadHandler {
                 exception.printStackTrace();
             }
         });
+    }
+
+    public static void showDefaultImagesIfOffline(String category, ImageView imageView) {
+
+        switch (category) {
+
+            case "Video Game":
+                imageView.setImageResource(R.drawable.videogame);
+                break;
+            case "Sports":
+                imageView.setImageResource(R.drawable.sports);
+                break;
+            case "Technology":
+                imageView.setImageResource(R.drawable.technology);
+                break;
+            case "Outdoor Activities":
+                imageView.setImageResource(R.drawable.create_back);
+                break;
+            case "Indoor Activities":
+                imageView.setImageResource(R.drawable.create_back);
+                break;
+            case "Arts":
+                imageView.setImageResource(R.drawable.art);
+                break;
+            case "Music":
+                imageView.setImageResource(R.drawable.music);
+                break;
+            case "Movies":
+                imageView.setImageResource(R.drawable.movie);
+                break;
+            case "Auto":
+                imageView.setImageResource(R.drawable.auto);
+                break;
+            case "Food":
+                imageView.setImageResource(R.drawable.food);
+                break;
+            case "Fitness":
+                imageView.setImageResource(R.drawable.fitness);
+                break;
+        }
     }
 }

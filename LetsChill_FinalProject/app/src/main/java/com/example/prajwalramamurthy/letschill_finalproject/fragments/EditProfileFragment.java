@@ -427,10 +427,6 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
             if (!mTextView_interests.getText().toString().isEmpty()) {
 
-//                String[] interests = mTextView_interests.getText().toString().split("\n");
-//
-//                final ArrayList<String> newInterests = new ArrayList<>(Arrays.asList(interests));
-
                 mDBReference = FirebaseDatabase.getInstance().getReference("Users");
 
                 mDBReference.addValueEventListener(new ValueEventListener() {
@@ -441,73 +437,71 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                             User person = user.getValue(User.class);
 
-//                            if (retrievedUser != null) {
+                            if (person != null && person.getEmail().equals(retrievedUser.getEmail())) {
 
-                                if (person != null && person.getEmail().equals(retrievedUser.getEmail())) {
+                                // Variables to be saved back in the database
+                                String fullName = "Not defined";
+                                String username = "Not defined";
+                                String phone = "Not defined";
+                                String fbEmail = "Not defined";
 
-                                    // Variables to be saved back in the database
-                                    String fullName = "Not defined";
-                                    String username = "Not defined";
-                                    String phone = "Not defined";
-                                    String fbEmail = "Not defined";
+                                // Full name, phone number and facebook email are not required
+                                // If they are empty, save in the database as "Not defined"
+                                if (!mEditText_fullName.getText().toString().trim().isEmpty()) {
 
-                                    // Full name, phone number and facebook email are not required
-                                    // If they are empty, save in the database as "Not defined"
-                                    if (!mEditText_fullName.getText().toString().trim().isEmpty()) {
+                                    fullName = mEditText_fullName.getText().toString();
+                                    mDBReference.child(retrievedUser.getUserID()).child("fullName").setValue(fullName);
 
-                                        fullName = mEditText_fullName.getText().toString();
-                                        mDBReference.child(retrievedUser.getUserID()).child("fullName").setValue(fullName);
+                                    if (!mEditText_username.getText().toString().trim().isEmpty()) {
 
-                                        if (!mEditText_username.getText().toString().trim().isEmpty()) {
+                                        username = mEditText_username.getText().toString();
+                                        mDBReference.child(retrievedUser.getUserID()).child("username").setValue(username);
 
-                                            username = mEditText_username.getText().toString();
-                                            mDBReference.child(retrievedUser.getUserID()).child("username").setValue(username);
+                                        if (!mEditText_phone.getText().toString().trim().isEmpty()) {
 
-                                            if (!mEditText_phone.getText().toString().trim().isEmpty()) {
+                                            phone = mEditText_phone.getText().toString();
+                                            mDBReference.child(retrievedUser.getUserID()).child("phone").setValue(phone);
 
-                                                phone = mEditText_phone.getText().toString();
-                                                mDBReference.child(retrievedUser.getUserID()).child("phone").setValue(phone);
+                                            if (!mEditText_facebookEmail.getText().toString().trim().isEmpty()) {
 
-                                                if (!mEditText_facebookEmail.getText().toString().trim().isEmpty()) {
+                                                fbEmail = mEditText_facebookEmail.getText().toString();
+                                                mDBReference.child(retrievedUser.getUserID()).child("facebookEmail").setValue(fbEmail);
 
-                                                    fbEmail = mEditText_facebookEmail.getText().toString();
-                                                    mDBReference.child(retrievedUser.getUserID()).child("facebookEmail").setValue(fbEmail);
+                                                if (didSelectAnImage) {
 
-                                                    if (didSelectAnImage) {
-
-                                                        mDBReference.child(retrievedUser.getUserID()).child("profilePhoto").setValue(mUrl);
-                                                    }
-
-                                                    if (getContext() != null) {
-
-                                                        Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
-
-
-                                                    }
-                                                    // Close the activity
-                                                    mEditProfileInterface.closeEditProfileActivity();
-
-                                                } else {
-
-                                                    mEditText_facebookEmail.setError("Don't use spaces as input");
+                                                    mDBReference.child(retrievedUser.getUserID()).child("profilePhoto").setValue(mUrl);
                                                 }
+
+                                                if (getContext() != null) {
+
+                                                    Toast.makeText(getContext(), R.string.toast_changesSaved, Toast.LENGTH_LONG).show();
+
+
+                                                }
+                                                // Close the activity
+                                                mEditProfileInterface.closeEditProfileActivity();
 
                                             } else {
 
-                                                mEditText_phone.setError("Don't use spaces as input");
+                                                mEditText_facebookEmail.setError("Don't use spaces as input");
                                             }
 
                                         } else {
 
-                                            mEditText_username.setError("Don't use spaces as input");
+                                            mEditText_phone.setError("Don't use spaces as input");
                                         }
 
                                     } else {
 
-                                        mEditText_fullName.setError("Don't use spaces as input");
+                                        mEditText_username.setError("Don't use spaces as input");
                                     }
+
+                                } else {
+
+                                    mEditText_fullName.setError("Don't use spaces as input");
                                 }
-//                            }
+                            }
+
                         }
                     }
 

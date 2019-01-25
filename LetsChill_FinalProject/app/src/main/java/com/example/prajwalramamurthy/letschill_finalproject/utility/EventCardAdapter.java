@@ -200,14 +200,13 @@ public class EventCardAdapter extends BaseAdapter implements Filterable {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
 
-                        mViewHolder.mEventImage.setImageResource(R.drawable.create_back);
                         exception.printStackTrace();
                     }
                 });
 
                 if (!ConnectionHandler.isConnected(mContext)) {
 
-                    mViewHolder.mEventImage.setImageResource(R.drawable.create_back);
+                    ImageDownloadHandler.showDefaultImagesIfOffline(mEvent.getmCategory(), mViewHolder.mEventImage);
                 }
             }
 

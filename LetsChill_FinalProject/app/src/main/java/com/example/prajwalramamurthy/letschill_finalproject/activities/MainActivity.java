@@ -57,14 +57,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MainPageAdapter mTabAdapter;
     private TabItem mTabToday;
     private TabItem mTabUpcoming;
-    private TabItem mTabPast;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private DatabaseReference mDBReference;
     private final Handler mHandler = new Handler();
-    private ArrayList<Event> mTodayEvents;
-    private ArrayList<Event> mUpcomingEvents;
-    private ArrayList<Event> mPastEvents;
     private ArrayList<Event> mAllEvents;
     private ProgressBar mProgressBar;
     MenuItem searchMenuItem;

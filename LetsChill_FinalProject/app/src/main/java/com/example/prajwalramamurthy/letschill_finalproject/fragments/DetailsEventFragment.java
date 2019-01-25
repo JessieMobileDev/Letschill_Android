@@ -31,6 +31,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActiv
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -177,6 +178,12 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             exception.printStackTrace();
                         }
                     });
+
+                    // If there is no connection, display default images for the cards based on their categories
+                    if (!ConnectionHandler.isConnected(getContext())) {
+
+                        ImageDownloadHandler.showDefaultImagesIfOffline(mEvent.getmCategory(), imageView_background);
+                    }
                 }
 
                 // Assign data to each UI element and display
