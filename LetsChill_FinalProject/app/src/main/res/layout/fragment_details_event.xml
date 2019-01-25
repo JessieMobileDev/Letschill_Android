@@ -26,7 +26,7 @@
                 android:layout_marginTop="11dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_participants"
+                app:layout_constraintTop_toBottomOf="@+id/listView_detail_participants"
                 app:srcCompat="@drawable/ic_whatshot_gray_24dp" />
 
             <TextView
@@ -52,7 +52,7 @@
                 android:text="@string/category"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_participants" />
+                app:layout_constraintTop_toBottomOf="@+id/listView_detail_participants" />
 
             <ImageView
                 android:id="@+id/imageView6"
@@ -65,16 +65,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_description"
                 app:srcCompat="@drawable/ic_people_gray_24dp" />
 
-            <TextView
-                android:id="@+id/textView_detail_participants"
+            <ListView
+                android:id="@+id/listView_detail_participants"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/example_participants"
                 android:textColor="@color/text_almostBlack"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 

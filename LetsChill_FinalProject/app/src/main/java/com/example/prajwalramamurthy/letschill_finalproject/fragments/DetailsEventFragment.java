@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -21,17 +20,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
-import com.example.prajwalramamurthy.letschill_finalproject.activities.MainActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.JoinedPeopleAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,33 +47,26 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.json.JSONObject;
-
-import java.io.DataOutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-public class DetailsEventFragment extends Fragment implements View.OnClickListener
-{
+public class DetailsEventFragment extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
     // Variables
     private TextView textView_title, textView_dateTime, textView_location, textView_host,
             textView_description, textView_participants, textView_category, textView_pplJoined,
             textView_pplRsvp;
     private Button button_rsvp, button_leave, button_join, button_edit;
+    private ListView mListView_joinedPeople;
     private ImageView imageView_background;
     private DetailsEventInterface mDetailsEventInterface;
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
     private String mUid;
     private DatabaseReference mDBReference;
-    private ArrayList<String> mJoinedUsersNames = new ArrayList<>();
+    private ArrayList<User> mJoinedUsersNames = new ArrayList<>();
     private static final String CHANNEL_ID = "id";
     private static final String CHANNEL_NAME = "name";
     private static final String CHANNEL_DESC = "desc";
@@ -84,6 +78,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     public interface DetailsEventInterface {
 
         void closeDetailsEventActivity(Event mEvent);
+        void openUserDetailsProfileScreen(User user);
     }
 
     public static DetailsEventFragment newInstance(Event mEvent) {
@@ -128,7 +123,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             textView_location = getView().findViewById(R.id.textView_detail_location);
             textView_host = getView().findViewById(R.id.textView_detail_host);
             textView_description = getView().findViewById(R.id.textView_detail_description);
-            textView_participants = getView().findViewById(R.id.textView_detail_participants);
             textView_category = getView().findViewById(R.id.textView_detail_category);
 
             textView_pplJoined = getView().findViewById(R.id.textView_detail_pplJoined);
@@ -138,6 +132,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_join = getView().findViewById(R.id.button_detail_joinEvent);
             button_edit = getView().findViewById(R.id.button_detail_edit);
             imageView_background = getView().findViewById(R.id.imageView_details_eventImage);
+            mListView_joinedPeople = getView().findViewById(R.id.listView_detail_participants);
 
             // Set on click listeners
             button_edit.setOnClickListener(this);
@@ -145,6 +140,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             button_leave.setOnClickListener(this);
             button_rsvp.setOnClickListener(this);
             textView_location.setOnClickListener(this);
+            mListView_joinedPeople.setOnItemClickListener(this);
 
             button_leave.setVisibility(View.INVISIBLE);
             button_rsvp.setVisibility(View.INVISIBLE);
@@ -218,7 +214,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                                         if (user.getKey().equals(id)) {
 
-                                            mJoinedUsersNames.add(retrievedUser.getUsername());
+                                            mJoinedUsersNames.add(retrievedUser);
 
                                         }
                                     }
@@ -226,30 +222,38 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             }
                         }
 
-                        StringBuilder sb = new StringBuilder();
+                        if (getContext() != null) {
 
-                        if (mJoinedUsersNames.size() == 0) {
+                            // Set the joined users' name into the adapter on the list view
+                            JoinedPeopleAdapter mAdapter = new JoinedPeopleAdapter(getContext(), mJoinedUsersNames);
+                            mListView_joinedPeople.setAdapter(mAdapter);
 
-                            textView_participants.setText("Nobody yet, be the first one!");
-                        } else if (mJoinedUsersNames.size() == 1) {
-
-                            textView_participants.setText(mJoinedUsersNames.get(0));
-                        } else {
-
-                            for (int i = 0; i < mJoinedUsersNames.size(); i++) {
-
-                                if (i == mJoinedUsersNames.size() - 1) {
-
-                                    sb.append(mJoinedUsersNames.get(i));
-                                } else {
-
-                                    sb.append(mJoinedUsersNames.get(i)).append("\n");
-                                    Log.d("opa", "onActivityCreated: participants names: " + mJoinedUsersNames.get(i));
-                                }
-                            }
-                            textView_participants.setText(sb.toString());
-                            mJoinedUsersNames.clear();
                         }
+
+//                        StringBuilder sb = new StringBuilder();
+//
+//                        if (mJoinedUsersNames.size() == 0) {
+//
+//                            textView_participants.setText("Nobody yet, be the first one!");
+//                        } else if (mJoinedUsersNames.size() == 1) {
+//
+//                            textView_participants.setText(mJoinedUsersNames.get(0));
+//                        } else {
+//
+//                            for (int i = 0; i < mJoinedUsersNames.size(); i++) {
+//
+//                                if (i == mJoinedUsersNames.size() - 1) {
+//
+//                                    sb.append(mJoinedUsersNames.get(i));
+//                                } else {
+//
+//                                    sb.append(mJoinedUsersNames.get(i)).append("\n");
+//                                    Log.d("opa", "onActivityCreated: participants names: " + mJoinedUsersNames.get(i));
+//                                }
+//                            }
+//                            textView_participants.setText(sb.toString());
+//                            mJoinedUsersNames.clear();
+//                        }
                     }
 
                     @Override
@@ -265,6 +269,13 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             getCurrentSignedInUser();
         }
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        // Get the user object from the cell tapped on and pass to the profile details page
+        mDetailsEventInterface.openUserDetailsProfileScreen(mJoinedUsersNames.get(position));
     }
 
     private void getCurrentSignedInUser() {
