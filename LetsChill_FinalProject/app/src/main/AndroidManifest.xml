@@ -130,6 +130,11 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
+        <!-- Search Filter Activity -->
+        <activity android:name=".activities.SearchFilterActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+
         <!-- Meta-Data -->
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>

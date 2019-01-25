@@ -416,7 +416,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_returnSearch:
 
-                requestLocation();
+//                requestLocation();
+                Intent mFilterIntent = new Intent(this, SearchFilterActivity.class);
+                startActivity(mFilterIntent);
                 break;
         }
     }

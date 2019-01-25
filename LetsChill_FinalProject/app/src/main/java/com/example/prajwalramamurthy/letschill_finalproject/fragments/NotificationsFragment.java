@@ -42,26 +42,6 @@ public class NotificationsFragment extends Fragment
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        inflater.inflate(R.menu.menu_main, menu);
-//    }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        if (getContext() != null && getActivity() != null) {
-//
-//            MenuIntentHandler.getMenuIntents(item, getContext(), getActivity(), MenuIntentHandler.NOTIFICATIONS_ACTIVITY);
-//        }
-//
-//        return false;
-//
-//    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -72,11 +52,6 @@ public class NotificationsFragment extends Fragment
             switchEventChanged = getView().findViewById(R.id.switch_eventChanged);
             switchGuestJoined = getView().findViewById(R.id.switch_guestJoined);
             switchEventTimeNotify = getView().findViewById(R.id.switch_eventTimeNotify);
-
-
         }
-
     }
-
-
 }

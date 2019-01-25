@@ -171,12 +171,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private String getLoggedUserUid() {
-
-        // Retrieve the user UID
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
-
     @Override
     public void onClick(View view) {
 
