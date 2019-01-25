@@ -25,8 +25,13 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloa
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -40,6 +45,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ProfileInterface mProfileInterface;
     private User mRetrievedUser;
     private DatabaseReference mDBReference;
+    private FirebaseUser mFirebaseUser;
 
     // Constants
     private static final String ARG_LOGGED_USER = "ARG_LOGGED_USER";
@@ -156,8 +162,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 }
 
                 mTextView_interests.setText(sb.toString());
+
+                if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(mRetrievedUser.getUserID())) {
+
+                    mButton_edit.setVisibility(View.GONE);
+                }
             }
         }
+    }
+
+    private String getLoggedUserUid() {
+
+        // Retrieve the user UID
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @Override

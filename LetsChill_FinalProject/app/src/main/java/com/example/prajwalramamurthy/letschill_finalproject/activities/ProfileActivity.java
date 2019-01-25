@@ -24,6 +24,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
     private FirebaseUser mFirebaseUser;
     private String mUserUID;
     private DatabaseReference mDBReference;
+    private User mUser;
 
     // Constants
     public static final String INTENT_LOGGED_USER_OBJECT = "INTENT_LOGGED_USER_OBJECT";
@@ -34,8 +35,20 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
         setContentView(R.layout.activity_profile);
         setTitle("Profile");
 
-        // Grab the logged user info and pass into the fragment
-        requestLoggedUserInfo();
+        mUser = getIntent().getParcelableExtra(DetailsEventActivity.ARGS_USER_OBJECT);
+
+
+        if (mUser != null) {
+
+            // Instantiate the profile fragment and pass the user object to it
+            getSupportFragmentManager().beginTransaction().replace(R.id.profile_frame,
+                    ProfileFragment.newInstance(mUser)).commitAllowingStateLoss();
+
+        } else {
+
+            // Grab the logged user info and pass into the fragment
+            requestLoggedUserInfo();
+        }
     }
 
     private void requestLoggedUserInfo() {

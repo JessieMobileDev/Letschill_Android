@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.CreateEventFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.DetailsEventFragment;
 
@@ -14,6 +15,7 @@ public class DetailsEventActivity extends AppCompatActivity implements DetailsEv
 
     // Constants
     public static final String ARGS_INTENT_OBJECT = "ARGS_INTENT_OBJECT";
+    public static final String ARGS_USER_OBJECT = "ARGS_USER_OBJECT";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,5 +44,17 @@ public class DetailsEventActivity extends AppCompatActivity implements DetailsEv
 
         // Close this activity
         finish();
+    }
+
+    @Override
+    public void openUserDetailsProfileScreen(User user) {
+
+        // Open the profile screen and passes the user
+        Intent mUserProfileIntent = new Intent(this, ProfileActivity.class);
+        mUserProfileIntent.putExtra(ARGS_USER_OBJECT, user);
+        startActivity(mUserProfileIntent);
+
+        // Do not close this activity
+        // User has to be able to return to the event they were looking at
     }
 }
