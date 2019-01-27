@@ -31,6 +31,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.HelperMethods;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.JoinedPeopleAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
@@ -54,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class DetailsEventFragment extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
+
     // Variables
     private TextView textView_title, textView_dateTime, textView_location, textView_host,
             textView_description, textView_participants, textView_category, textView_pplJoined,
@@ -70,10 +72,10 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
     private static final String CHANNEL_ID = "id";
     private static final String CHANNEL_NAME = "name";
     private static final String CHANNEL_DESC = "desc";
+    private Event mEvent;
 
     // Constants
     private static final String ARGS_OBJECT = "ARGS_OBJECT";
-    private Event mEvent;
 
     public interface DetailsEventInterface {
 
@@ -194,9 +196,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 // TODO: missing the "participants"
                 // Get the event's joined users names
                 mDBReference = FirebaseDatabase.getInstance().getReference("Users");
-//
-//                // Clear the array list
-//                mJoinedUsersNames.clear();
 
                 // Loop through the users and find the ones that have joined the event
                 mDBReference.addValueEventListener(new ValueEventListener() {
@@ -229,31 +228,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                             mListView_joinedPeople.setAdapter(mAdapter);
 
                         }
-
-//                        StringBuilder sb = new StringBuilder();
-//
-//                        if (mJoinedUsersNames.size() == 0) {
-//
-//                            textView_participants.setText("Nobody yet, be the first one!");
-//                        } else if (mJoinedUsersNames.size() == 1) {
-//
-//                            textView_participants.setText(mJoinedUsersNames.get(0));
-//                        } else {
-//
-//                            for (int i = 0; i < mJoinedUsersNames.size(); i++) {
-//
-//                                if (i == mJoinedUsersNames.size() - 1) {
-//
-//                                    sb.append(mJoinedUsersNames.get(i));
-//                                } else {
-//
-//                                    sb.append(mJoinedUsersNames.get(i)).append("\n");
-//                                    Log.d("opa", "onActivityCreated: participants names: " + mJoinedUsersNames.get(i));
-//                                }
-//                            }
-//                            textView_participants.setText(sb.toString());
-//                            mJoinedUsersNames.clear();
-//                        }
                     }
 
                     @Override
@@ -261,7 +235,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                     }
                 });
-
             }
 
             // Check if the logged in user is the same as the event host
@@ -326,6 +299,31 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                                 button_rsvp.setVisibility(View.VISIBLE);
                                                 button_leave.setVisibility(View.VISIBLE);
 
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("eventsRsvp").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot rsvpEvent: dataSnapshot.getChildren()) {
+
+                                        if (rsvpEvent != null) {
+
+                                            String rsvpEventId = rsvpEvent.getValue(String.class);
+
+                                            if (mEvent.getmEventId().equals(rsvpEventId)) {
+
+                                                // If even id is equal to the user's rsvp'ed event id, display "cancel Rsvp" on the button
+                                                button_rsvp.setText("Cancel RSVP");
                                             }
                                         }
                                     }
@@ -421,9 +419,12 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+
                         if (dataSnapshot.exists()) {
+
                             Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
                         } else {
+
                             ref.child(user.getUid()).child("joinedEvents").push().setValue(mEvent.getmEventId());
                         }
                     }
@@ -485,9 +486,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                                     mDBReference.setValue(mEvent);
                                                 }
 
-                                                // send message
-                                                //sendPost();
-
                                             }
 
                                             @Override
@@ -530,58 +528,6 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         }
     }
 
-//    public void sendPost() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    URL url = new URL("https://fcm.googleapis.com/v1/projects/letschill_finalproject/messages:send HTTP/1.1");
-//                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                    conn.setRequestMethod("POST");
-//                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-//                    conn.setRequestProperty("Accept","application/json");
-//                    conn.setDoOutput(true);
-//                    conn.setDoInput(true);
-//
-//                    String message = "{\n" +
-//                            "  \"message\":{\n" +
-//                            "    \"topic\" : \"user\",\n" +
-//                            "    \"notification\" : {\n" +
-//                            "      \"body\" : \"This is a Firebase Cloud Messaging Topic Message!\",\n" +
-//                            "      \"title\" : \"FCM Message\"\n" +
-//                            "      }\n" +
-//                            "   }\n" +
-//                            "}";
-//
-////                    jsonParam.put("timestamp", 1488873360);
-////                    jsonParam.put("uname", message.getUser());
-////                    jsonParam.put("message", message.getMessage());
-////                    jsonParam.put("latitude", 0D);
-////                    jsonParam.put("longitude", 0D);
-//
-//
-//
-//                    Log.i("JSON", message);
-//                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-//                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-//                    os.writeBytes(message);
-//
-//                    os.flush();
-//                    os.close();
-//
-//                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-//                    Log.i("MSG" , conn.getResponseMessage());
-//
-//                    conn.disconnect();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        thread.start();
-//    }
-
     private void leaveButtonClick()
     {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -605,41 +551,114 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-
-                //Toast.makeText(getContext(),"You clicked no button",Toast.LENGTH_LONG).show();
             }
         });
 
         alertDialogBuilder.show();
-
-//        AlertDialog alertDialog = alertDialogBuilder.create();
-//        alertDialog.show();
-
-
     }
 
-    private void rsvpButtonClick()
-    {
+    private void rsvpButtonClick() {
+
         // Note: this method is being called inside the "joinButtonClick()". I'm recycling the buttons
         // instead of having a bunch of buttons on the layout. It's all connected and working. Just do
         // the rsvp functionality in this method and it will work.
 
-        Toast.makeText(getContext(), "Thank You for the event RSVP", Toast.LENGTH_LONG).show();
-
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        HashMap<String,String> notification = new HashMap<>();
+        final String userUid = user.getUid();
 
-        notification.put("from", user.getUid());
-        notification.put("to", mEvent.getmHost_uid());
-        notification.put("type", "rsvp");
+        if (button_rsvp.getText().equals("RSVP")) {
 
-        FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+            Toast.makeText(getContext(), "Thank You for the event RSVP", Toast.LENGTH_LONG).show();
+
+            // Notify the host that someone has just rsvp'ed to the event
+            HashMap<String,String> notification = new HashMap<>();
+
+            notification.put("from", user.getUid());
+            notification.put("to", mEvent.getmHost_uid());
+            notification.put("type", "rsvp");
+
+            // Save the notification uid in the database
+            FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+
+            // Save the current logged user uid into the event's rsvp'ed node
+            if (!userUid.isEmpty()) {
 
 
+                mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
+                        .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
+                        .child(mEvent.getmEventId()).child("usersRsvp");
+                mDBReference.push().setValue(userUid);
+
+                // Save the event uid to the user's rsvp'ed node
+                mDBReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp");
+                mDBReference.push().setValue(mEvent.getmEventId());
+
+                // Change the rsvp button title to "cancel RSVP"
+                button_rsvp.setText("Cancel RSVP");
+
+            }
+
+        } else if (button_rsvp.getText().equals("Cancel RSVP")) {
+
+            // Remove the user id from the event node "usersRsvp"
+            mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
+                    .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
+                    .child(mEvent.getmEventId()).child("usersRsvp");
+
+            mDBReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot userId: dataSnapshot.getChildren()) {
+
+                        String userIdRsvp = userId.getValue(String.class);
+
+                        if (userIdRsvp != null && userIdRsvp.equals(userUid)) {
+
+                            Log.d("userId", "onDataChange: user id: " + userUid);
+
+                            mDBReference.child(userId.getKey()).removeValue();
+                            Toast.makeText(getContext(), "Removed User RSVP", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    Log.d("userId", "rsvpButtonClick: event id: " + mEvent.getmEventId() + " event month: " +
+                            HelperMethods.getCurrentMonth(mEvent.getmEventDate()) + " event date: " + mEvent.getmEventDate());
+                }
+            });
+
+            // Remove the event id from the events rsvp node "eventsRsvp"
+            mDBReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp");
+            mDBReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot eventId: dataSnapshot.getChildren()) {
+
+                        String eventIdRsvp = eventId.getValue(String.class);
+
+                        if (eventIdRsvp != null && eventIdRsvp.equals(mEvent.getmEventId())) {
+
+                            mDBReference.child(eventId.getKey()).removeValue();
+//                            Toast.makeText(getContext(), "Removed Event RSVP", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
-    private void openMapOnClick()
-    {
+    private void openMapOnClick() {
 
         String query = "geo:0,0?q=" + mEvent.getmEventLocation();
         Uri gmmIntentUri = Uri.parse(query);

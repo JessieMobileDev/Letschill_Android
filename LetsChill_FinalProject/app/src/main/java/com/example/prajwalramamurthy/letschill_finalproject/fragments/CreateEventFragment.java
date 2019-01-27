@@ -412,10 +412,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                                 || Integer.valueOf(mParticipants.getText().toString()) != 1
                                 || Integer.valueOf(mParticipants.getText().toString()) < 1000) {
 
-//                        if (!mParticipants.getText().toString().equals("0") &&
-//                                !mParticipants.getText().toString().equals("1") &&
-//                                mParticipants.getText().toString().equals("1001")) {
-
+//
                             // Disable save button
                             mButton_saveButton.setEnabled(false);
 
