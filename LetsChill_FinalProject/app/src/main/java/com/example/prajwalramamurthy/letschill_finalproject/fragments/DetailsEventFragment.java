@@ -601,11 +601,9 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
         } else if (button_rsvp.getText().equals("Cancel RSVP")) {
 
             // Remove the user id from the event node "usersRsvp"
-            mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
+            FirebaseDatabase.getInstance().getReference().child("Events")
                     .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
-                    .child(mEvent.getmEventId()).child("usersRsvp");
-
-            mDBReference.addValueEventListener(new ValueEventListener() {
+                    .child(mEvent.getmEventId()).child("usersRsvp").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -617,8 +615,12 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                             Log.d("userId", "onDataChange: user id: " + userUid);
 
-                            mDBReference.child(userId.getKey()).removeValue();
+                            FirebaseDatabase.getInstance().getReference().child("Events")
+                                    .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
+                                    .child(mEvent.getmEventId()).child("usersRsvp").child(userId.getKey()).removeValue();
                             Toast.makeText(getContext(), "Removed User RSVP", Toast.LENGTH_SHORT).show();
+
+                            button_rsvp.setText("RSVP");
                         }
                     }
                 }
@@ -645,6 +647,8 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                             mDBReference.child(eventId.getKey()).removeValue();
 //                            Toast.makeText(getContext(), "Removed Event RSVP", Toast.LENGTH_SHORT).show();
+
+                            button_rsvp.setText("RSVP");
 
                         }
                     }
