@@ -55,6 +55,52 @@ public class FormValidation {
         return isValid;
     }
 
+    public static boolean doesPasswordContainSymbols(String pw) {
+
+        Boolean isValid = true;
+        Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+
+        if (specialCharPatten.matcher(pw).find()) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    public static boolean doesPasswordContainNumbers(String pw) {
+
+        Boolean isValid = true;
+        Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+
+        if (!digitCasePatten.matcher(pw).find()) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    public static boolean isPassword8CharsLong(String pw) {
+
+        Boolean isValid = true;
+
+        if (pw.length() < 8) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    public static boolean doesPasswordHaveUppercasedLetter(String pw) {
+
+        Boolean isValid = true;
+        Pattern upperCasePatten = Pattern.compile("[A-Z ]");
+
+        if (!upperCasePatten.matcher(pw).find()) {
+            isValid = false;
+        }
+        return isValid;
+    }
+
     public static boolean isEmailValid(String email) {
         boolean result = true;
         try {

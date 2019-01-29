@@ -22,18 +22,19 @@
         style="@style/button_orange_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/button_signUp"
         app:layout_constraintEnd_toEndOf="@+id/editText_repeatPassword_signup"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/editText_repeatPassword_signup"
-        app:layout_constraintTop_toBottomOf="@+id/editText_repeatPassword_signup" />
+        app:layout_constraintTop_toBottomOf="@+id/background_pw_hints" />
 
     <EditText
         android:id="@+id/editText_email_signup"
         style="@style/editText_signIn_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:drawableStart="@drawable/edittext_icon_email"
         android:ems="10"
         android:hint="@string/editText_emailHint"
@@ -47,7 +48,7 @@
         style="@style/editText_signIn_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:drawableStart="@drawable/edittext_icon_password"
         android:ems="10"
         android:hint="@string/editText_passwordHint"
@@ -61,7 +62,7 @@
         style="@style/editText_signIn_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:drawableStart="@drawable/edittext_icon_password"
         android:ems="10"
         android:hint="@string/editText_repeatPassword"
@@ -72,19 +73,19 @@
 
     <EditText
         android:id="@+id/editText_username_signup"
+        style="@style/editText_signIn_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="150dp"
         android:layout_marginEnd="50dp"
+        android:drawableStart="@drawable/edittext_icon_person"
         android:ems="10"
+        android:hint="@string/editText_usernameHint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        android:hint="@string/editText_usernameHint"
-        style="@style/editText_signIn_style"
-        android:drawableStart="@drawable/edittext_icon_person" />
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <ProgressBar
         android:id="@+id/progressBar_signup"
@@ -96,5 +97,115 @@
         app:layout_constraintEnd_toEndOf="@+id/button_signup"
         app:layout_constraintStart_toStartOf="@+id/button_signup"
         app:layout_constraintTop_toTopOf="@+id/editText_username_signup" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/background_pw_hints"
+        android:layout_width="0dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/password_background_hint"
+        app:layout_constraintEnd_toEndOf="@+id/editText_repeatPassword_signup"
+        app:layout_constraintStart_toStartOf="@+id/editText_repeatPassword_signup"
+        app:layout_constraintTop_toBottomOf="@+id/editText_repeatPassword_signup">
+
+        <TextView
+            android:id="@+id/textView_pwHint_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:text="Your password must contain:"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_first_character"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:text="At least 8 characters"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_pwHint_title"
+            app:layout_constraintStart_toEndOf="@+id/imageView_first_character"
+            app:layout_constraintTop_toTopOf="@+id/imageView_first_character" />
+
+        <ImageView
+            android:id="@+id/imageView_first_character"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@+id/textView_pwHint_title"
+            app:layout_constraintTop_toBottomOf="@+id/textView_pwHint_title"
+            app:srcCompat="@drawable/ic_check_green_24dp" />
+
+        <ImageView
+            android:id="@+id/imageView_second_letter"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView_first_character"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_first_character"
+            app:srcCompat="@drawable/ic_check_green_24dp" />
+
+        <TextView
+            android:id="@+id/textView_second_letter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:text="At least 1 uppercased letter"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_pwHint_title"
+            app:layout_constraintStart_toEndOf="@+id/imageView_second_letter"
+            app:layout_constraintTop_toTopOf="@+id/imageView_second_letter" />
+
+        <ImageView
+            android:id="@+id/imageView_third_number"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView_second_letter"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_second_letter"
+            app:srcCompat="@drawable/ic_check_green_24dp" />
+
+        <TextView
+            android:id="@+id/textView_third_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:text="At least 1 number"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_second_letter"
+            app:layout_constraintStart_toEndOf="@+id/imageView_third_number"
+            app:layout_constraintTop_toTopOf="@+id/imageView_third_number" />
+
+        <ImageView
+            android:id="@+id/imageView_fourth_special"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView_third_number"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_third_number"
+            app:srcCompat="@drawable/ic_check_green_24dp" />
+
+        <TextView
+            android:id="@+id/textView_fourth_special"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            android:text="NO symbols"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_second_letter"
+            app:layout_constraintStart_toEndOf="@+id/imageView_fourth_special"
+            app:layout_constraintTop_toTopOf="@+id/imageView_fourth_special" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
