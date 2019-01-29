@@ -74,6 +74,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private static final String ARG_LOGGED_USER = "ARG_LOGGED_USER";
     private static final String ARG_ALL_TYPED_DATA = "ARG_ALL_TYPED_DATA";
     private static final String ARG_INTERESTS = "ARG_INTERESTS";
+    private static final String ARG_FB_IMAGE = "ARG_FB_IMAGE";
     private static final String ERROR_EMPTY_FIELDS = "Do not leave this field empty";
     private static final String CROP_EXTRA = "crop";
     private static final String CROP_OUTPUTX = "outputX";
@@ -104,6 +105,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         args.putParcelable(ARG_LOGGED_USER, loggedUser);
         args.putBundle(ARG_ALL_TYPED_DATA, allTypedData);
         args.putStringArrayList(ARG_INTERESTS, newInterests);
+//        args.putParcelable(ARG_FB_IMAGE, fbProfileImage);
 
         EditProfileFragment fragment = new EditProfileFragment();
         fragment.setArguments(args);
@@ -272,6 +274,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
                 // Check if photo contains facebook in it, if so, download the image to display
                 if (retrievedUser.getProfilePhoto().contains("https")) {
 
+//                    mImageView_profilePicture.setImageBitmap((Bitmap) getArguments().getParcelable(ARG_FB_IMAGE));
                     mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
                             .downloadFacebookImageToBitmap(retrievedUser.getProfilePhoto()));
                 } else {
@@ -328,6 +331,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                     if (photoPath.contains("https")) {
 
+//                        mImageView_profilePicture.setImageBitmap((Bitmap) getArguments().getParcelable(ARG_FB_IMAGE));
                         mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
                                 .downloadFacebookImageToBitmap(photoPath));
                     } else {

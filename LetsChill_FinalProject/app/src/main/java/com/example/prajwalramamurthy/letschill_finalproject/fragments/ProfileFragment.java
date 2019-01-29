@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.prajwalramamurthy.letschill_finalproject.R;
+import com.example.prajwalramamurthy.letschill_finalproject.activities.ProfileActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
@@ -49,17 +50,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     // Constants
     private static final String ARG_LOGGED_USER = "ARG_LOGGED_USER";
+    public static final String ARG_PROFILE_IMAGE = "ARG_PROFILE_IMAGE";
     private static final String TAG = "tag";
 
     public interface ProfileInterface {
 
-        void openProfileEditActivity(User user);
+        void openProfileEditActivity(User user, Bitmap fbImage);
     }
 
-    public static ProfileFragment newInstance(User loggedUser) {
+    public static ProfileFragment newInstance(User loggedUser, Bitmap profileImage) {
 
         Bundle args = new Bundle();
         args.putParcelable(ARG_LOGGED_USER, loggedUser);
+        args.putParcelable(ARG_PROFILE_IMAGE, profileImage);
 
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
@@ -136,8 +139,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 // Check if photo contains facebook in it, if so, download the image to display
                 if (mRetrievedUser.getProfilePhoto().contains("https")) {
 
-                    mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
-                            .downloadFacebookImageToBitmap(mRetrievedUser.getProfilePhoto()));
+                    // Retrieve the image passed to this fragment
+                    Bitmap profileImage = getArguments().getParcelable(ARG_PROFILE_IMAGE);
+
+                    if (profileImage != null) {
+
+                        mImageView_profilePicture.setImageBitmap(profileImage);
+                    }
+//                    mImageView_profilePicture.setImageBitmap(ImageDownloadHandler
+//                            .downloadFacebookImageToBitmap(mRetrievedUser.getProfilePhoto()));
                 } else {
 
                     if (mRetrievedUser.getProfilePhoto().contains("IDImages")) {
@@ -181,7 +191,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 if (mRetrievedUser != null) {
 
                     // Open the "EditProfile" and pass the current event object to it
-                    mProfileInterface.openProfileEditActivity(mRetrievedUser);
+                    mProfileInterface.openProfileEditActivity(mRetrievedUser, (Bitmap) getArguments().getParcelable(ARG_PROFILE_IMAGE));
                 }
 
                 break;

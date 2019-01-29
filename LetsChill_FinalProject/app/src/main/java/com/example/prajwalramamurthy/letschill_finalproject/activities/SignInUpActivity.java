@@ -157,8 +157,6 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
         // Swap the ForgotPasswordFragment for the SignInFragment
         getSupportFragmentManager().beginTransaction().addToBackStack(null).add(R.id.signin_frame, SignInFragment.newInstance()).commit();
 
-        // Close this activity
-        finish();
     }
 
     @Override
@@ -241,16 +239,14 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
 
-
+                            // Move to Interests screen
+                            moveToInterestsFromSignIn();
                         }
                     });
 
-                    // Move to Interests screen
-                    moveToInterestsFromSignIn();
 
-                }
-                else
-                {
+
+                } else {
                     Toast.makeText(SignInUpActivity.this, R.string.facebook_toast_fail,
                             Toast.LENGTH_SHORT).show();
                     //moveToInterestsFromSignIn();

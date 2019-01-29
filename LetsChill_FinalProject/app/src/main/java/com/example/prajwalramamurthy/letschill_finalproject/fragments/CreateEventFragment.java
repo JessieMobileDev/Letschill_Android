@@ -194,6 +194,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             mEditText_TimeEnd.setOnClickListener(this);
             mButton_saveButton.setOnClickListener(this);
             mButton_mapButton.setOnClickListener(this);
+            mLocation.setOnClickListener(this);
 
             // Instantiate the SharedPreferences
             mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -728,6 +729,14 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
                     openMap();
 
                 }
+                break;
+            case R.id.editText_create_location:
+
+                if (ConnectionHandler.isConnected(getContext())) {
+                    // If map button is tapped
+                    openMap();
+                }
+
                 break;
         }
     }

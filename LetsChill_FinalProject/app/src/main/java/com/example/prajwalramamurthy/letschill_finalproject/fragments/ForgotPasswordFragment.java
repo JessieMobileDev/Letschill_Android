@@ -129,7 +129,6 @@ public class ForgotPasswordFragment extends Fragment implements View.OnClickList
 
                             // The email does not exist in the database. Display the exception error message
                             Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 });

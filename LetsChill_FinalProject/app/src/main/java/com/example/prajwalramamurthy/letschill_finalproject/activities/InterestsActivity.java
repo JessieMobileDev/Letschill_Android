@@ -41,6 +41,10 @@ public class InterestsActivity extends AppCompatActivity implements InterestsFra
                 getFragmentManager().beginTransaction().replace(R.id.interests_frame, InterestsFragment.newInstance(loggedUser,
                         1, allTypedData)).commit();
             }
+        } else {
+
+            getFragmentManager().beginTransaction().replace(R.id.interests_frame, InterestsFragment.newInstance(null,
+                    3, null)).commit();
         }
     }
 

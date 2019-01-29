@@ -20,10 +20,10 @@
 
             <ImageView
                 android:id="@+id/imageView7"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/listView_detail_participants"
@@ -34,6 +34,7 @@
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/example_dateTime"
                 android:textColor="@color/text_almostBlack"
@@ -45,21 +46,21 @@
             <TextView
                 android:id="@+id/textView21"
                 style="@style/createEvent_editText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="@string/category"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView_detail_description"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/listView_detail_participants" />
+                app:layout_constraintTop_toTopOf="@+id/imageView7" />
 
             <ImageView
                 android:id="@+id/imageView6"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_description"
@@ -70,57 +71,57 @@
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:layout_marginEnd="16dp"
-                android:textColor="@color/text_almostBlack"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
                 android:divider="@null"
                 android:dividerHeight="0dp"
+                android:textColor="@color/text_almostBlack"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
             <TextView
                 android:id="@+id/textView19"
                 style="@style/createEvent_editText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="@string/participants"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_description" />
+                app:layout_constraintTop_toTopOf="@+id/imageView6" />
 
             <TextView
                 android:id="@+id/textView16"
                 style="@style/createEvent_editText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="@string/description"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_host" />
+                app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
             <TextView
                 android:id="@+id/textView_detail_description"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/example_description"
                 android:textColor="@color/text_almostBlack"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_host"
@@ -128,10 +129,10 @@
 
             <ImageView
                 android:id="@+id/imageView4"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_location"
@@ -140,25 +141,25 @@
             <TextView
                 android:id="@+id/textView14"
                 style="@style/createEvent_editText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="@string/host"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_location" />
+                app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
             <TextView
                 android:id="@+id/textView_detail_host"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/example_host"
                 android:textColor="@color/text_almostBlack"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
@@ -166,8 +167,8 @@
                 android:id="@+id/textView_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/roboto_regular"
                 android:text="@string/example_title"
@@ -181,14 +182,14 @@
             <ImageView
                 android:id="@+id/imageView_details_eventImage"
                 android:layout_width="match_parent"
-                android:layout_height="186dp"
+                android:layout_height="220dp"
+                android:contentDescription="@string/none"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/create_back"
-                android:contentDescription="@string/none"/>
+                app:srcCompat="@drawable/create_back" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -231,10 +232,10 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="24dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_title"
@@ -242,10 +243,10 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:contentDescription="@string/none"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_detail_dateTime"
@@ -254,51 +255,53 @@
             <TextView
                 android:id="@+id/textView9"
                 style="@style/createEvent_editText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
                 android:text="@string/date_and_time"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_title" />
+                app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
             <TextView
                 android:id="@+id/textView12"
                 style="@style/createEvent_editText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
                 android:text="@string/location"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_detail_dateTime" />
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
             <TextView
                 android:id="@+id/textView_detail_dateTime"
                 style="@style/createEvent_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/example_dateTime"
                 android:textColor="@color/text_almostBlack"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView9"
                 app:layout_constraintStart_toStartOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <TextView
                 android:id="@+id/textView_detail_location"
                 style="@style/createEvent_editText"
-                android:layout_width="0dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/example_location"
+                android:textAlignment="textStart"
                 android:textColor="@android:color/holo_blue_light"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView9"
+                app:layout_constraintEnd_toEndOf="@+id/textView12"
+                app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
             <Button
@@ -306,7 +309,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="24dp"
                 android:background="@android:color/holo_green_dark"
@@ -327,7 +330,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="24dp"
                 android:text="@string/leave"
@@ -342,7 +345,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="24dp"
                 android:text="@string/rsvp"
