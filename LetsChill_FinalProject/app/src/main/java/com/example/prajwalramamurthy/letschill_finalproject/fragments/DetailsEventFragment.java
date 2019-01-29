@@ -35,8 +35,10 @@ import com.example.prajwalramamurthy.letschill_finalproject.utility.HelperMethod
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.JoinedPeopleAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -323,7 +325,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                             if (mEvent.getmEventId().equals(rsvpEventId)) {
 
                                                 // If even id is equal to the user's rsvp'ed event id, display "cancel Rsvp" on the button
-//                                                button_rsvp.setText("Cancel RSVP");
+                                                button_rsvp.setText("Cancel RSVP");
                                             }
                                         }
                                     }
@@ -587,11 +589,11 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                 mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
                         .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
                         .child(mEvent.getmEventId()).child("usersRsvp");
-                mDBReference.push().setValue(userUid);
+                mDBReference.child(userUid).setValue(userUid);
 
                 // Save the event uid to the user's rsvp'ed node
                 mDBReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp");
-                mDBReference.push().setValue(mEvent.getmEventId());
+                mDBReference.child(mEvent.getmEventId()).setValue(mEvent.getmEventId());
 
                 // Change the rsvp button title to "cancel RSVP"
                 button_rsvp.setText("Cancel RSVP");
@@ -600,101 +602,26 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
         } else if (button_rsvp.getText().equals("Cancel RSVP")) {
 
-            // Remove the user id from the event node "usersRsvp"
-            mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
+
+            // TESTING
+            FirebaseDatabase.getInstance().getReference().child("Events")
                     .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
-                    .child(mEvent.getmEventId()).child("usersRsvp");
-            mDBReference.addValueEventListener(new ValueEventListener() {
+                    .child(mEvent.getmEventId()).child("usersRsvp").child(userUid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onComplete(@NonNull Task<Void> task) {
 
-                    for (DataSnapshot userId: dataSnapshot.getChildren()) {
-
-                        String userIdRsvp = userId.getValue(String.class);
-
-                        if (userIdRsvp != null && userIdRsvp.equals(userUid)) {
-
-                            Log.d("userId", "onDataChange: user id: " + userUid);
-
-                            mDBReference.child(userId.getKey()).removeValue();
-
-                            FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp")
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                            for (DataSnapshot eventId: dataSnapshot.getChildren()) {
-
-                                                String eventIdRsvp = eventId.getValue(String.class);
-
-                                                if (eventIdRsvp != null && eventIdRsvp.equals(mEvent.getmEventId())) {
-
-//                                                    mDBReference.child(eventId.getKey()).removeValue();
-                                                    FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp")
-                                                            .child(eventId.getKey()).removeValue();
-//                            Toast.makeText(getContext(), "Removed Event RSVP", Toast.LENGTH_SHORT).show();
-
-                                                    button_rsvp.setText("RSVP");
-
-                                                }
-                                            }
-
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-
-
-
-
-
-
-//                            Toast.makeText(getContext(), "Removed User RSVP", Toast.LENGTH_SHORT).show();
-//
-//                            button_rsvp.setText("RSVP");
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    Log.d("userId", "rsvpButtonClick: event id: " + mEvent.getmEventId() + " event month: " +
-                            HelperMethods.getCurrentMonth(mEvent.getmEventDate()) + " event date: " + mEvent.getmEventDate());
+                    button_rsvp.setText("RSVP");
                 }
             });
 
-//            // Remove the event id from the events rsvp node "eventsRsvp"
-//            mDBReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp");
-//            mDBReference.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                    for (DataSnapshot eventId: dataSnapshot.getChildren()) {
-//
-//                        String eventIdRsvp = eventId.getValue(String.class);
-//
-//                        if (eventIdRsvp != null && eventIdRsvp.equals(mEvent.getmEventId())) {
-//
-//                            mDBReference.child(eventId.getKey()).removeValue();
-////                            Toast.makeText(getContext(), "Removed Event RSVP", Toast.LENGTH_SHORT).show();
-//
-//                            button_rsvp.setText("RSVP");
-//
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
+            FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp")
+                    .child(mEvent.getmEventId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+
+                    button_rsvp.setText("RSVP");
+                }
+            });
         }
     }
 
