@@ -17,7 +17,7 @@ public class User implements Parcelable {
     private String device_token;
     private String facebookEmail;
     private ArrayList<String> interests = new ArrayList<>();
-//    private ArrayList<String> joinedEvents = new ArrayList<>();
+    private ArrayList<String> joinedEvents = new ArrayList<>();
 
     // Constructor
     public User(String userID, String fullName, String username, String email, String phone,
@@ -27,7 +27,7 @@ public class User implements Parcelable {
 
     // Constructor
     public User(String userID, String fullName, String username, String email, String phone,
-                String facebookEmail, String profilePhoto, String device_token) {
+                String facebookEmail, String profilePhoto, String device_token, ArrayList<String> joinedEvents) {
         this.userID = userID;
         this.fullName = fullName;
         this.username = username;
@@ -36,6 +36,7 @@ public class User implements Parcelable {
         this.facebookEmail = facebookEmail;
         this.profilePhoto = profilePhoto;
         this.device_token = device_token;
+        this.joinedEvents = joinedEvents;
     }
 
     // Constructor
@@ -49,7 +50,7 @@ public class User implements Parcelable {
 
     // Constructor
     public User(String userID, String profilePhoto, String fullName, String username, String email, String phone,
-                String device_token, String facebookEmail, ArrayList<String> interests) {
+                String device_token, String facebookEmail, ArrayList<String> interests, ArrayList<String> joinedEvents) {
         this.userID = userID;
         this.profilePhoto = profilePhoto;
         this.fullName = fullName;
@@ -59,7 +60,7 @@ public class User implements Parcelable {
         this.device_token = device_token;
         this.facebookEmail = facebookEmail;
         this.interests = interests;
-//        this.joinedEvents = joinedEvents;
+        this.joinedEvents = joinedEvents;
     }
 
 
@@ -78,7 +79,7 @@ public class User implements Parcelable {
         phone = in.readString();
         facebookEmail = in.readString();
         interests = in.createStringArrayList();
-//        joinedEvents = in.createStringArrayList();
+        joinedEvents = in.createStringArrayList();
         device_token = in.readString();
     }
 
@@ -93,7 +94,7 @@ public class User implements Parcelable {
         dest.writeString(facebookEmail);
         dest.writeStringList(interests);
         dest.writeString(device_token);
-//        dest.writeStringList(joinedEvents);
+        dest.writeStringList(joinedEvents);
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -154,9 +155,9 @@ public class User implements Parcelable {
         this.device_token = device_token;
     }
 
-    //    public ArrayList<String> getJoinedEvents() {
-//        return joinedEvents;
-//    }
+        public ArrayList<String> getJoinedEvents() {
+        return joinedEvents;
+    }
 
 
 

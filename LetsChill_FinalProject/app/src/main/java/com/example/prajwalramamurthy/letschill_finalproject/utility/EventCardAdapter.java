@@ -174,19 +174,19 @@ public class EventCardAdapter extends BaseAdapter {
             mViewHolder.mEventTime.setText(dateString + ", from " + mEvent.getmEventTimeStart() + " to " + mEvent.getmEventTimeFinish());
             mViewHolder.mEventLocation.setText(mEvent.getmEventLocation());
 
-            if (mEvent.getmJoinedPeopleIds() != null) {
+//            if (mEvent.getmJoinedPeopleIds() != null) {
                 if (mEvent.getmJoinedPeopleIds().size() != 0) {
 
                     mViewHolder.mJoinedPeople.setText(String.valueOf(mEvent.getmJoinedPeopleIds().size()) + "/" + mEvent.getmParticipants() + " joined");
                     Log.d("test", "getView: it's not null and it's not zero");
-                } else {
+                } else if (mEvent.getmJoinedPeopleIds() == null || mEvent.getmJoinedPeopleIds().size() == 0) {
                     mViewHolder.mJoinedPeople.setText("0/" + mEvent.getmParticipants());
                     Log.d("test", "getView: it's not null and it's zero");
                 }
-            } else {
-
-                Log.d("test", "getView: joined array is null");
-            }
+//            } else {
+//
+//                Log.d("test", "getView: joined array is null");
+//            }
 
             if (ConnectionHandler.isConnected(mContext)) {
                 mViewHolder.mEventLocation.setOnClickListener(new View.OnClickListener() {

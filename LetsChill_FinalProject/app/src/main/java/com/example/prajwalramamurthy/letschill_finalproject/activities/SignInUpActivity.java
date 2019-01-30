@@ -231,7 +231,7 @@ public class SignInUpActivity extends AppCompatActivity implements SignInFragmen
 
 
                     User createdUser = new User(user.getUid(), user.getDisplayName(), user.getDisplayName(), "N/A",
-                            "N/A", facebookEmail, facebookPicture,token);
+                            "N/A", facebookEmail, facebookPicture,token, null);
 
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(user.getUid())
