@@ -258,58 +258,5 @@ public class DatabaseEventIntentService extends IntentService {
                 }
             });
         }
-
-        // Reference to an image file in Cloud Storage
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-
-
-
-        if (mRequestDeleteID == 2) {
-
-            // Retrieve the event passed through the intent
-            final Event mEvent = intent.getParcelableExtra(EditEventFragment.ARGS_OBJECT);
-
-            if (mEvent != null) {
-
-                // Loop through the events and look for the same to change the variable isDeleted to true
-                mDBReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        for (DataSnapshot event: dataSnapshot.getChildren()) {
-
-                            Event mRetrievedEvent = event.getValue(Event.class);
-
-                            if (mRetrievedEvent != null) {
-
-                                if (mRetrievedEvent.getmEventId().equals(mEvent.getmEventId())) {
-
-                                    // If Ids are a match, change the variable isDeleted to true
-//                                    Event mChangedEvent = new Event(mRetrievedEvent.getmEventId(), mRetrievedEvent.getmEventName(),
-//                                            mRetrievedEvent.getmEventLocation(), mRetrievedEvent.getmEventDate(), mRetrievedEvent.getmEventTimeStart(),
-//                                            mRetrievedEvent.getmEventTimeFinish(), mRetrievedEvent.getmDescription(), mRetrievedEvent.getmParticipants(),
-//                                            mRetrievedEvent.getmCategory(), mRetrievedEvent.getmHost(), mRetrievedEvent.ismIsRecurringEvent(),
-//                                            mRetrievedEvent.ismPublicOrPrivate(), mRetrievedEvent.getmUrl(), true);
-
-                                    // Get the reference in the database using the event ID
-                                    mDBReference = FirebaseDatabase.getInstance().getReference("Events").child(mRetrievedEvent.getmEventId());
-
-                                    // Save the changed event back to the database
-//                                    mDBReference.setValue(mChangedEvent);
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                // Send an ok to the EditEventFragment
-                mReceiver.send(Activity.RESULT_OK, null);
-            }
-        }
     }
 }

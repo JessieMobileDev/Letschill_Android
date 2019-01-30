@@ -189,6 +189,10 @@ public class Event implements Parcelable
         this.mJoinedPeopleIds = mJoinedPeopleIds;
     }
 
+    public void setmIsDeleted(boolean mIsDeleted) {
+        this.mIsDeleted = mIsDeleted;
+    }
+
     @Override
     public int describeContents() {
         return 0;

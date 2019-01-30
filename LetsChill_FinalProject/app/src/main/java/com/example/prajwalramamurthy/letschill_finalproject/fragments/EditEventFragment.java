@@ -40,6 +40,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.AddressValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.HelperMethods;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -355,14 +356,24 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if (mEvent != null) {
+                        // Set the variable mIsDeleted to true in the database
+                        FirebaseDatabase.getInstance().getReference("Events")
+                                .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate()))
+                                .child(mEvent.getmEventDate()).child(mEvent.getmEventId())
+                                .child("mIsDeleted").setValue(true).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
 
-                            Intent mChangeVariableIntent = new Intent(getContext(), DatabaseEventIntentService.class);
-                            mChangeVariableIntent.putExtra(DatabaseEventIntentService.EXTRA_RESULT_RECEIVER, new DatabaseEventDataReceiver());
-                            mChangeVariableIntent.putExtra(EXTRA_DB_DELETE_ID, 2);
-                            mChangeVariableIntent.putExtra(ARGS_OBJECT, mEvent);
-                            getContext().startService(mChangeVariableIntent);
-                        }
+                                if (getContext() != null) {
+
+                                    // Display a toast
+                                    Toast.makeText(getContext(), "Event deleted", Toast.LENGTH_SHORT).show();
+
+                                    // Close the edit screen and the details page
+                                    mEditEventInterface.closeEditEventActivity();
+                                }
+                            }
+                        });
                     }
                 });
                 mDeleteAlert.create().show();
