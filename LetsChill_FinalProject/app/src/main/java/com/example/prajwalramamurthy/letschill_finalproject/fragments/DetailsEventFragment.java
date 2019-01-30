@@ -128,7 +128,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
             textView_category = getView().findViewById(R.id.textView_detail_category);
 
             textView_pplJoined = getView().findViewById(R.id.textView_detail_pplJoined);
-            textView_pplRsvp = getView().findViewById(R.id.textView_detail_rsvp);
+//            textView_pplRsvp = getView().findViewById(R.id.textView_detail_rsvp);
             button_rsvp = getView().findViewById(R.id.button_detail_rsvp);
             button_leave = getView().findViewById(R.id.button_detail_leave);
             button_join = getView().findViewById(R.id.button_detail_joinEvent);
@@ -150,6 +150,40 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
             // Retrieve the custom object selected from the list
             mEvent = getArguments().getParcelable(ARGS_OBJECT);
+
+            // Update the label
+            textView_pplJoined.setText(mEvent.getmJoinedPeopleIds().size() + "/" + mEvent.getmParticipants() + " people joined");
+//            textView_pplRsvp.setText(mEvent.);
+
+//            final ArrayList<String> usersRspved = new ArrayList<>();
+//
+//            FirebaseDatabase.getInstance().getReference("Events")
+//                    .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
+//                    .child("usersRsvp").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                    for (DataSnapshot rsvp: dataSnapshot.getChildren()) {
+//
+//                        if (rsvp != null) {
+//
+//                            String rsvpId = rsvp.getValue(String.class);
+//
+//                            if (rsvpId != null) {
+//
+//                                usersRspved.add(rsvpId);
+//
+//                                textView_pplRsvp.setText(usersRspved.size() + "/" + mEvent.getmParticipants() + " confirmed");
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
 
             if (mEvent != null) {
 
