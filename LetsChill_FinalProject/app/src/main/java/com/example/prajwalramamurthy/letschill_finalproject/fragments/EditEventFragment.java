@@ -29,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -83,6 +84,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
     private String url;
     private boolean didSelectNewImage = false;
     private int mCameFromMapToEditEvent;
+    private ProgressBar mProgressBar;
 
     // Constants
     public static final String ARGS_OBJECT = "ARGS_OBJECT";
@@ -168,6 +170,7 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mButton_save = getView().findViewById(R.id.save_editEvent_button);
             mButton_delete = getView().findViewById(R.id.button_delete_edit);
             mImageView_eventImage = getView().findViewById(R.id.imageView_edit_eventImage);
+            mProgressBar = getView().findViewById(R.id.progressBar_edit_saving);
 
             // Assign click listeners
             mButton_save.setOnClickListener(this);
@@ -177,6 +180,9 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
             mEditText_EndEvent.setOnClickListener(this);
             mEditText_eventDate.setOnClickListener(this);
             mImageView_eventImage.setOnClickListener(this);
+
+            // Set the loading progress bar to invisible at first
+            mProgressBar.setVisibility(View.GONE);
 
             mCameFromMapToEditEvent = getArguments().getInt(ARGS_CAME_FROM_MAP);
 
@@ -577,6 +583,9 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                 if (mEditText_description.getText().toString().length() >= 2 && mEditText_description.getText().length() <= 280) {
 
+                    // Set the progress circle to visible
+                    mProgressBar.setVisibility(View.VISIBLE);
+
                     // Catch and store the user input and pass it to our data model
                     final String mEvtName = mEditText_eventTitle.getText().toString();
                     final String mEvtDesc = mEditText_description.getText().toString();
@@ -704,6 +713,9 @@ public class EditEventFragment extends Fragment implements View.OnClickListener,
 
                                 // Close this activity
                                 mEditEventInterface.closeEditEventActivity();
+
+                                // Set the progress icon to gone
+                                mProgressBar.setVisibility(View.GONE);
 
                             }
                         });
