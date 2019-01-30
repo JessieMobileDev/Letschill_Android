@@ -37,7 +37,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/create_back"
+                app:srcCompat="@drawable/select_image"
                 android:contentDescription="@string/none"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"/>
