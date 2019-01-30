@@ -556,6 +556,8 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private void saveImagetoStorageDatabase()
     {
 
+        mButton_saveButton.setEnabled(false);
+        
         if (didSelectNewImage) {
             // will save our ID image to our database
 
