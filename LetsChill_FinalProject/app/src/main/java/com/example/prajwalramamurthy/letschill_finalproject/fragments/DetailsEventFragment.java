@@ -592,12 +592,50 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     private void leaveButtonClick()
     {
+        // Display an alert to make sure that's what they want to do
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
-                alertDialogBuilder.setPositiveButton("yes",
+        alertDialogBuilder.setTitle("Leave event");
+        alertDialogBuilder.setMessage("Are you sure you want to leave the current event?");
+                alertDialogBuilder.setPositiveButton("YES",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
+
+                                // Remove the current event from the joinedEvents array list
+                                ArrayList<String> joinedEventsIds = mUser.getJoinedEvents();
+
+                                if (joinedEventsIds != null) {
+
+                                    for (String joinedEvent: joinedEventsIds) {
+                                        if (joinedEvent.equals(mEvent.getmEventId())) {
+                                            joinedEventsIds.remove(joinedEvent);
+                                        }
+                                    }
+
+                                    // Save the updated array list back to the database
+                                    FirebaseDatabase.getInstance().getReference("Users").child(mUid)
+                                            .child("joinedEvents").setValue(joinedEventsIds);
+                                }
+
+                                // Remove the current user id from the event node mJoinedPeopleIds
+                                ArrayList<String> joinedPeopleIds = mEvent.getmJoinedPeopleIds();
+
+                                if (joinedPeopleIds != null) {
+
+                                    for (String joinedUser: joinedPeopleIds) {
+                                        if (joinedUser.equals(mUser.getUserID())) {
+                                            joinedPeopleIds.remove(joinedUser);
+                                        }
+                                    }
+
+                                    // Save the updated array list back to the database
+                                    FirebaseDatabase.getInstance().getReference("Events")
+                                            .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate()))
+                                            .child(mEvent.getmEventDate()).child(mEvent.getmEventId())
+                                            .child("mJoinedPeopleIds").setValue(joinedPeopleIds);
+                                }
+
+                                // Display a toast to confirm that they left the event
                                 Toast.makeText(getContext(),"You left the event",Toast.LENGTH_LONG).show();
 
                                 // This part will only work if the logged in user is not the same as the event host
@@ -605,16 +643,10 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                                 button_leave.setVisibility(View.INVISIBLE);
                                 button_rsvp.setVisibility(View.INVISIBLE);
-
                             }
                         });
 
-        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+        alertDialogBuilder.setNegativeButton("NO", null);
 
         alertDialogBuilder.show();
     }
@@ -760,9 +792,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                     rsvpButtonClick();
 
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
                 }
 
@@ -776,9 +806,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
                     leaveButtonClick();
 
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getContext(), "No Network. Please check network connection for further activity.", Toast.LENGTH_LONG).show();
                 }
 
