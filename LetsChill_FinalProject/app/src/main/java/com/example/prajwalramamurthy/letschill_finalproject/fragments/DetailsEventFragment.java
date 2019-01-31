@@ -635,6 +635,28 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                             .child("mJoinedPeopleIds").setValue(joinedPeopleIds);
                                 }
 
+
+                                // Remove the rsvp from the event if there is any matching
+                                FirebaseDatabase.getInstance().getReference().child("Events")
+                                        .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
+                                        .child(mEvent.getmEventId()).child("usersRsvp").child(mUid).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        button_rsvp.setText("RSVP");
+                                    }
+                                });
+
+                                // Remove the event from the user's node eventsRsvp
+                                FirebaseDatabase.getInstance().getReference().child("Users").child(mUid).child("eventsRsvp")
+                                        .child(mEvent.getmEventId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        button_rsvp.setText("RSVP");
+                                    }
+                                });
+
                                 // Display a toast to confirm that they left the event
                                 Toast.makeText(getContext(),"You left the event",Toast.LENGTH_LONG).show();
 
