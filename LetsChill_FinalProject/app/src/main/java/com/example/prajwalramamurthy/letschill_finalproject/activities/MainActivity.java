@@ -36,18 +36,26 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.EventLocalStorage;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.MapFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabListViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabMapViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.DatabaseEventIntentService;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.EventCardAdapter;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.HelperMethods;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.LocalStorageHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MainPageAdapter;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -69,11 +77,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Event> mAllEvents;
     private ArrayList<Event> mFilteredEvents;
     private ProgressBar mProgressBar;
-    MenuItem searchMenuItem;
+    private MenuItem searchMenuItem;
     private SharedPreferences mPrefs;
     private EditText mEditText_search;
     private Button mButton_return;
     private boolean isSearching = false;
+    private User mUser;
+    private String mUid;
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
@@ -149,6 +159,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Get the current logged in user
+        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot user: dataSnapshot.getChildren()) {
+                    if (user.getKey().equals(mUid)) {
+                        mUser = user.getValue(User.class);
+//                        if (mUser != null && mUser.getUserID().equals(mUid)) {
+//                            mUser = tempUser;
+//                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // Get current location
         requestLocation();
@@ -409,9 +441,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.fab_activity:
 
-                // Move to "EventActivity"
-                Intent mCreateEventIntent = new Intent(MainActivity.this, EventActivity.class);
-                startActivity(mCreateEventIntent);
+                if (HelperMethods.isUserVerified(mUser, this)) {
+
+                    // Move to "EventActivity"
+                    Intent mCreateEventIntent = new Intent(MainActivity.this, EventActivity.class);
+                    startActivity(mCreateEventIntent);
+                } else {
+
+                    // Display and alert about not being verified
+                    FormValidation.displayAlertNoId("Not verified", "Your account is not verified. Verify now in your profile in order to create an event!",
+                            "OK", this);
+                }
 
                 break;
             case R.id.button_returnSearch:

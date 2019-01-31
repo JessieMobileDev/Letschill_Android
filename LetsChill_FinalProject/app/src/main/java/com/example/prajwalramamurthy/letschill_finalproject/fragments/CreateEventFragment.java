@@ -36,8 +36,10 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.activities.MapActivity;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
+import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.HelperMethods;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -90,6 +92,7 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
     private Bitmap mBitmap;
     private boolean mFirstInstance;
     private Bitmap newBitmap;
+    private User mUser;
 
     // Constants
     private static final String CROP_EXTRA = "crop";
@@ -203,7 +206,26 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
             Bundle allDataBundle = getArguments().getBundle(MapFragment.ARG_ALL_DATA_BUNDLE);
             String address = getArguments().getString(MapActivity.INTENT_RESULT_ADDRESS);
 
-
+//            // Get the current logged in user
+//            FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                    for (DataSnapshot user: dataSnapshot.getChildren()) {
+//                        if (user != null) {
+//                            User tempUser = user.getValue(User.class);
+//                            if (mUser != null && mUser.getUserID().equals(mUid)) {
+//                                mUser = tempUser;
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
 
             if (allDataBundle != null) {
                 Log.d("address", "onActivityCreated: reloading frag address: " + address +
@@ -722,6 +744,14 @@ public class CreateEventFragment extends Fragment implements DatePickerDialog.On
 
                 // If save button is tapped, all collected data is stored in the database
                 saveImagetoStorageDatabase();
+
+//                if (HelperMethods.isUserVerified(mUser, getContext())) {
+//
+//                } else {
+//                    // Display and alert about not being verified
+//                    FormValidation.displayAlertNoId("Not verified", "Your account is not verified. Verify now in your profile in order to join an event!",
+//                            "OK", getContext());
+//                }
 
                 break;
             case R.id.button_map:

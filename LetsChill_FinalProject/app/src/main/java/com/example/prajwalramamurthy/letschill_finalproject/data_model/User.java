@@ -18,7 +18,7 @@ public class User implements Parcelable {
     private String facebookEmail;
     private ArrayList<String> interests = new ArrayList<>();
     private ArrayList<String> joinedEvents = new ArrayList<>();
-    private boolean isUserVerified;
+    private boolean isVerified;
     private boolean isPhoneVerified;
 
     // Constructor
@@ -30,7 +30,7 @@ public class User implements Parcelable {
     // Constructor
     public User(String userID, String fullName, String username, String email, String phone,
                 String facebookEmail, String profilePhoto, String device_token, ArrayList<String> joinedEvents,
-                boolean isUserVerified, boolean isPhoneVerified) {
+                boolean isVerified) {
         this.userID = userID;
         this.fullName = fullName;
         this.username = username;
@@ -40,8 +40,8 @@ public class User implements Parcelable {
         this.profilePhoto = profilePhoto;
         this.device_token = device_token;
         this.joinedEvents = joinedEvents;
-        this.isUserVerified = isUserVerified;
-        this.isPhoneVerified = isPhoneVerified;
+        this.isVerified = isVerified;
+//        this.isPhoneVerified = isPhoneVerified;
     }
 
     // Constructor
@@ -55,7 +55,8 @@ public class User implements Parcelable {
 
     // Constructor
     public User(String userID, String profilePhoto, String fullName, String username, String email, String phone,
-                String device_token, String facebookEmail, ArrayList<String> interests, ArrayList<String> joinedEvents) {
+                String device_token, String facebookEmail, ArrayList<String> interests, ArrayList<String> joinedEvents,
+                boolean isVerified) {
         this.userID = userID;
         this.profilePhoto = profilePhoto;
         this.fullName = fullName;
@@ -66,14 +67,12 @@ public class User implements Parcelable {
         this.facebookEmail = facebookEmail;
         this.interests = interests;
         this.joinedEvents = joinedEvents;
+        this.isVerified = isVerified;
     }
 
 
     // Blank Constructor
-    public User() {
-
-
-    }
+    public User() { }
 
     protected User(Parcel in) {
         userID = in.readString();
@@ -86,8 +85,8 @@ public class User implements Parcelable {
         interests = in.createStringArrayList();
         joinedEvents = in.createStringArrayList();
         device_token = in.readString();
-        isUserVerified = in.readByte() != 0;
-        isPhoneVerified = in.readByte() != 0;
+        isVerified = in.readByte() != 0;
+//        isPhoneVerified = in.readByte() != 0;
     }
 
     @Override
@@ -102,8 +101,8 @@ public class User implements Parcelable {
         dest.writeStringList(interests);
         dest.writeString(device_token);
         dest.writeStringList(joinedEvents);
-        dest.writeByte((byte) (isUserVerified ? 1 : 0));
-        dest.writeByte((byte) (isPhoneVerified ? 1: 0));
+        dest.writeByte((byte) (isVerified ? 1 : 0));
+//        dest.writeByte((byte) (isPhoneVerified ? 1: 0));
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -169,10 +168,10 @@ public class User implements Parcelable {
     }
 
     public boolean isUserVerified() {
-        return isUserVerified;
+        return isVerified;
     }
 
-    public boolean isPhoneVerified() {
-        return isPhoneVerified;
-    }
+//    public boolean isPhoneVerified() {
+//        return isPhoneVerified;
+//    }
 }

@@ -30,6 +30,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.HelperMethods;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.JoinedPeopleAdapter;
@@ -361,6 +362,12 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                                                 button_rsvp.setVisibility(View.VISIBLE);
                                                 button_leave.setVisibility(View.VISIBLE);
 
+                                            } else {
+
+                                                // Display only the "rsvp" and "leave" buttons
+                                                button_join.setVisibility(View.VISIBLE);
+                                                button_rsvp.setVisibility(View.GONE);
+                                                button_leave.setVisibility(View.GONE);
                                             }
                                         }
                                     }
@@ -457,212 +464,116 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
     private void joinButtonClick()
     {
+        // Find out if current logged user is verified
+        // Retrieve the username from the current logged in user
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUid = mFirebaseUser.getUid();
+
+        FirebaseDatabase.getInstance().getReference("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot users: dataSnapshot.getChildren()) {
+                    if (users != null) {
+                        User tempUser = users.getValue(User.class);
+                        if (tempUser.getUserID().equals(mUid)) {
+                            mUser = tempUser;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         if (button_join.getText().toString().equals(getResources().getString(R.string.join))) {
 
-            // If the button text is equal to "Join", continue below
-            // This part will only work if the logged in user is not the same as the event host
-            button_join.setVisibility(View.INVISIBLE);
+            if (HelperMethods.isUserVerified(mUser, getContext())) {
 
-            button_leave.setVisibility(View.VISIBLE);
-            button_rsvp.setVisibility(View.VISIBLE);
+                // If the button text is equal to "Join", continue below
+                // This part will only work if the logged in user is not the same as the event host
+                button_join.setVisibility(View.INVISIBLE);
 
-            // Display in-app notification
-            displayNotification();
+                button_leave.setVisibility(View.VISIBLE);
+                button_rsvp.setVisibility(View.VISIBLE);
 
-
-            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-            // Make an array to hold all the joined ids
-            ArrayList<String> joinedIds;
-
-            // Get all the list from the event
-            joinedIds = mEvent.getmJoinedPeopleIds();
-
-            // Add the new user on it
-            joinedIds.add(mUid);
-
-            // Join an event: Save the current logged user id to the event node mJoinedPeopleIds
-            // Join an event: Save the current event to the current logged user node joinedEvents
-            FirebaseDatabase.getInstance().getReference("Events").child(HelperMethods.getCurrentMonth(mEvent.getmEventDate()))
-                    .child(mEvent.getmEventDate()).child(mEvent.getmEventId()).child("mJoinedPeopleIds").setValue(joinedIds)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                            Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-            // Make an array to hold all the joined events ids and get all the events list from the user node
-            ArrayList<String> eventsJoined = mUser.getJoinedEvents();
-
-            // Add the new event id to the existing list
-            eventsJoined.add(mEvent.getmEventId());
-
-            // Save the new updated list back to the node in the user joinedEvents
-            FirebaseDatabase.getInstance().getReference("Users").child(mUid)
-                    .child("joinedEvents").setValue(eventsJoined);
-
-//            FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("joinedEvents")
-//                    .addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                    for (DataSnapshot joinedEvent: dataSnapshot.getChildren()) {
-//
-//                        if (joinedEvent != null) {
-//
-//                            Event event = joinedEvent.getValue(Event.class);
-//
-//                            eventsJoined.add(event.getmEventId());
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-
-            // Join an event: Save the current selected event id in the user's joinedEvents node
+                // Display in-app notification
+                displayNotification();
 
 
-//            FirebaseDatabase.getInstance().getReference("Events").child(HelperMethods.getCurrentMonth(mEvent.getmEventDate()))
-//                    .child(mEvent.getmEventDate()).child(mEvent.getmEventId()).child("mJoinedPeopleIds").child(mUid).setValue(mUid)
-//            .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Void> task) {
-//
-//                    Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
-//                }
-//            });
+                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-//            if(user!= null) {
-//                final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-//
-//                Query query = ref.child("joinedEvents").equalTo(mEvent.getmEventId());
-//                query.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                        if (dataSnapshot.exists()) {
-//
-//                            Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
-//                        } else {
-//
-//                            ref.child(user.getUid()).child("joinedEvents").push().setValue(mEvent.getmEventId());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
+                // Make an array to hold all the joined ids
+                ArrayList<String> joinedIds;
 
-            FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("joinedEvents")
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Get all the list from the event
+                joinedIds = mEvent.getmJoinedPeopleIds();
 
-                            for (DataSnapshot joinedEvent: dataSnapshot.getChildren()) {
+                // Add the new user on it
+                joinedIds.add(mUid);
 
-                                String eventId = joinedEvent.getValue(String.class);
+                // Join an event: Save the current logged user id to the event node mJoinedPeopleIds
+                // Join an event: Save the current event to the current logged user node joinedEvents
+                FirebaseDatabase.getInstance().getReference("Events").child(HelperMethods.getCurrentMonth(mEvent.getmEventDate()))
+                        .child(mEvent.getmEventDate()).child(mEvent.getmEventId()).child("mJoinedPeopleIds").setValue(joinedIds)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                                if (eventId != null && eventId.equals(mEvent.getmEventId())) {
+                                Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
+                            }
+                        });
 
-                                    if (getContext() != null) {
-                                        Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
+                // Make an array to hold all the joined events ids and get all the events list from the user node
+                ArrayList<String> eventsJoined = mUser.getJoinedEvents();
+
+                // Add the new event id to the existing list
+                eventsJoined.add(mEvent.getmEventId());
+
+                // Save the new updated list back to the node in the user joinedEvents
+                FirebaseDatabase.getInstance().getReference("Users").child(mUid)
+                        .child("joinedEvents").setValue(eventsJoined);
+
+                FirebaseDatabase.getInstance().getReference("Users").child(mUid).child("joinedEvents")
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot joinedEvent : dataSnapshot.getChildren()) {
+
+                                    String eventId = joinedEvent.getValue(String.class);
+
+                                    if (eventId != null && eventId.equals(mEvent.getmEventId())) {
+
+                                        if (getContext() != null) {
+                                            Toast.makeText(getContext(), R.string.toast_firebase_join, Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
 
-            HashMap<String,String> notification = new HashMap<>();
+                HashMap<String, String> notification = new HashMap<>();
 
-            notification.put("from", user.getUid());
-            notification.put("to", mEvent.getmHost_uid());
-            notification.put("type", "joined");
+                notification.put("from", user.getUid());
+                notification.put("to", mEvent.getmHost_uid());
+                notification.put("type", "joined");
 
-            FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+                FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+            } else {
 
-
-//            // Add the joined users to the event object
-//            mDBReference = FirebaseDatabase.getInstance().getReference("Events");
-//
-//            final Query query = mDBReference.child("JoinedUsers").equalTo(user.getUid());
-//            mDBReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                    for (final DataSnapshot month: dataSnapshot.getChildren()) {
-//
-//                        for (final DataSnapshot day: month.getChildren()) {
-//
-//                            for (final DataSnapshot event: day.getChildren()) {
-//
-//                                final Event retrievedEvent = event.getValue(Event.class);
-//
-//                                if (retrievedEvent != null) {
-//
-//                                    if (retrievedEvent.getmEventId().equals(mEvent.getmEventId())) {
-//
-//                                        final ArrayList<String> joinedPeopleIds = retrievedEvent.getmJoinedPeopleIds();
-//                                        joinedPeopleIds.add(user.getUid());
-//                                        mEvent.setmJoinedPeopleIds(joinedPeopleIds);
-//                                        query.addValueEventListener(new ValueEventListener() {
-//                                            @Override
-//                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                                                // Check if the limit has reached before joining
-//                                                if (mEvent.getmJoinedPeopleIds().size() == mEvent.getmJoinedPeople()) {
-//
-//                                                    // If the limit has reached, disable the "join" button and change text to
-//                                                    // "event full"
-//                                                    button_join.setEnabled(false);
-//                                                    button_join.setText("Event Full");
-//                                                } else {
-//
-//                                                    mDBReference = FirebaseDatabase.getInstance().getReference("Events")
-//                                                            .child(month.getKey()).child(day.getKey()).child(mEvent.getmEventId());
-//                                                    mDBReference.setValue(mEvent);
-//                                                }
-//
-//                                            }
-//
-//                                            @Override
-//                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                            }
-//                                        });
-//                                    } else {
-//
-//                                        break;
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-
+                // Display and alert about not being verified
+                FormValidation.displayAlertNoId("Not verified", "Your account is not verified. Verify now in your profile in order to join an event!",
+                "OK", getContext());
+            }
 
         } else if (button_join.getText().toString().equals(getResources().getString(R.string.rsvp))) {
 
@@ -719,34 +630,42 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
 
         if (button_rsvp.getText().equals("RSVP")) {
 
-            Toast.makeText(getContext(), "Thank You for the event RSVP", Toast.LENGTH_LONG).show();
+            if (HelperMethods.isUserVerified(mUser, getContext())) {
 
-            // Notify the host that someone has just rsvp'ed to the event
-            HashMap<String,String> notification = new HashMap<>();
+                Toast.makeText(getContext(), "Thank You for the event RSVP", Toast.LENGTH_LONG).show();
 
-            notification.put("from", user.getUid());
-            notification.put("to", mEvent.getmHost_uid());
-            notification.put("type", "rsvp");
+                // Notify the host that someone has just rsvp'ed to the event
+                HashMap<String, String> notification = new HashMap<>();
 
-            // Save the notification uid in the database
-            FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+                notification.put("from", user.getUid());
+                notification.put("to", mEvent.getmHost_uid());
+                notification.put("type", "rsvp");
 
-            // Save the current logged user uid into the event's rsvp'ed node
-            if (!userUid.isEmpty()) {
+                // Save the notification uid in the database
+                FirebaseDatabase.getInstance().getReference().child("Notifications").push().setValue(notification);
+
+                // Save the current logged user uid into the event's rsvp'ed node
+                if (!userUid.isEmpty()) {
 // && userUid != null && mEvent.getmEventId() != null && !mEvent.getmEventId().isEmpty()
 
-                mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
-                        .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
-                        .child(mEvent.getmEventId()).child("usersRsvp");
-                mDBReference.child(userUid).setValue(userUid);
+                    mDBReference = FirebaseDatabase.getInstance().getReference().child("Events")
+                            .child(HelperMethods.getCurrentMonth(mEvent.getmEventDate())).child(mEvent.getmEventDate())
+                            .child(mEvent.getmEventId()).child("usersRsvp");
+                    mDBReference.child(userUid).setValue(userUid);
 
-                // Save the event uid to the user's rsvp'ed node
-                mDBReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp");
-                mDBReference.child(mEvent.getmEventId()).setValue(mEvent.getmEventId());
+                    // Save the event uid to the user's rsvp'ed node
+                    mDBReference = FirebaseDatabase.getInstance().getReference().child("Users").child(userUid).child("eventsRsvp");
+                    mDBReference.child(mEvent.getmEventId()).setValue(mEvent.getmEventId());
 
-                // Change the rsvp button title to "cancel RSVP"
-                button_rsvp.setText("Cancel RSVP");
+                    // Change the rsvp button title to "cancel RSVP"
+                    button_rsvp.setText("Cancel RSVP");
 
+                }
+            } else {
+
+                // Display and alert about not being verified
+                FormValidation.displayAlertNoId("Not verified", "Your account is not verified. Verify now in your profile in order to join an event!",
+                        "OK", getContext());
             }
 
         } else if (button_rsvp.getText().equals("Cancel RSVP")) {
@@ -771,6 +690,7 @@ public class DetailsEventFragment extends Fragment implements View.OnClickListen
                     button_rsvp.setText("RSVP");
                 }
             });
+
         }
     }
 

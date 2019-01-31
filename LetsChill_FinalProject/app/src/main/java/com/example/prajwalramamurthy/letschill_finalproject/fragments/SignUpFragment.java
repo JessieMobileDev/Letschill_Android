@@ -254,7 +254,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                         if (!mUserUID.isEmpty()) {
 
                             User user = new User(mUserUID, "N/A", mUsername, mEmail, "N/A",
-                                    "N/A", "N/A",token, null, false, false);
+                                    "N/A", "N/A",token, null, false);
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(mUserUID).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
