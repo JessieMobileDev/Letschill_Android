@@ -10,4 +10,6 @@
     <color name="facebook_background_blue">#3B5998</color>
     <color name="checkmark">#32CD32</color>
     <color name="block">#CD4948</color>
+    <color name="verified">#4AD384</color>
+    <color name="not_verified">#DE8282</color>
 </resources>

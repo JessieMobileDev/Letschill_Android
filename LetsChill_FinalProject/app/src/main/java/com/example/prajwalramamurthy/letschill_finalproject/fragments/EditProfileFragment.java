@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.prajwalramamurthy.letschill_finalproject.R;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
+import com.example.prajwalramamurthy.letschill_finalproject.utility.FormValidation;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ImageDownloadHandler;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.MenuIntentHandler;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -55,7 +56,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     // Variables
     private EditText mEditText_fullName, mEditText_username, mEditText_phone,
             mEditText_facebookEmail;
-    private TextView mTextView_interests;
+    private TextView mTextView_interests, mTextView_verified;
     private ImageView mImageView_profilePicture;
     private Button mButton_chooseInterests;
     private ConstraintLayout mContraintLayout_verified;
@@ -226,6 +227,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             mEditText_phone = getView().findViewById(R.id.editText_editProfile_phone);
             mEditText_facebookEmail = getView().findViewById(R.id.editText_editProfile_fb);
             mTextView_interests = getView().findViewById(R.id.textView_editProfile_interests);
+            mTextView_verified = getView().findViewById(R.id.textView_editProfile_verified);
             mButton_chooseInterests = getView().findViewById(R.id.button_editProfile_interests);
             mContraintLayout_verified = getView().findViewById(R.id.constraint_notVerified);
             mImageView_profilePicture = getView().findViewById(R.id.imageView_editProfile);
@@ -238,6 +240,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             // Assign click listeners
             mImageView_profilePicture.setOnClickListener(this);
             mButton_chooseInterests.setOnClickListener(this);
+            mTextView_verified.setOnClickListener(this);
+
+            // Update the verified label
+            isUserVerified(false);
 
             if (retrievedUser != null) {
 
@@ -451,7 +457,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                                 // Full name, phone number and facebook email are not required
                                 // If they are empty, save in the database as "Not defined"
-                                if (!mEditText_fullName.getText().toString().trim().isEmpty()) {
+                                if (!mEditText_fullName.getText().toString().isEmpty()) {
 
                                     fullName = mEditText_fullName.getText().toString();
                                     mDBReference.child(retrievedUser.getUserID()).child("fullName").setValue(fullName);
@@ -502,7 +508,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                                 } else {
 
-                                    mEditText_fullName.setError("Don't use spaces as input");
+                                    mEditText_fullName.setError("Don't leave this empty");
                                 }
                             }
 
@@ -559,6 +565,86 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
                 mEditProfileInterface.openInterestsActivity(retrievedUser, 1, allTypedData, interestsArrayList);
                 break;
+            case R.id.textView_editProfile_verified:
+
+                isUserVerified(true);
+                break;
+        }
+    }
+
+    private void isUserVerified(boolean wasTappedOnIt) {
+
+        // Note: Right now, checks for phone number, email and facebook email.
+        // If they exist in the database, user is verified
+        User mRetrievedUser = getArguments().getParcelable(ARG_LOGGED_USER);
+
+        // Checks if the user is already verified
+        if (mRetrievedUser != null && getContext() != null) {
+
+            // If the user is verified, then display a pop up message
+            if (!mRetrievedUser.getEmail().equals("N/A") && !mRetrievedUser.getPhone().equals("N/A")
+                    && !mRetrievedUser.getFacebookEmail().equals("N/A")) {
+
+                Log.d("a0a0a0a0", "isUserVerified: user is verified");
+
+                // Save to the firebase
+                FirebaseDatabase.getInstance().getReference("Users").child(mRetrievedUser.getUserID())
+                        .child("isVerified").setValue(true);
+
+                if (wasTappedOnIt) {
+
+                    // Display an alert dialog letting the user know about their current state
+                    FormValidation.displayAlert(R.string.alert_verified_title, R.string.alert_verified_message,
+                            R.string.alert_verified_button, getContext());
+                }
+
+                // Change the color of the constraint background to green and change text on textView
+                mContraintLayout_verified.setBackgroundColor(getResources().getColor(R.color.verified));
+                mTextView_verified.setText("verified");
+
+                // Takes the user to the verification activity if they are not yet verified
+//                mProfileInterface.openVerificationActivity(mRetrievedUser);
+            } else {
+
+                // Change the isVerified value in the database if any information is missing
+                FirebaseDatabase.getInstance().getReference("Users").child(mRetrievedUser.getUserID())
+                        .child("isVerified").setValue(false);
+
+                ArrayList<String> missingData = new ArrayList<>();
+
+                if (mRetrievedUser.getPhone().equals("N/A")) {
+                    missingData.add("phone number");
+                }
+                if (mRetrievedUser.getFacebookEmail().equals("N/A")) {
+                    missingData.add("Facebook email");
+                }
+
+                if (missingData.size() == 1) {
+
+                    if (wasTappedOnIt) {
+
+                        // Display an alert
+                        FormValidation.displayAlertNoId("Missing info", "Please update your "
+                                + missingData.get(0) + " in your profile!", "OK", getContext());
+                    }
+                } else if (missingData.size() == 2) {
+
+                    if (wasTappedOnIt) {
+
+                        // Display an alert
+                        FormValidation.displayAlertNoId("Missing info", "Please update your "
+                                        + missingData.get(0) + " and your " + missingData.get(1) + " in your profile!",
+                                "OK", getContext());
+                    }
+                }
+
+                missingData.clear();
+
+                // Change the color of the verified tag to red and change text label
+                mContraintLayout_verified.setBackgroundColor(getResources().getColor(R.color.not_verified));
+                mTextView_verified.setText("not verified");
+
+            }
         }
     }
 }

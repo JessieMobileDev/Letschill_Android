@@ -117,6 +117,11 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
 //        finish();
     }
 
+    @Override
+    public void openVerificationActivity(User currentLoggedUser) {
+
+    }
+
     public class ImageDownloaderDataReceiver extends ResultReceiver {
 
         ImageDownloaderDataReceiver() {

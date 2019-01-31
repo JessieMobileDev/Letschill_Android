@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView_verification_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/verification_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="18sp"
+        android:textColor="@color/text_almostBlack"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textView_verification_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/verification_subtitle"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_verification_title"
+        app:layout_constraintStart_toStartOf="@+id/textView_verification_title"
+        app:layout_constraintTop_toBottomOf="@+id/textView_verification_title" />
+
+    <EditText
+        android:id="@+id/editText_verification_code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="@string/verification_hint"
+        android:inputType="number"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_verification_title"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView_verification_title"
+        app:layout_constraintTop_toBottomOf="@+id/editText_verification_phone" />
+
+    <Button
+        android:id="@+id/button_verification_verify"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/verification_button_send"
+        android:fontFamily="@font/roboto_regular"
+        style="@style/button_orange_style"
+        app:layout_constraintEnd_toEndOf="@+id/textView_verification_title"
+        app:layout_constraintStart_toStartOf="@+id/textView_verification_title"
+        app:layout_constraintTop_toBottomOf="@+id/editText_verification_code" />
+
+    <EditText
+        android:id="@+id/editText_verification_phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/verification_phone"
+        android:inputType="phone"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView_verification_title"
+        app:layout_constraintStart_toStartOf="@+id/textView_verification_title"
+        app:layout_constraintTop_toBottomOf="@+id/textView_verification_subtitle" />
+</android.support.constraint.ConstraintLayout>

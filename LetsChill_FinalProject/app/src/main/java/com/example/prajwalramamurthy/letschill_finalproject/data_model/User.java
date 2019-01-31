@@ -18,6 +18,8 @@ public class User implements Parcelable {
     private String facebookEmail;
     private ArrayList<String> interests = new ArrayList<>();
     private ArrayList<String> joinedEvents = new ArrayList<>();
+    private boolean isUserVerified;
+    private boolean isPhoneVerified;
 
     // Constructor
     public User(String userID, String fullName, String username, String email, String phone,
@@ -27,7 +29,8 @@ public class User implements Parcelable {
 
     // Constructor
     public User(String userID, String fullName, String username, String email, String phone,
-                String facebookEmail, String profilePhoto, String device_token, ArrayList<String> joinedEvents) {
+                String facebookEmail, String profilePhoto, String device_token, ArrayList<String> joinedEvents,
+                boolean isUserVerified, boolean isPhoneVerified) {
         this.userID = userID;
         this.fullName = fullName;
         this.username = username;
@@ -37,6 +40,8 @@ public class User implements Parcelable {
         this.profilePhoto = profilePhoto;
         this.device_token = device_token;
         this.joinedEvents = joinedEvents;
+        this.isUserVerified = isUserVerified;
+        this.isPhoneVerified = isPhoneVerified;
     }
 
     // Constructor
@@ -81,6 +86,8 @@ public class User implements Parcelable {
         interests = in.createStringArrayList();
         joinedEvents = in.createStringArrayList();
         device_token = in.readString();
+        isUserVerified = in.readByte() != 0;
+        isPhoneVerified = in.readByte() != 0;
     }
 
     @Override
@@ -95,6 +102,8 @@ public class User implements Parcelable {
         dest.writeStringList(interests);
         dest.writeString(device_token);
         dest.writeStringList(joinedEvents);
+        dest.writeByte((byte) (isUserVerified ? 1 : 0));
+        dest.writeByte((byte) (isPhoneVerified ? 1: 0));
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -155,11 +164,15 @@ public class User implements Parcelable {
         this.device_token = device_token;
     }
 
-        public ArrayList<String> getJoinedEvents() {
+    public ArrayList<String> getJoinedEvents() {
         return joinedEvents;
     }
 
+    public boolean isUserVerified() {
+        return isUserVerified;
+    }
 
-
-
+    public boolean isPhoneVerified() {
+        return isPhoneVerified;
+    }
 }

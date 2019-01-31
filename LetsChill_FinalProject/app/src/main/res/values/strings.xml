@@ -152,4 +152,15 @@
     <string name="max_participants_string">Must be min 2 max 1000 participants</string>
     <string name="string_event_success">Event successfully created.</string>
 
+    <!-- Verification Fragment Strings -->
+    <string name="verification_title">Verification Code</string>
+    <string name="verification_subtitle">We\’ve just sent you an SMS with the verification code! Add the code below to proceed.</string>
+    <string name="verification_hint">123—456</string>
+    <string name="verification_button_verify">Verify</string>
+    <string name="verification_phone">+1 (555) 345—8765</string>
+    <string name="verification_button_send">Send</string>
+    <string name="alert_verified_title">Verified</string>
+    <string name="alert_verified_message">Your account is already verified!</string>
+    <string name="alert_verified_button">OK</string>
+
 </resources>

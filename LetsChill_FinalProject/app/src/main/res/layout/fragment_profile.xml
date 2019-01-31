@@ -180,18 +180,20 @@
                     android:id="@+id/constraint_profile_notVerified"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:background="#DE8282"
+                    android:background="@color/not_verified"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <TextView
-                        android:id="@+id/textView29"
+                        android:id="@+id/textView_profile_verified"
                         style="@style/profile_notVerified"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:text="@string/profile_notVerified"
                         android:textAlignment="center"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"

@@ -133,6 +133,15 @@ public class FormValidation {
         alert.show();
     }
 
+    public static void displayAlertNoId(String title, String message, String button, Context context) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.setPositiveButton(button, null);
+        alert.show();
+    }
+
     public static void clearEditTexts(ArrayList<EditText> mAllEditTexts) {
 
         for (EditText mEditText:mAllEditTexts) {
