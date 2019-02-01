@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -38,6 +41,7 @@ import com.example.prajwalramamurthy.letschill_finalproject.data_model.Event;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.EventLocalStorage;
 import com.example.prajwalramamurthy.letschill_finalproject.data_model.User;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.MapFragment;
+import com.example.prajwalramamurthy.letschill_finalproject.fragments.SearchFilterFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabListViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.fragments.TabMapViewFragment;
 import com.example.prajwalramamurthy.letschill_finalproject.utility.ConnectionHandler;
@@ -59,7 +63,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         TabListViewFragment.TabTodayInterface, TabMapViewFragment.TabMapViewInterface {
@@ -84,12 +92,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isSearching = false;
     private User mUser;
     private String mUid;
+    private Geocoder geocoder;
 
     // Constants
     public static final String EXTRA_DB_REQUEST_ID = "EXTRA_DB_REQUEST_ID";
     public static final String EXTRA_INTENT_DETAILS = "EXTRA_INTENT_DETAILS";
     public static final String EXTRA_LAT = "EXTRA_LAT";
     public static final String EXTRA_LONG = "EXTRA_LONG";
+    public static final String EXTRA_FILTER_SELECTION = "EXTRA_FILTER_SELECTION";
+    public static final String EXTRA_FILTER_RADIUS = "EXTRA_FILTER_RADIUS";
+    public static final String EXTRA_FILTER_INTERESTS = "EXTRA_FILTER_INTERESTS";
     public static final String EXTRA_PREFS_TAB_SELECTION = "EXTRA_PREFS_TAB_SELECTION";
     private static final int REQUEST_LOCATION_PERMISSION = 0x01101;
     private static final String TAG = "test";
@@ -116,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Assign the click listener to the floating button
         mFab.setOnClickListener(this);
         mButton_return.setOnClickListener(this);
+
+        // Instantiate the SharedPreferences
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         // Get current location
         requestLocation();
@@ -272,6 +288,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (ConnectionHandler.isConnected(this)) {
 
+            // Before requesting the events, collect the filter preferences
+            String mFilterSelection = mPrefs.getString(SearchFilterFragment.PREFS_FILTER_SELECTION, "nothing");
+            int mRadiusMiles = mPrefs.getInt(SearchFilterFragment.PREFS_FILTER_MILES, 3);
+            Set<String> mRetrievedInterests;
+            ArrayList<String> mSelectedInterests = new ArrayList<>();
+
+            if (mFilterSelection.equals("interests")) {
+
+                mRetrievedInterests = mPrefs.getStringSet(SearchFilterFragment.PREFS_FILTER_INTERESTS, new HashSet<String>());
+                mSelectedInterests = new ArrayList<>(mRetrievedInterests);
+            }
+
             // Start an intent service to retrieve all the events' data
             // We're fetching all the events that the user is hosting, or just participating
             Intent mFetchIntent = new Intent(this, DatabaseEventIntentService.class);
@@ -279,6 +307,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFetchIntent.putExtra(EXTRA_LAT, lat);
             mFetchIntent.putExtra(EXTRA_LONG, lng);
             mFetchIntent.putExtra(EXTRA_DB_REQUEST_ID, 0);
+            mFetchIntent.putExtra(EXTRA_FILTER_SELECTION, mFilterSelection);
+            mFetchIntent.putExtra(EXTRA_FILTER_RADIUS, mRadiusMiles);
+            mFetchIntent.putExtra(EXTRA_FILTER_INTERESTS, mSelectedInterests);
             startService(mFetchIntent);
 
             // Set the progress bar to be visible
@@ -358,6 +389,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (resultData != null) {
 
+                // Before filtering the events, collect the filter preferences
+                String mFilterSelection = mPrefs.getString(SearchFilterFragment.PREFS_FILTER_SELECTION, "nothing");
+                int mRadiusMiles = mPrefs.getInt(SearchFilterFragment.PREFS_FILTER_MILES, 3);
+                int convertedRadiusToMiles = (mRadiusMiles + 1) * 10;
+
                 // Retrieve the array list containing all the events
                 mAllEvents = (ArrayList<Event>) resultData.getSerializable(DatabaseEventIntentService.BUNDLE_EXTRA_ALL_EVENTS);
                 double mCurrentLatitude = resultData.getDouble(EXTRA_LAT);
@@ -371,10 +407,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     for (Event savedEvent: mAllEvents) {
 
-                        if (savedEvent.getmEventName().toLowerCase().contains(userInput)) {
+                        double distanceMiles = HelperMethods.getDistanceBetweenTwoPlaces(mCurrentLatitude,
+                                savedEvent.getmLatitude(), mCurrentLongitude, savedEvent.getmLongitude());
 
+                        if (mFilterSelection.equals("title") && savedEvent.getmEventName().toLowerCase().contains(userInput)
+                                && distanceMiles <= convertedRadiusToMiles) {
+
+                            Log.d("lololo", "onReceiveResult: distance in miles: " + distanceMiles);
                             mFilteredEvents.add(savedEvent);
+
+                        } else if (mFilterSelection.equals("city")) {
+
+                            String mEventCityName = HelperMethods.getCityName(MainActivity.this,
+                                    savedEvent.getmLatitude(), savedEvent.getmLongitude());
+
+                            if (mEventCityName.toLowerCase().contains(userInput)) {
+
+                                mFilteredEvents.add(savedEvent);
+                            }
+                        } else if (mFilterSelection.equals("interests")
+                                && distanceMiles <= convertedRadiusToMiles) {
+
+                            Set<String> mRetrievedInterests = mPrefs.getStringSet(SearchFilterFragment.PREFS_FILTER_INTERESTS, new HashSet<String>());
+                            ArrayList<String> mSelectedInterests = new ArrayList<>(mRetrievedInterests);
+
+                            if (mSelectedInterests.size() != 0) {
+
+                                for (String interest: mSelectedInterests) {
+                                    if (savedEvent.getmCategory().equals(interest)) {
+
+                                        mFilteredEvents.add(savedEvent);
+                                    }
+                                }
+                            }
                         }
+//                        if (savedEvent.getmEventName().toLowerCase().contains(userInput)) {
+//
+//                            mFilteredEvents.add(savedEvent);
+//                        }
                     }
 
                     // Assign the adapter to the view pager that will display the screen for each tab item

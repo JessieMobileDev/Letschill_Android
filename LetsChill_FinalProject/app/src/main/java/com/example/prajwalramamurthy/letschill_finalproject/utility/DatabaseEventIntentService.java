@@ -94,6 +94,11 @@ public class DatabaseEventIntentService extends IntentService {
 
         if (mRequestID == 0) {
 
+            // Collect the preferences passed by the intent
+//            final String mFilterSelection = intent.getStringExtra(MainActivity.EXTRA_FILTER_SELECTION);
+//            int mRadiusMiles = intent.getIntExtra(MainActivity.EXTRA_FILTER_RADIUS, 3);
+//            final ArrayList<String> mSelectedInterests = intent.getStringArrayListExtra(MainActivity.EXTRA_FILTER_INTERESTS);
+
             mDBReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -106,19 +111,10 @@ public class DatabaseEventIntentService extends IntentService {
                         for (DataSnapshot event: day.getChildren()) {
                             Event mEvent = event.getValue(Event.class);
 
-                            if (mEvent != null) {
+                            // Do checks based on the filter selection
+                            if (mEvent != null && !mEvent.ismIsDeleted()) {
 
-                                SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy");
-                                String mTodayDateString = mSimpleDateFormat.format(Calendar.getInstance().getTime());
-
-                                // If the event deletion is set to false, then display
-                                if (!mEvent.ismIsDeleted()) {
-
-                                    mAllEvents.add(mEvent);
-
-                                    Log.d(TAG, "onDataChange (today): (1) Today - Selected event date: " + mEvent.getmEventDate() +
-                                            " - Today date: " + mTodayDateString);
-                                }
+                                mAllEvents.add(mEvent);
 
                             } else {
 
