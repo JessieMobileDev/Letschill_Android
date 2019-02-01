@@ -145,8 +145,8 @@
         android:fontFamily="@font/roboto_regular"
         android:textColor="@color/text_almostBlack"
         android:visibility="gone"
-        android:divider="@null"
-        android:dividerHeight="0dp"
+
+
         android:paddingStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textView_search_interests"

@@ -15,13 +15,12 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
-
 import com.example.prajwalramamurthy.letschill_finalproject.R;
-import com.example.prajwalramamurthy.letschill_finalproject.utility.SearchInterestsAdapter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SearchFilterFragment extends Fragment implements View.OnClickListener,
         ListView.OnItemClickListener, SeekBar.OnSeekBarChangeListener {
@@ -33,10 +32,13 @@ public class SearchFilterFragment extends Fragment implements View.OnClickListen
     private ListView mListView_interests;
     private SharedPreferences mPrefs;
     private List<String> mInterests;
-    private SearchInterestsAdapter mAdapter;
+    private ArrayList<String> mSelectedInterests = new ArrayList<>();
+    private ArrayAdapter<String> mAdapter;
 
     // Constants
     public static final String PREFS_FILTER_SELECTION = "PREFS_FILTER_SELECTION";
+    public static final String PREFS_FILTER_MILES = "PREFS_FILTER_MILES";
+    public static final String PREFS_FILTER_INTERESTS = "PREFS_FILTER_INTERESTS";
 
     public static SearchFilterFragment newInstance() {
 
@@ -76,17 +78,20 @@ public class SearchFilterFragment extends Fragment implements View.OnClickListen
             mListView_interests.setOnItemClickListener(this);
             mListView_interests.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             mListView_interests.setItemsCanFocus(false);
+            mSeekBar_miles.setOnSeekBarChangeListener(this);
 
             // Convert the xml list of strings into an array list
             mInterests = Arrays.asList(getResources().getStringArray(R.array.spinner_category));
 
             // Set the adapter to the listview
-            mAdapter = new SearchInterestsAdapter(getContext(), mInterests);
+            mAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_multiple_choice, mInterests);
             mListView_interests.setAdapter(mAdapter);
 
             // Instantiate the SharedPreferences
             mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
+            // Update the UI with the previously saved preferences
+            updatePreferencesUI();
         }
     }
 
@@ -104,6 +109,9 @@ public class SearchFilterFragment extends Fragment implements View.OnClickListen
                 // Save selection to user defaults
                 mPrefs.edit().putString(PREFS_FILTER_SELECTION, "title").apply();
 
+                // Display the miles on the seekbar
+                mSeekBar_miles.setProgress(mPrefs.getInt(PREFS_FILTER_MILES, 3));
+
                 break;
             case R.id.radioButton_search_city:
 
@@ -114,6 +122,9 @@ public class SearchFilterFragment extends Fragment implements View.OnClickListen
                 // Save selection to user defaults
                 mPrefs.edit().putString(PREFS_FILTER_SELECTION, "city").apply();
 
+                // Display the miles on the seekbar
+                mSeekBar_miles.setProgress(mPrefs.getInt(PREFS_FILTER_MILES, 3));
+
                 break;
             case R.id.radioButton_search_interests:
 
@@ -123,6 +134,58 @@ public class SearchFilterFragment extends Fragment implements View.OnClickListen
 
                 // Save selection to user defaults
                 mPrefs.edit().putString(PREFS_FILTER_SELECTION, "interests").apply();
+
+                // Display the miles on the seekbar
+                mSeekBar_miles.setProgress(mPrefs.getInt(PREFS_FILTER_MILES, 3));
+                break;
+        }
+    }
+
+    private void updatePreferencesUI() {
+
+        // Display the listview selected rows colors
+        displaySelectedRows();
+
+        switch (mPrefs.getString(PREFS_FILTER_SELECTION, "nothing")) {
+
+            case "title":
+
+                // Select the title radius button
+                mRButton_title.setChecked(true);
+
+                // Also make the interests text view and list view disappear for selection
+                mTextView_interestsTitle.setVisibility(View.GONE);
+                mListView_interests.setVisibility(View.GONE);
+
+                // Display the miles on the seekbar
+                mSeekBar_miles.setProgress(mPrefs.getInt(PREFS_FILTER_MILES, 3));
+
+                break;
+            case "city":
+
+                // Select the city radius button
+                mRButton_city.setChecked(true);
+
+                // Also make the interests text view and list view disappear for selection
+                mTextView_interestsTitle.setVisibility(View.GONE);
+                mListView_interests.setVisibility(View.GONE);
+
+                // Display the miles on the seekbar
+                mSeekBar_miles.setProgress(mPrefs.getInt(PREFS_FILTER_MILES, 3));
+
+                break;
+            case "interests":
+
+                // Select the interests radius button
+                mRButton_interests.setChecked(true);
+
+                // Also make the interests text view and list view appear for selection
+                mTextView_interestsTitle.setVisibility(View.VISIBLE);
+                mListView_interests.setVisibility(View.VISIBLE);
+
+                // Display the miles on the seekbar
+                mSeekBar_miles.setProgress(mPrefs.getInt(PREFS_FILTER_MILES, 3));
+
                 break;
         }
     }
@@ -130,12 +193,55 @@ public class SearchFilterFragment extends Fragment implements View.OnClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        Set<String> mSetInterests = new HashSet<>();
 
+        if (mListView_interests.isItemChecked(position)) {
+
+            // Save the selected items to another array list
+            mSelectedInterests.add(mInterests.get(position));
+
+            // Save the array as a HashSet to preferences
+            mSetInterests.addAll(mSelectedInterests);
+            mPrefs.edit().putStringSet(PREFS_FILTER_INTERESTS, mSetInterests).apply();
+
+        } else {
+
+            // Remove the items that were unselected
+            mSelectedInterests.remove(mInterests.get(position));
+
+            // Save the array as a HashSet to preferences
+            mSetInterests.addAll(mSelectedInterests);
+            mPrefs.edit().putStringSet(PREFS_FILTER_INTERESTS, mSetInterests).apply();
+        }
+    }
+
+    private void displaySelectedRows() {
+
+        // Retrieve the saved HashSet that contains all the selected interests
+        Set<String> mRetrievedSet = mPrefs.getStringSet(PREFS_FILTER_INTERESTS, new HashSet<String>());
+        ArrayList<String> mSetInterests = new ArrayList<>(mRetrievedSet);
+
+        if (mSetInterests.size() != 0) {
+
+            // Loop through the HashSet and select the saved interests
+            for (int i = 0; i < mInterests.size(); i++) {
+                for (int y = 0; y < mSetInterests.size(); y++) {
+                    if (mInterests.get(i).equals(mSetInterests.get(y))) {
+
+                        // Check the item on the list
+                        mListView_interests.setItemChecked(i, true);
+
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
+        // Save the selected amount of miles to preferences whenever the user changes
+        mPrefs.edit().putInt(PREFS_FILTER_MILES, progress).apply();
     }
 
     @Override
